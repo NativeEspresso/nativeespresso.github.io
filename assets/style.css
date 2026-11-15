@@ -193,6 +193,22 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--line);b
 .foot-in p{font-size:.88rem;margin-top:10px}
 .foot-base{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);display:flex;gap:8px;flex-wrap:wrap}
 
+/* project spotlight & showcase cards */
+.spotlight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:24px;margin-top:32px}
+.project-card{border:1px solid var(--line);border-radius:20px;background:var(--surface);padding:32px;display:flex;flex-direction:column;gap:18px;position:relative;transition:transform .25s,border-color .25s,box-shadow .25s}
+.project-card:hover{transform:translateY(-5px);border-color:color-mix(in srgb,var(--accent,var(--cyan)) 55%,transparent);box-shadow:0 16px 45px rgba(4,6,12,.6)}
+.project-card .badge{align-self:flex-start;font-family:var(--font-m);font-size:.72rem;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--overlay);color:var(--cyan);letter-spacing:.05em}
+.project-card .badge.badge-beta{color:var(--amber);border-color:rgba(251,191,36,.3)}
+.project-card .badge.badge-dev{color:var(--magenta);border-color:rgba(244,63,123,.3)}
+.project-card h3{font-size:1.5rem;display:flex;align-items:center;gap:10px}
+.project-card .desc{color:var(--muted);font-size:.96rem;line-height:1.6;flex:1}
+.project-card .tags{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:0}
+.project-card .tags li{font-family:var(--font-m);font-size:.72rem;color:var(--muted);background:var(--overlay);border:1px solid var(--line);padding:3px 9px;border-radius:6px}
+.project-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:4px;padding-top:18px;border-top:1px solid var(--line)}
+.project-links-sub{font-size:.84rem;color:var(--muted);display:flex;gap:12px;margin-top:2px}
+.project-links-sub a{color:var(--muted)}
+.project-links-sub a:hover{color:var(--cyan)}
+
 /* responsive */
 @media (max-width:960px){
   .cards{grid-template-columns:1fr 1fr}

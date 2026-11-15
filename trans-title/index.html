@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trans-Title — Private On-Device Transcription &amp; Subtitles</title>
+<meta name="description" content="Trans-Title generates subtitles and transcribes video and audio completely offline on Android. Fast, private, zero cloud uploads.">
+<meta name="theme-color" content="#07090f">
+<meta property="og:title" content="Trans-Title — Private On-Device Transcription &amp; Subtitles">
+<meta property="og:description" content="Speech-to-text and subtitle generation that stays 100% on your Android device.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2307090f'/%3E%3Crect x='6' y='8' width='20' height='16' rx='3' stroke='%23f43f7b' stroke-width='2' fill='none'/%3E%3Cpath d='M10 16h6M10 19h10' stroke='%2322d3ee' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="top">
+  <div class="wrap nav-in">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <a class="brand" href="../index.html" title="Back to Native Espresso Home" style="opacity:.8;font-size:.95rem;">
+        <span>Native Espresso</span>
+      </a>
+      <span style="color:var(--line);font-weight:300;">/</span>
+      <a class="brand" href="#top" aria-label="Trans-Title home">
+        <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect x="4" y="6" width="24" height="20" rx="4" stroke="var(--magenta)" stroke-width="2.2" fill="none"/><path d="M8 18h6M8 21h10M17 18h7" stroke="var(--magenta)" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Trans-Title</span>
+      </a>
+    </div>
+    <nav class="links" id="menu" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#how">How It Works</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a class="btn btn-sm btn-primary" href="mailto:ch.talha.amjad@outlook.com?subject=Trans-Title%20Beta">Early Access</a>
+    </nav>
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb-a" aria-hidden="true" style="background:radial-gradient(circle,rgba(244,63,123,.45),transparent 65%);"></div>
+  <div class="orb orb-b" aria-hidden="true" style="background:radial-gradient(circle,rgba(79,124,255,.4),transparent 65%);"></div>
+  <div class="wrap hero-in">
+    <p class="kicker rise" style="--d:0">Android · Edge-AI Transcription · Media3</p>
+    <h1 class="rise" style="--d:1">Private captions.<br><span class="grad">Zero cloud uploads.</span></h1>
+    <p class="lede rise" style="--d:2">Trans-Title transcribes and synchronizes subtitles for your videos and audio recordings entirely on your Android hardware. No subscription paywalls, no streaming your private conversations to external servers.</p>
+    <div class="hero-cta rise" style="--d:3">
+      <a class="btn btn-primary" href="mailto:ch.talha.amjad@outlook.com?subject=Trans-Title%20Early%20Access">Request Early Access</a>
+      <a class="btn btn-ghost" href="privacy.html">Privacy Policy</a>
+    </div>
+    <ul class="chips rise" style="--d:4">
+      <li><i class="dot dot-green"></i>100% On-Device</li>
+      <li><i class="dot dot-cyan"></i>SRT &amp; VTT Export</li>
+      <li><i class="dot dot-magenta"></i>Zero Telemetry</li>
+    </ul>
+  </div>
+  <svg class="hero-wave" id="heroWave" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="hw2" x1="0" x2="1"><stop offset="0" stop-color="#f43f7b"/><stop offset=".5" stop-color="#4f7cff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+    <path class="w1" d="M0 110 C 100 40 200 180 300 110 S 500 40 600 110 S 800 180 900 110 S 1100 40 1200 110" fill="none" stroke="url(#hw2)" stroke-width="2.5"/>
+    <path class="w2" d="M0 110 C 100 170 200 50 300 110 S 500 170 600 110 S 800 50 900 110 S 1100 170 1200 110" fill="none" stroke="url(#hw2)" stroke-width="1.4" opacity=".45"/>
+  </svg>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="section" data-accent="magenta">
+  <div class="wrap">
+    <p class="kicker reveal">Capabilities</p>
+    <h2 class="reveal">Engineered for creators and professionals</h2>
+    <div class="grid cards">
+      <article class="card reveal"><div class="ico" style="--c:var(--magenta)">✍</div><h3>Accurate Speech-to-Text</h3><p>Quantized speech models run directly on your phone's processor for real-time and batch subtitle generation.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--cyan)">⛨</div><h3>Absolute Privacy</h3><p>Your video drafts, client interviews, and voice memos never leave the phone. Full functionality works in airplane mode.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--blue)">⏱</div><h3>Auto Sync &amp; Timing</h3><p>Timestamp alignment down to millisecond accuracy with customizable caption block lengths.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--amber)">📄</div><h3>Multiple Export Formats</h3><p>Export clean .SRT, .VTT, or plain text transcripts ready for YouTube, Premiere, DaVinci, or social reels.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--green)">⚡</div><h3>Hardware Accelerated</h3><p>Optimized for ARM NEON and Android NNAPI for fast inference without battery drain.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--magenta)">✦</div><h3>No Monthly Lock-in</h3><p>Pay once for unlimited processing. Say goodbye to restrictive per-minute cloud billing.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="section" data-accent="blue">
+  <div class="wrap">
+    <p class="kicker reveal">Workflow</p>
+    <h2 class="reveal">Three steps to synced subtitles</h2>
+    <ol class="steps">
+      <li class="reveal"><b class="mono">01</b><h3>Select Media</h3><p>Import video clips, voice notes, podcasts, or recordings from your storage.</p></li>
+      <li class="reveal"><b class="mono">02</b><h3>Local AI Processing</h3><p>Speech models decode audio and segment sentences completely on your phone.</p></li>
+      <li class="reveal"><b class="mono">03</b><h3>Review &amp; Export</h3><p>Adjust any wording on a visual timeline and export your subtitles or burned video.</p></li>
+    </ol>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap foot-in">
+    <div>
+      <a class="brand" href="../index.html"><span>Native Espresso</span></a>
+      <p class="muted">Trans-Title — Private on-device transcription.<br>Crafted by Native Espresso in Sargodha, Pakistan.</p>
+    </div>
+    <nav aria-label="Trans-Title"><b>Trans-Title</b><a href="#features">Features</a><a href="#how">How it works</a></nav>
+    <nav aria-label="Legal"><b>Legal</b><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of service</a></nav>
+    <nav aria-label="Studio"><b>Native Espresso</b><a href="../index.html">All Projects</a><a href="../echo-cleaner/">Echo Cleaner</a></nav>
+  </div>
+  <div class="wrap foot-base mono">© <span id="yr"></span> Native Espresso · Trans-Title · 100% On-Device Processing.</div>
+</footer>
+<script src="../assets/main.js"></script>
+</body>
+</html>

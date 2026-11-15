@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Echo Cleaner — Studio-clear voice, 100% offline</title>
-<meta name="description" content="Echo Cleaner removes echo, noise and reverb and boosts your voice — entirely on-device. No uploads. Android.">
+<title>Native Espresso — High-Performance Native Android & On-Device AI</title>
+<meta name="description" content="Independent engineering studio specializing in high-performance native Android apps, edge AI, and offline-first utilities. Zero cloud surveillance.">
 <meta name="theme-color" content="#07090f">
-<meta property="og:title" content="Echo Cleaner — Studio-clear voice, 100% offline">
-<meta property="og:description" content="AI voice enhancement that never leaves your device.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2307090f'/%3E%3Cpath d='M6 16h3l2-6 3 12 3-16 3 14 2-4h4' stroke='%2322d3ee' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<meta property="og:title" content="Native Espresso — High-Performance Native Android & On-Device AI">
+<meta property="og:description" content="Independent engineering studio building native Android apps and on-device AI. 100% private, zero uploads.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2307090f'/%3E%3Cpath d='M7 11h14v8a5 5 0 0 1-5 5h-4a5 5 0 0 1-5-5v-8z' stroke='%2322d3ee' stroke-width='2' fill='none'/%3E%3Cpath d='M21 13h2a3 3 0 0 1 3 3v0a3 3 0 0 1-3 3h-2' stroke='%2322d3ee' stroke-width='2' fill='none'/%3E%3Cpath d='M10 6c0 1.5 2 2 2 3M14 6c0 1.5 2 2 2 3M18 6c0 1.5 2 2 2 3' stroke='%234f7cff' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -17,19 +17,24 @@
 <body>
 <div class="grain" aria-hidden="true"></div>
 
+<!-- HEADER / NAV -->
 <header class="nav" id="top">
   <div class="wrap nav-in">
-    <a class="brand" href="#top" aria-label="Echo Cleaner home">
-      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="none" stroke="currentColor" stroke-opacity=".25"/><path d="M6 16h3l2-6 3 12 3-16 3 14 2-4h4" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Echo&nbsp;Cleaner</span>
+    <a class="brand" href="#top" aria-label="Native Espresso Home">
+      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="none" stroke="currentColor" stroke-opacity=".25"/>
+        <path d="M7 12h13v7a4 4 0 0 1-4 4h-5a4 4 0 0 1-4-4v-7z" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M20 14h2a2.5 2.5 0 0 1 2.5 2.5v0A2.5 2.5 0 0 1 22 19h-2" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M10 7c0 1.2 1.5 1.8 1.5 2.6M14 7c0 1.2 1.5 1.8 1.5 2.6M18 7c0 1.2 1.5 1.8 1.5 2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span>Native&nbsp;Espresso</span>
     </a>
     <nav class="links" id="menu" aria-label="Primary">
-      <a href="#demo">Live demo</a>
-      <a href="#features">Features</a>
-      <a href="#how">How it works</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#faq">FAQ</a>
-      <a class="btn btn-sm btn-primary" href="mailto:ch.talha.amjad@outlook.com?subject=Echo%20Cleaner%20closed%20testing">Join the beta</a>
+      <a href="#projects">Projects</a>
+      <a href="#philosophy">Philosophy</a>
+      <a href="#tech">Tech Stack</a>
+      <a href="#contact">Contact</a>
+      <a class="btn btn-sm btn-primary" href="https://github.com/NativeEspresso" target="_blank" rel="noopener">GitHub</a>
     </nav>
     <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
@@ -41,17 +46,17 @@
   <div class="orb orb-a" aria-hidden="true"></div>
   <div class="orb orb-b" aria-hidden="true"></div>
   <div class="wrap hero-in">
-    <p class="kicker rise" style="--d:0">Android · On-device AI · FFmpeg + ONNX Runtime</p>
-    <h1 class="rise" style="--d:1">Studio-clear voice.<br><span class="grad">Zero uploads.</span></h1>
-    <p class="lede rise" style="--d:2">Echo Cleaner strips echo, background noise and room reverb — then boosts and clarifies your voice. Every sample is processed on your phone. Nothing ever leaves it.</p>
+    <p class="kicker rise" style="--d:0">Independent Engineering Studio · Sargodha, Pakistan</p>
+    <h1 class="rise" style="--d:1">Native Performance.<br><span class="grad">Engineered On-Device.</span></h1>
+    <p class="lede rise" style="--d:2">We craft high-performance Android applications and edge-AI utilities. From neural audio restoration to high-speed transcription — every operation runs locally on your silicon. Zero cloud round-trips. Zero surveillance.</p>
     <div class="hero-cta rise" style="--d:3">
-      <a class="btn btn-primary" href="#demo">Try the live demo</a>
-      <a class="btn btn-ghost" href="echo-cleaner/privacy.html">Read the privacy policy</a>
+      <a class="btn btn-primary" href="#projects">Explore Projects</a>
+      <a class="btn btn-ghost" href="#philosophy">Our Privacy Standard</a>
     </div>
     <ul class="chips rise" style="--d:4">
-      <li><i class="dot dot-green"></i>100% offline</li>
-      <li><i class="dot dot-cyan"></i>DeepFilterNet + Clear model</li>
-      <li><i class="dot dot-magenta"></i>No account required</li>
+      <li><i class="dot dot-green"></i>100% On-Device Processing</li>
+      <li><i class="dot dot-cyan"></i>Native C++ / Rust / JNI</li>
+      <li><i class="dot dot-magenta"></i>Zero Data Surveillance</li>
     </ul>
   </div>
   <svg class="hero-wave" id="heroWave" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
@@ -61,134 +66,198 @@
   </svg>
 </section>
 
-<!-- DEMO -->
-<section id="demo" class="section" data-accent="cyan">
+<!-- PROJECTS SPOTLIGHT -->
+<section id="projects" class="section" data-accent="cyan">
   <div class="wrap">
-    <p class="kicker reveal">Interactive signal lab</p>
-    <h2 class="reveal">Hear what “clean” looks like</h2>
-    <p class="lede reveal">Drag the enhancement chain live. Magenta is the junk — echo, hiss and room tail. Watch it collapse as the on-device models do their job. Optionally play a synthesized before/after tone.</p>
-    <div class="lab reveal">
-      <div class="scope">
-        <canvas id="wave" aria-label="Live waveform visualization of noisy versus enhanced signal"></canvas>
-        <div class="scope-hud">
-          <span class="mono" id="roNoise">NOISE −6 dB</span>
-          <span class="mono" id="roEcho">ECHO −4 dB</span>
-          <span class="mono" id="roGain">GAIN +0.0 dB</span>
+    <p class="kicker reveal">Project Showcase</p>
+    <h2 class="reveal">Apps &amp; On-Device Tools</h2>
+    <p class="lede reveal">Each application is built from the ground up for responsiveness, battery efficiency, and airtight data security. Click into any app to explore features, interactive demos, and legal documentation.</p>
+
+    <div class="spotlight-grid">
+      <!-- ECHO CLEANER -->
+      <article class="project-card reveal">
+        <span class="badge badge-beta">Closed Beta · Android</span>
+        <h3>
+          <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><path d="M6 16h3l2-6 3 12 3-16 3 14 2-4h4" stroke="var(--cyan)" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Echo Cleaner
+        </h3>
+        <p class="desc">Studio-clear voice processing directly on your phone. Eliminates speaker-to-mic acoustic echo, hiss, drone, and room reverb without thinning voice frequencies. Operates entirely in airplane mode.</p>
+        <ul class="tags">
+          <li>DeepFilterNet</li>
+          <li>ONNX Runtime</li>
+          <li>FFmpeg DSP</li>
+          <li>C++ / JNI</li>
+          <li>100% Offline</li>
+        </ul>
+        <div class="project-actions">
+          <a class="btn btn-primary btn-sm" href="echo-cleaner/">Explore &amp; Live Demo →</a>
+          <a class="btn btn-ghost btn-sm" href="echo-cleaner/privacy.html">Privacy</a>
+          <a class="btn btn-ghost btn-sm" href="echo-cleaner/terms.html">Terms</a>
         </div>
-      </div>
-      <aside class="console" aria-label="Demo controls">
-        <h3 class="console-title">Enhancement chain</h3>
-        <label class="ctl"><span>Enhancement <output id="vEnh">70%</output></span>
-          <input type="range" id="enh" min="0" max="100" value="70"></label>
-        <label class="ctl"><span>Voice boost <output id="vBoost">35%</output></span>
-          <input type="range" id="boost" min="0" max="100" value="35"></label>
-        <label class="ctl"><span>Motion speed <output id="vSpeed">40%</output></span>
-          <input type="range" id="speed" min="0" max="100" value="40"></label>
-        <div class="toggles">
-          <label class="tgl"><input type="checkbox" id="tEcho" checked><i></i>Echo removal</label>
-          <label class="tgl"><input type="checkbox" id="tNoise" checked><i></i>Noise reduction</label>
-          <label class="tgl"><input type="checkbox" id="tReverb" checked><i></i>De-reverb</label>
+      </article>
+
+      <!-- TRANS-TITLE -->
+      <article class="project-card reveal">
+        <span class="badge badge-dev">In Development · Android</span>
+        <h3>
+          <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect x="4" y="6" width="24" height="20" rx="4" stroke="var(--magenta)" stroke-width="2.2" fill="none"/><path d="M8 18h6M8 21h10M17 18h7" stroke="var(--magenta)" stroke-width="2" stroke-linecap="round"/></svg>
+          Trans-Title
+        </h3>
+        <p class="desc">Private on-device transcription and subtitle generation. Automatically synchronizes accurate captions, handles speech-to-text, and produces SRT/VTT subtitles without streaming personal recordings to remote cloud APIs.</p>
+        <ul class="tags">
+          <li>Speech AI</li>
+          <li>Media3</li>
+          <li>Jetpack Compose</li>
+          <li>Subtitles</li>
+          <li>Local-First</li>
+        </ul>
+        <div class="project-actions">
+          <a class="btn btn-primary btn-sm" href="trans-title/">Explore Project →</a>
+          <a class="btn btn-ghost btn-sm" href="trans-title/privacy.html">Privacy</a>
+          <a class="btn btn-ghost btn-sm" href="trans-title/terms.html">Terms</a>
         </div>
-        <label class="ctl"><span>Display</span>
-          <select id="style"><option value="wave">Mirrored wave</option><option value="bars">Spectrum bars</option></select></label>
-        <div class="console-actions">
-          <button class="btn btn-primary btn-sm" id="btnAudio" aria-pressed="false">▶ Play demo tone</button>
-          <button class="btn btn-ghost btn-sm" id="btnRand">Randomize</button>
-          <button class="btn btn-ghost btn-sm" id="btnReset">Reset</button>
-          <button class="btn btn-ghost btn-sm" id="btnExport">Export PNG</button>
+      </article>
+
+      <!-- EXPERIMENTAL LAB -->
+      <article class="project-card reveal">
+        <span class="badge">Open Lab &amp; Concepts</span>
+        <h3>
+          <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><circle cx="16" cy="16" r="10" stroke="var(--green)" stroke-width="2" fill="none" stroke-dasharray="3 3"/><circle cx="16" cy="16" r="3" fill="var(--green)"/></svg>
+          More in the Pipeline
+        </h3>
+        <p class="desc">Active experiments exploring local vector memory on mobile, low-latency DSP pipelines, and hardware-accelerated ML inference for developer and creator workflows.</p>
+        <ul class="tags">
+          <li>KMP</li>
+          <li>Hardware NPU</li>
+          <li>Offline Vectors</li>
+          <li>Zero Telemetry</li>
+        </ul>
+        <div class="project-actions">
+          <a class="btn btn-ghost btn-sm" href="mailto:ch.talha.amjad@outlook.com?subject=Native%20Espresso%20Ideas">Propose an Idea →</a>
+          <a class="btn btn-ghost btn-sm" href="https://github.com/NativeEspresso" target="_blank" rel="noopener">GitHub</a>
         </div>
-        <p class="console-note mono">Synthesized preview — the app runs real models on your audio, offline.</p>
-      </aside>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section id="features" class="section" data-accent="green">
+<!-- PHILOSOPHY / PILLARS -->
+<section id="philosophy" class="section" data-accent="green">
   <div class="wrap">
-    <p class="kicker reveal">The chain</p>
-    <h2 class="reveal">Four problems. One tap.</h2>
+    <p class="kicker reveal">The Native Espresso Standard</p>
+    <h2 class="reveal">Built for users, not surveillance.</h2>
     <div class="grid cards">
-      <article class="card reveal"><div class="ico" style="--c:var(--magenta)">◉</div><h3>Echo removal</h3><p>Speaker-to-mic echo and double-talk artifacts suppressed without thinning the voice.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--amber)">≋</div><h3>Noise reduction</h3><p>DeepFilterNet neural denoising via ONNX Runtime removes hiss, hum, traffic and crowd noise.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--blue)">⌁</div><h3>De-reverb</h3><p>The Clear model drys out room tail so recordings sound close-mic’d, not bathroom-mic’d.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--green)">↯</div><h3>Boost &amp; clarify</h3><p>FFmpeg DSP loudness shaping lifts quiet speech and keeps peaks controlled.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--cyan)">⛨</div><h3>Truly offline</h3><p>No network permission needed for processing. Your recordings are never uploaded, logged or shared.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--magenta)">✦</div><h3>Free &amp; Pro</h3><p>Start free with daily enhancements; go Pro for unlimited, ad-free processing.</p></article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--cyan)">⛨</div>
+        <h3>100% On-Device Processing</h3>
+        <p>AI models and DSP routines execute locally on your device's CPU, GPU, and NPU. Your audio, video, and personal files never get beamed to external clouds.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--amber)">⚡</div>
+        <h3>Native Bare-Metal Speed</h3>
+        <p>We write performant C++, Rust, and assembly kernels where cycles count, connected to clean Kotlin &amp; Jetpack Compose interfaces for buttery 120Hz responsiveness.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--magenta)">✕</div>
+        <h3>No Surveillance or Data Brokers</h3>
+        <p>No behavioral tracking SDKs. No telemetry spying on what files you process. We don't want your personal data, and we don't build systems that can hold it.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--blue)">✈</div>
+        <h3>Airplane Mode as Default</h3>
+        <p>Apps should never brick themselves when you enter a tunnel, board a flight, or lose signal. Core capabilities remain fully operational offline.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--green)">✦</div>
+        <h3>Transparent &amp; Fair Model</h3>
+        <p>No predatory subscriptions with hidden renewal traps. Free tiers with clear limitations, and clean one-time Pro purchases powered by Google Play Billing.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--amber)">✉</div>
+        <h3>Direct Engineering Support</h3>
+        <p>Built by an independent developer in Sargodha, Pakistan. You communicate directly with the engineer who builds the code, not an outsourced support queue.</p>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- HOW -->
-<section id="how" class="section" data-accent="blue">
+<!-- TECH STACK -->
+<section id="tech" class="section" data-accent="blue">
   <div class="wrap">
-    <p class="kicker reveal">Pipeline</p>
-    <h2 class="reveal">Import → enhance → export</h2>
+    <p class="kicker reveal">Under The Hood</p>
+    <h2 class="reveal">How our stack works</h2>
     <ol class="steps">
-      <li class="reveal"><b class="mono">01</b><h3>Pick a recording</h3><p>Voice memo, interview, lecture, field recording — any audio on your device.</p></li>
-      <li class="reveal"><b class="mono">02</b><h3>On-device inference</h3><p>FFmpeg DSP + Clear + DeepFilterNet (Rust→C++ via JNI) run locally through ONNX Runtime.</p></li>
-      <li class="reveal"><b class="mono">03</b><h3>Export the clean take</h3><p>Save or share the enhanced file. The original stays untouched.</p></li>
+      <li class="reveal">
+        <b class="mono">01</b>
+        <h3>Edge AI &amp; Inference</h3>
+        <p>Quantized neural network weights running on ONNX Runtime with NNAPI/XNNPACK acceleration, ensuring minimal memory footprint and fast inference.</p>
+      </li>
+      <li class="reveal">
+        <b class="mono">02</b>
+        <h3>C++ &amp; FFmpeg DSP</h3>
+        <p>Low-level media processing via custom native shared libraries, high-performance JNI wrappers, and optimized audio/video decoding.</p>
+      </li>
+      <li class="reveal">
+        <b class="mono">03</b>
+        <h3>Modern Jetpack Compose</h3>
+        <p>100% declarative UI built with Jetpack Compose, Kotlin Coroutines, and Flow for smooth state management and zero legacy view hierarchy overhead.</p>
+      </li>
     </ol>
   </div>
 </section>
 
-<!-- PRICING -->
-<section id="pricing" class="section" data-accent="magenta">
-  <div class="wrap">
-    <p class="kicker reveal">Simple, honest pricing</p>
-    <h2 class="reveal">Free to start. Pro when you need it.</h2>
-    <div class="grid plans">
-      <article class="plan reveal">
-        <h3>Free</h3><p class="price">$0</p>
-        <ul>
-          <li class="yes">1 enhancement per day</li>
-          <li class="yes">+2 more via rewarded ads</li>
-          <li class="yes">Full enhancement chain</li>
-          <li class="no">Contains ads</li>
-        </ul>
-        <a class="btn btn-ghost" href="mailto:ch.talha.amjad@outlook.com?subject=Echo%20Cleaner%20closed%20testing">Join closed testing</a>
-      </article>
-      <article class="plan plan-pro reveal">
-        <span class="tag">Recommended</span>
-        <h3>Pro</h3><p class="price">One purchase<span> · via Google Play</span></p>
-        <ul>
-          <li class="yes">Unlimited enhancements</li>
-          <li class="yes">Zero ads, zero rewarded waits</li>
-          <li class="yes">Same 100% offline pipeline</li>
-          <li class="yes">Supports solo development</li>
-        </ul>
-        <a class="btn btn-primary" href="mailto:ch.talha.amjad@outlook.com?subject=Echo%20Cleaner%20Pro">Get Pro at launch</a>
-      </article>
-    </div>
-    <p class="privacy-strip reveal">⛨ Your audio never leaves your device — in either plan. <a href="echo-cleaner/privacy.html">Privacy policy</a> · <a href="echo-cleaner/terms.html">Terms</a></p>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section id="faq" class="section" data-accent="amber">
+<!-- CONTACT & CLOSED TESTING -->
+<section id="contact" class="section" data-accent="magenta">
   <div class="wrap narrow">
-    <p class="kicker reveal">Questions</p>
-    <h2 class="reveal">FAQ</h2>
-    <div class="faq reveal">
-      <details><summary>Does Echo Cleaner upload my audio?</summary><p>No. All enhancement runs on-device using FFmpeg and ONNX Runtime models. Processing works in airplane mode.</p></details>
-      <details><summary>How does the free tier work?</summary><p>One free enhancement per day, plus two extra unlocks by watching a rewarded ad. Pro removes limits and ads.</p></details>
-      <details><summary>What models power it?</summary><p>DeepFilterNet (Rust→C++ via JNI) for neural denoising, the Clear model for de-reverb, and FFmpeg DSP for echo handling, boost and clarity — all through ONNX Runtime.</p></details>
-      <details><summary>Is my purchase tied to an account?</summary><p>No account needed. Pro is handled by Google Play Billing and restores with your Play account.</p></details>
-      <details><summary>How do I report a problem?</summary><p>Email <a href="mailto:ch.talha.amjad@outlook.com">ch.talha.amjad@outlook.com</a>. An in-app feedback form is coming; it will only send what you explicitly submit.</p></details>
+    <p class="kicker reveal">Get In Touch</p>
+    <h2 class="reveal">Connect with Native Espresso</h2>
+    <p class="lede reveal">Interested in closed testing our upcoming releases, reporting an issue, or inquiring about native Android edge-AI development? Drop a message directly.</p>
+    
+    <div class="grid plans" style="grid-template-columns:1fr;margin-top:28px;">
+      <article class="plan plan-pro reveal" style="align-items:flex-start;">
+        <h3 style="font-size:1.6rem;">Direct Developer Inquiries</h3>
+        <p class="desc" style="color:var(--muted);font-size:1rem;margin:8px 0 16px;">
+          Solo engineering studio founded by <strong>Talha Amjad</strong>. Open for closed beta feedback, collaborations, and privacy inquiries.
+        </p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;">
+          <a class="btn btn-primary" href="mailto:ch.talha.amjad@outlook.com?subject=Native%20Espresso%20Inquiry">Email ch.talha.amjad@outlook.com</a>
+          <a class="btn btn-ghost" href="https://github.com/NativeEspresso" target="_blank" rel="noopener">GitHub Profile</a>
+        </div>
+      </article>
     </div>
   </div>
 </section>
 </main>
 
+<!-- FOOTER -->
 <footer class="footer">
   <div class="wrap foot-in">
-    <div><a class="brand" href="#top"><span>Echo Cleaner</span></a><p class="muted">Studio-clear voice, on your device.<br>Built solo in Sargodha, Pakistan.</p></div>
-    <nav aria-label="Footer"><b>App</b><a href="#demo">Live demo</a><a href="#features">Features</a><a href="#pricing">Pricing</a></nav>
-    <nav aria-label="Legal"><b>Legal</b><a href="echo-cleaner/privacy.html">Privacy policy</a><a href="echo-cleaner/terms.html">Terms of service</a></nav>
-    <nav aria-label="Contact"><b>Contact</b><a href="mailto:ch.talha.amjad@outlook.com">ch.talha.amjad@outlook.com</a></nav>
+    <div>
+      <a class="brand" href="#top"><span>Native Espresso</span></a>
+      <p class="muted">Independent Android &amp; Edge-AI Studio.<br>Built with precision in Sargodha, Pakistan.</p>
+    </div>
+    <nav aria-label="Apps">
+      <b>Projects</b>
+      <a href="echo-cleaner/">Echo Cleaner</a>
+      <a href="trans-title/">Trans-Title</a>
+      <a href="https://github.com/NativeEspresso" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+    <nav aria-label="Legal">
+      <b>Policies</b>
+      <a href="echo-cleaner/privacy.html">Echo Cleaner Privacy</a>
+      <a href="trans-title/privacy.html">Trans-Title Privacy</a>
+      <a href="echo-cleaner/terms.html">Echo Cleaner Terms</a>
+    </nav>
+    <nav aria-label="Contact">
+      <b>Contact</b>
+      <a href="mailto:ch.talha.amjad@outlook.com">ch.talha.amjad@outlook.com</a>
+    </nav>
   </div>
-  <div class="wrap foot-base mono">© <span id="yr"></span> Echo Cleaner · All audio stays on your device.</div>
+  <div class="wrap foot-base mono">
+    © <span id="yr"></span> Native Espresso · All audio &amp; media stays on your device.
+  </div>
 </footer>
+
 <script src="assets/main.js"></script>
 </body>
 </html>
