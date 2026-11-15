@@ -111,3 +111,18 @@ The host environment has verified access to the following runtimes in `PATH`:
 * **FFmpeg** (`ffmpeg`): Available for audio/video manipulation, DSP testing, and codec processing.
 * **Java / OpenJDK** (`java`): Available for Android Gradle builds, Kotlin scripting, and bytecode analysis.
 
+---
+
+## 7. Associated Source Projects [READ_ONLY]
+
+The following local repositories contain the production source code and development assets for the applications hosted and showcased on this web portal. AI agents and developers may read, analyze, and inspect these directories for technical context, feature sets, audio/AI pipelines, and privacy compliance requirements, but **MUST NOT modify, create, or delete** any files within them from this web repository:
+
+* `C:\Projects\Android\Trans-Title` `[READ_ONLY]`
+  * **Trans-Title**: Native Android source code for on-device transcription, subtitle generation (SRT/VTT), and Media3 integration.
+* `C:\Projects\KMP\Echo-Cleaner` `[READ_ONLY]`
+  * **Echo Cleaner**: Kotlin Multiplatform / Android source code for on-device neural audio enhancement, ONNX Runtime inference (DeepFilterNet, Clear model), and FFmpeg DSP.
+
+> [!IMPORTANT]
+> **Strict Read-Only Access**: Treat `C:\Projects\Android\Trans-Title` and `C:\Projects\KMP\Echo-Cleaner` strictly as read-only references (`[READ_ONLY]`). Do not run write, edit, stage, or git operations against those project paths from the `Native-Espresso` web workspace.
+
+
