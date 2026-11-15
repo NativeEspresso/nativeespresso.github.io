@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trans-Title — Private On-Device Transcription &amp; Subtitles</title>
-<meta name="description" content="Trans-Title generates subtitles and transcribes video and audio completely offline on Android. Fast, private, zero cloud uploads.">
+<title>Trans-Title — Flagship Multimedia Suite &amp; On-Device AI Studio</title>
+<meta name="description" content="Trans-Title is a flagship native Android media suite with 4-tier on-device speech transcription, neural subtitle translation, multi-track Cross-Play orchestration, and high-fidelity video & music players. 100% offline and private.">
 <meta name="theme-color" content="#07090f">
-<meta property="og:title" content="Trans-Title — Private On-Device Transcription &amp; Subtitles">
-<meta property="og:description" content="Speech-to-text and subtitle generation that stays 100% on your Android device.">
+<meta property="og:title" content="Trans-Title — Flagship Multimedia Suite &amp; On-Device AI Studio">
+<meta property="og:description" content="On-device speech transcription, subtitle translation, Cross-Play video orchestration, and flagship media players. Zero cloud uploads.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2307090f'/%3E%3Crect x='6' y='8' width='20' height='16' rx='3' stroke='%23f43f7b' stroke-width='2' fill='none'/%3E%3Cpath d='M10 16h6M10 19h10' stroke='%2322d3ee' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,6 +17,7 @@
 <body>
 <div class="grain" aria-hidden="true"></div>
 
+<!-- HEADER / NAV -->
 <header class="nav" id="top">
   <div class="wrap nav-in">
     <div style="display:flex;align-items:center;gap:10px;">
@@ -30,11 +31,14 @@
       </a>
     </div>
     <nav class="links" id="menu" aria-label="Primary">
-      <a href="#features">Features</a>
-      <a href="#how">How It Works</a>
+      <a href="#studios">Studios</a>
+      <a href="#transcribe">AI Transcribe</a>
+      <a href="#translate">Translation</a>
+      <a href="#crossplay">Cross-Play</a>
+      <a href="#players">Players</a>
+      <a href="#beta-queue">Join Beta</a>
       <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a class="btn btn-sm btn-primary" href="mailto:native.espresso@gmail.com?subject=Trans-Title%20Beta">Early Access</a>
+      <a class="btn btn-sm btn-primary" href="#beta-queue">Closed Testing</a>
     </nav>
     <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
@@ -46,17 +50,25 @@
   <div class="orb orb-a" aria-hidden="true" style="background:radial-gradient(circle,rgba(244,63,123,.45),transparent 65%);"></div>
   <div class="orb orb-b" aria-hidden="true" style="background:radial-gradient(circle,rgba(79,124,255,.4),transparent 65%);"></div>
   <div class="wrap hero-in">
-    <p class="kicker rise" style="--d:0">Android · Edge-AI Transcription · Media3</p>
-    <h1 class="rise" style="--d:1">Private captions.<br><span class="grad">Zero cloud uploads.</span></h1>
-    <p class="lede rise" style="--d:2">Trans-Title transcribes and synchronizes subtitles for your videos and audio recordings entirely on your Android hardware. No subscription paywalls, no streaming your private conversations to external servers.</p>
+    <p class="kicker rise" style="--d:0">Android · Multimedia Suite &amp; Edge-AI Studio</p>
+    <h1 class="rise" style="--d:1">Your Media Studio.<br><span class="grad">100% On-Device.</span></h1>
+    <p class="lede rise" style="--d:2">Trans-Title combines next-generation on-device speech transcription, neural subtitle translation, and multi-track video orchestration with high-fidelity video and music players. Everything runs locally on your silicon with zero cloud latency and zero surveillance.</p>
+    
+    <div class="platforms rise" style="--d:2.5;margin-bottom:20px;">
+      <span class="platform-tag queue"><b>Android</b> Closed Testing (v1.0.16)</span>
+      <span class="platform-tag"><b>Windows</b> In Planning</span>
+      <span class="platform-tag"><b>iOS</b> In Planning</span>
+      <span class="platform-tag"><b>macOS / Linux</b> Roadmap</span>
+    </div>
+
     <div class="hero-cta rise" style="--d:3">
-      <a class="btn btn-primary" href="mailto:native.espresso@gmail.com?subject=Trans-Title%20Early%20Access">Request Early Access</a>
-      <a class="btn btn-ghost" href="privacy.html">Privacy Policy</a>
+      <a class="btn btn-primary" href="#beta-queue">Join Closed Testing (v1.0.16)</a>
+      <a class="btn btn-ghost" href="#studios">Explore the Studios</a>
     </div>
     <ul class="chips rise" style="--d:4">
-      <li><i class="dot dot-green"></i>100% On-Device</li>
-      <li><i class="dot dot-cyan"></i>SRT &amp; VTT Export</li>
-      <li><i class="dot dot-magenta"></i>Zero Telemetry</li>
+      <li><i class="dot dot-green"></i>100% On-Device Processing</li>
+      <li><i class="dot dot-cyan"></i>4-Tier Speech Accuracy</li>
+      <li><i class="dot dot-magenta"></i>Lock-Screen Background Processing</li>
     </ul>
   </div>
   <svg class="hero-wave" id="heroWave" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
@@ -66,48 +78,282 @@
   </svg>
 </section>
 
-<!-- FEATURES -->
-<section id="features" class="section" data-accent="magenta">
+<!-- STUDIOS OVERVIEW -->
+<section id="studios" class="section" data-accent="magenta">
   <div class="wrap">
-    <p class="kicker reveal">Capabilities</p>
-    <h2 class="reveal">Engineered for creators and professionals</h2>
-    <div class="grid cards">
-      <article class="card reveal"><div class="ico" style="--c:var(--magenta)">✍</div><h3>Accurate Speech-to-Text</h3><p>Quantized speech models run directly on your phone's processor for real-time and batch subtitle generation.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--cyan)">⛨</div><h3>Absolute Privacy</h3><p>Your video drafts, client interviews, and voice memos never leave the phone. Full functionality works in airplane mode.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--blue)">⏱</div><h3>Auto Sync &amp; Timing</h3><p>Timestamp alignment down to millisecond accuracy with customizable caption block lengths.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--amber)">📄</div><h3>Multiple Export Formats</h3><p>Export clean .SRT, .VTT, or plain text transcripts ready for YouTube, Premiere, DaVinci, or social reels.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--green)">⚡</div><h3>Hardware Accelerated</h3><p>Optimized for ARM NEON and Android NNAPI for fast inference without battery drain.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--magenta)">✦</div><h3>No Monthly Lock-in</h3><p>Pay once for unlimited processing. Say goodbye to restrictive per-minute cloud billing.</p></article>
+    <p class="kicker reveal">Creative Workstation</p>
+    <h2 class="reveal">Four Integrated Production Studios</h2>
+    <p class="lede reveal">More than just a player — Trans-Title delivers an end-to-end studio workbench for transcribing, translating, orchestrating, and experiencing your media.</p>
+
+    <div class="grid cards" style="grid-template-columns:repeat(2,1fr);margin-top:36px;">
+      <!-- STUDIO 1 -->
+      <article class="card reveal" style="border-left:3px solid var(--magenta);">
+        <div class="ico" style="--c:var(--magenta)">✍</div>
+        <h3 style="font-size:1.3rem;">AI Transcribe Studio</h3>
+        <p>On-device speech recognition turning spoken words into synchronized subtitles. Features 4 accuracy tiers (Fair, Better, High, Superior), 5-minute continuous pipelining with 3-second overlap stitching, and atomic crash-safe saves.</p>
+        <div style="margin-top:14px;"><a class="mono" href="#transcribe" style="color:var(--magenta);">Explore Transcribe Engine →</a></div>
+      </article>
+
+      <!-- STUDIO 2 -->
+      <article class="card reveal" style="border-left:3px solid var(--cyan);">
+        <div class="ico" style="--c:var(--cyan)">🌐</div>
+        <h3 style="font-size:1.3rem;">Smart Translation Studio</h3>
+        <p>Neural subtitle translation engine operating completely offline. Extract embedded subtitle streams from video containers, translate cues across languages, and fine-tune timings in an interactive visual timeline editor.</p>
+        <div style="margin-top:14px;"><a class="mono" href="#translate" style="color:var(--cyan);">Explore Translation Suite →</a></div>
+      </article>
+
+      <!-- STUDIO 3 -->
+      <article class="card reveal" style="border-left:3px solid var(--blue);">
+        <div class="ico" style="--c:var(--blue)">🎛</div>
+        <h3 style="font-size:1.3rem;">Cross-Play Studio</h3>
+        <p>Multi-track video orchestration workbench. Combine videos with external dubbed audio tracks (with millisecond delay adjustment for perfect lip-sync) and multi-language sidecar subtitles (.srt, .vtt, .ass, .ttml).</p>
+        <div style="margin-top:14px;"><a class="mono" href="#crossplay" style="color:var(--blue);">Explore Cross-Play →</a></div>
+      </article>
+
+      <!-- STUDIO 4 -->
+      <article class="card reveal" style="border-left:3px solid var(--amber);">
+        <div class="ico" style="--c:var(--amber)">▶</div>
+        <h3 style="font-size:1.3rem;">Flagship Video &amp; Music Players</h3>
+        <p>True OLED dark mode video player with gesture controls (volume, brightness, scrub) and an ambient music player featuring real-time audio waveform visualizers and dynamic album art lighting.</p>
+        <div style="margin-top:14px;"><a class="mono" href="#players" style="color:var(--amber);">Explore Players →</a></div>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section id="how" class="section" data-accent="blue">
+<!-- TRANSCRIBE DEEP DIVE -->
+<section id="transcribe" class="section" data-accent="cyan">
   <div class="wrap">
-    <p class="kicker reveal">Workflow</p>
-    <h2 class="reveal">Three steps to synced subtitles</h2>
-    <ol class="steps">
-      <li class="reveal"><b class="mono">01</b><h3>Select Media</h3><p>Import video clips, voice notes, podcasts, or recordings from your storage.</p></li>
-      <li class="reveal"><b class="mono">02</b><h3>Local AI Processing</h3><p>Speech models decode audio and segment sentences completely on your phone.</p></li>
-      <li class="reveal"><b class="mono">03</b><h3>Review &amp; Export</h3><p>Adjust any wording on a visual timeline and export your subtitles or burned video.</p></li>
-    </ol>
+    <p class="kicker reveal">Speech-to-Text</p>
+    <h2 class="reveal">AI Transcribe Studio: Pure On-Device Precision</h2>
+    <p class="lede reveal">Convert voice memos, interviews, client calls, and video dialogues into millisecond-accurate subtitle cues without streaming a single byte to external servers.</p>
+
+    <div class="grid cards" style="margin-top:32px;">
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--cyan)">⚡</div>
+        <h3>4-Tier Accuracy Ladder</h3>
+        <p>Choose from <strong>Fair</strong> (lightweight &amp; fast), <strong>Better</strong> (everyday balance), <strong>High</strong> (complex multi-speaker dialogue), and <strong>Superior</strong> (maximum recognition precision). Optimized with device RAM safety guards.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--green)">∞</div>
+        <h3>5-Min Chunk Pipelining</h3>
+        <p>Continuous 5-minute processing windows paired with 3-second overlap stitching. Eliminates severed words at chunk boundaries and guarantees seamless subtitle continuity.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--magenta)">🛡</div>
+        <h3>Lock-Screen Backgrounding</h3>
+        <p>Resilient foreground media service with CPU wake-lock protection. Lock your phone, slip it in your pocket, or switch apps — transcription continues uninterrupted.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--amber)">💾</div>
+        <h3>Atomic Checkpoint Recovery</h3>
+        <p>Tasks save checkpoints after every completed audio slice. If interrupted by a system restart, transcription resumes automatically right where it left off.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--blue)">⏱</div>
+        <h3>Millisecond Timestamp Sync</h3>
+        <p>Speech boundaries are automatically mapped to precise start and end times, generating subtitle cues ready for video production.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--cyan)">📄</div>
+        <h3>Standard Export Formats</h3>
+        <p>Export directly to industry-standard <code>.SRT</code>, <code>.VTT</code>, or clean plain-text transcripts compatible with Premiere, DaVinci, YouTube, and reels.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSLATE DEEP DIVE -->
+<section id="translate" class="section" data-accent="green">
+  <div class="wrap">
+    <p class="kicker reveal">Global Reach</p>
+    <h2 class="reveal">Smart Translation Studio &amp; Subtitle Editor</h2>
+    <p class="lede reveal">Break language barriers privately. Translate subtitles into dozens of global languages right on your device, complete with a visual timeline editor.</p>
+
+    <div class="grid cards" style="grid-template-columns:repeat(3,1fr);margin-top:32px;">
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--green)">🔍</div>
+        <h3>Embedded Stream Extractor</h3>
+        <p>Import video files directly — Trans-Title automatically discovers and extracts embedded subtitle streams from MKV, MP4, and WebM containers.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--cyan)">🌐</div>
+        <h3>On-Device Neural Translation</h3>
+        <p>Neural translation packages run completely offline. Translate dialogue from English, Spanish, Chinese, Hindi, Arabic, and dozens more with zero API keys required.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--magenta)">✏</div>
+        <h3>Interactive Subtitle Editor</h3>
+        <p>Inspect, adjust wording, adjust cue timings, and preview changes on an interactive timeline before saving or exporting.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CROSS-PLAY STUDIO DEEP DIVE -->
+<section id="crossplay" class="section" data-accent="blue">
+  <div class="wrap">
+    <p class="kicker reveal">Multi-Track Orchestrator</p>
+    <h2 class="reveal">Cross-Play Studio: Audio &amp; Subtitle Workbench</h2>
+    <p class="lede reveal">Take full creative control of multi-track media. Pair foreign films with dubbed audio, align external subtitles, and adjust millisecond sync offsets on a live visual canvas.</p>
+
+    <div class="grid cards" style="grid-template-columns:repeat(3,1fr);margin-top:32px;">
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--blue)">🎚</div>
+        <h3>Millisecond Audio Lip-Sync</h3>
+        <p>Compensate for audio delay with positive or negative millisecond sync sliders, achieving frame-accurate lip-sync between video and secondary audio tracks.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--amber)">📂</div>
+        <h3>External &amp; Sidecar Subtitles</h3>
+        <p>Load external <code>.srt</code>, <code>.vtt</code>, <code>.ass</code>, and <code>.ttml</code> sidecars seamlessly over any video container without re-encoding.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--magenta)">📽</div>
+        <h3>Virtual Video Projects</h3>
+        <p>Save multi-track pairings as virtual projects for instantaneous instant playback anytime, or export composite media packages.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PLAYERS DEEP DIVE -->
+<section id="players" class="section" data-accent="magenta">
+  <div class="wrap">
+    <p class="kicker reveal">Audio &amp; Video Experience</p>
+    <h2 class="reveal">Flagship Media Browsing &amp; Playback</h2>
+    <p class="lede reveal">Engineered for media enthusiasts who appreciate fluid design, hardware-accelerated playback, and zero clutter.</p>
+
+    <div class="grid cards" style="grid-template-columns:repeat(2,1fr);margin-top:32px;">
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--cyan)">🎬</div>
+        <h3 style="font-size:1.25rem;">OLED Dark Mode Video Player</h3>
+        <p>Hardware-accelerated playback supporting 4K, HDR, and variable frame rates. Features vertical frosted gesture HUDs for brightness and volume with haptic feedback, audio track selectors, and customizable subtitle rendering.</p>
+      </article>
+      <article class="card reveal">
+        <div class="ico" style="--c:var(--magenta)">🎵</div>
+        <h3 style="font-size:1.25rem;">Ambient Audio Player &amp; Visualizer</h3>
+        <p>High-resolution local music player featuring dynamic background aura that adapts to your album artwork. Includes real-time audio waveform visualizers, track &amp; folder drill-downs, and seamless queue management.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- TESTING QUEUE & BETA SQUAD -->
+<section id="beta-queue" class="section" data-accent="amber">
+  <div class="wrap">
+    <p class="kicker reveal">Closed Beta Program</p>
+    <h2 class="reveal">Join the Trans-Title Closed Testing Queue</h2>
+    <p class="lede reveal">Trans-Title (v1.0.16) is currently in active Closed Testing on the Google Play Store. Join our tester cohort to receive direct access, test on your hardware, and earn a free lifetime Pro upgrade.</p>
+
+    <div class="grid plans" style="grid-template-columns:1.2fr 1fr;margin-top:32px;max-width:1000px;">
+      <article class="plan plan-pro reveal" style="align-items:flex-start;">
+        <span class="tag">Active Recruitment</span>
+        <h3 style="font-size:1.5rem;">Join the Testing Cohort</h3>
+        <p style="color:var(--muted);font-size:.95rem;line-height:1.6;">
+          Google Play requires verified active testers before public launch. By joining, you help us validate our on-device speech AI across different Android chipsets, accents, and recording environments.
+        </p>
+        <ul style="margin:10px 0 16px;">
+          <li class="yes">Direct Google Play Store Closed Testing invite</li>
+          <li class="yes">Test v1.0.16 with instant language setup &amp; speech shortcuts</li>
+          <li class="yes">Free lifetime Pro upgrade for active test contributors</li>
+          <li class="yes">Direct engineering feedback channel</li>
+        </ul>
+        <a class="btn btn-primary" href="mailto:native.espresso@gmail.com?subject=Join%20Trans-Title%20Closed%20Testing%20Queue&body=Hi%20Native%20Espresso%20Team%2C%0A%0AI%20would%20like%20to%20join%20the%20Google%20Play%20Closed%20Testing%20track%20for%20Trans-Title.%0A%0AMy%20Google%20Play%20Email%3A%20%0AMy%20Android%20Device%20Model%3A%20%0AAndroid%20OS%20Version%3A%20%0A%0AThank%20you!">Join the Closed Testing Queue →</a>
+      </article>
+
+      <article class="plan reveal" style="align-items:flex-start;">
+        <h3 style="font-size:1.3rem;">Onboarding Steps</h3>
+        <ol class="steps" style="grid-template-columns:1fr;margin-top:14px;gap:12px;width:100%;">
+          <li style="padding:16px;">
+            <b class="mono">01</b>
+            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Send Your Play Email</h4>
+            <p style="font-size:.85rem;color:var(--muted);">Email us your Google Play Store account email and Android device model.</p>
+          </li>
+          <li style="padding:16px;">
+            <b class="mono">02</b>
+            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Get Store Opt-in Link</h4>
+            <p style="font-size:.85rem;color:var(--muted);">We add your email to the authorized Play Console test list and email you the direct opt-in link.</p>
+          </li>
+          <li style="padding:16px;">
+            <b class="mono">03</b>
+            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Test &amp; Unlock Pro</h4>
+            <p style="font-size:.85rem;color:var(--muted);">Install the app, test transcription and playback, and submit your feedback for permanent Pro status.</p>
+          </li>
+        </ol>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section" data-accent="cyan">
+  <div class="wrap narrow">
+    <p class="kicker reveal">Common Questions</p>
+    <h2 class="reveal">Frequently Asked Questions</h2>
+    <div class="faq reveal" style="margin-top:24px;">
+      <details>
+        <summary>Does Trans-Title upload my audio, videos, or transcripts?</summary>
+        <p>No. Trans-Title is built on an absolute privacy architecture. All speech-to-text recognition, subtitle translation, and video processing runs 100% on your Android hardware. Your media never leaves your device and the app functions fully in airplane mode.</p>
+      </details>
+      <details>
+        <summary>What are the 4 accuracy tiers in AI Transcribe?</summary>
+        <p>We provide four optimized on-device models: <strong>Fair</strong> (ultra-lightweight for quick notes), <strong>Better</strong> (balanced for everyday dialogue), <strong>High</strong> (high-precision for multi-speaker discussions), and <strong>Superior</strong> (maximum recognition fidelity for studio work, gated safely for devices with &ge; 5 GB RAM).</p>
+      </details>
+      <details>
+        <summary>Can it transcribe long videos and podcasts without cutting off words?</summary>
+        <p>Yes. Trans-Title uses 5-minute continuous pipelining combined with a 3-second overlap stitching algorithm that ensures words at chunk boundaries are never truncated or duplicated.</p>
+      </details>
+      <details>
+        <summary>Does transcription continue when the screen is locked?</summary>
+        <p>Yes. Trans-Title runs a resilient foreground media service with CPU wake-lock protection so you can lock your screen or switch apps without interrupting the process.</p>
+      </details>
+      <details>
+        <summary>What is Cross-Play Studio?</summary>
+        <p>Cross-Play is our video workbench that lets you pair a video container with external dubbed audio tracks (with positive or negative millisecond delay adjustment for lip-sync) and subtitle sidecars, allowing you to preview or export multi-track media with ease.</p>
+      </details>
+      <details>
+        <summary>How do I become an official closed tester?</summary>
+        <p>Click "Join Closed Testing Queue" or email <a href="mailto:native.espresso@gmail.com">native.espresso@gmail.com</a> with your Google Play Store email address. We will add you to the Google Play Closed Testing track immediately.</p>
+      </details>
+    </div>
   </div>
 </section>
 </main>
 
+<!-- FOOTER -->
 <footer class="footer">
   <div class="wrap foot-in">
     <div>
       <a class="brand" href="../index.html"><span>Native Espresso</span></a>
-      <p class="muted">Trans-Title — Private on-device transcription.<br>Crafted by Native Espresso in Sargodha, Pakistan.</p>
+      <p class="muted">Trans-Title — Flagship multimedia suite &amp; on-device AI.<br>Crafted with precision by Native Espresso in Sargodha, Pakistan.</p>
     </div>
-    <nav aria-label="Trans-Title"><b>Trans-Title</b><a href="#features">Features</a><a href="#how">How it works</a></nav>
-    <nav aria-label="Legal"><b>Legal</b><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of service</a></nav>
-    <nav aria-label="Studio"><b>Native Espresso</b><a href="../index.html">All Projects</a><a href="../echo-cleaner/">Echo Cleaner</a></nav>
+    <nav aria-label="Trans-Title">
+      <b>Trans-Title</b>
+      <a href="#studios">Studios</a>
+      <a href="#transcribe">AI Transcribe</a>
+      <a href="#translate">Translation</a>
+      <a href="#crossplay">Cross-Play</a>
+      <a href="#beta-queue">Closed Testing</a>
+    </nav>
+    <nav aria-label="Legal">
+      <b>Legal</b>
+      <a href="privacy.html">Privacy policy</a>
+      <a href="terms.html">Terms of service</a>
+      <a href="mailto:native.espresso@gmail.com">Data deletion request</a>
+    </nav>
+    <nav aria-label="Studio">
+      <b>Native Espresso</b>
+      <a href="../index.html">Company Home</a>
+      <a href="../echo-cleaner/">Echo Cleaner</a>
+      <a href="https://github.com/NativeEspresso" target="_blank" rel="noopener">GitHub</a>
+    </nav>
   </div>
-  <div class="wrap foot-base mono">© <span id="yr"></span> Native Espresso · Trans-Title · 100% On-Device Processing.</div>
+  <div class="wrap foot-base mono">
+    © <span id="yr"></span> Native Espresso · Trans-Title · 100% On-Device Processing. Zero Surveillance.
+  </div>
 </footer>
+
 <script src="../assets/main.js"></script>
 </body>
 </html>

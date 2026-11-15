@@ -209,6 +209,13 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--line);b
 .project-links-sub a{color:var(--muted)}
 .project-links-sub a:hover{color:var(--cyan)}
 
+/* platform tags & testing queue */
+.platforms{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
+.platform-tag{font-family:var(--font-m);font-size:.7rem;padding:3px 9px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted);display:inline-flex;align-items:center;gap:5px}
+.platform-tag.active{color:var(--cyan);border-color:rgba(34,211,238,.3);background:rgba(34,211,238,.08)}
+.platform-tag.queue{color:var(--amber);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
+.platform-tag b{color:var(--ink);font-weight:600}
+
 /* responsive */
 @media (max-width:960px){
   .cards{grid-template-columns:1fr 1fr}

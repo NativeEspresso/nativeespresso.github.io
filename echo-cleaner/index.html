@@ -47,7 +47,7 @@
   <div class="orb orb-a" aria-hidden="true"></div>
   <div class="orb orb-b" aria-hidden="true"></div>
   <div class="wrap hero-in">
-    <p class="kicker rise" style="--d:0">Android · On-device AI · FFmpeg + ONNX Runtime</p>
+    <p class="kicker rise" style="--d:0">Android · On-Device Neural Audio Studio</p>
     <h1 class="rise" style="--d:1">Studio-clear voice.<br><span class="grad">Zero uploads.</span></h1>
     <p class="lede rise" style="--d:2">Echo Cleaner strips echo, background noise and room reverb — then boosts and clarifies your voice. Every sample is processed on your phone. Nothing ever leaves it.</p>
     <div class="hero-cta rise" style="--d:3">
@@ -56,7 +56,7 @@
     </div>
     <ul class="chips rise" style="--d:4">
       <li><i class="dot dot-green"></i>100% offline</li>
-      <li><i class="dot dot-cyan"></i>DeepFilterNet + Clear model</li>
+      <li><i class="dot dot-cyan"></i>Multi-Stage Neural Denoising</li>
       <li><i class="dot dot-magenta"></i>No account required</li>
     </ul>
   </div>
@@ -116,9 +116,9 @@
     <h2 class="reveal">Four problems. One tap.</h2>
     <div class="grid cards">
       <article class="card reveal"><div class="ico" style="--c:var(--magenta)">◉</div><h3>Echo removal</h3><p>Speaker-to-mic echo and double-talk artifacts suppressed without thinning the voice.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--amber)">≋</div><h3>Noise reduction</h3><p>DeepFilterNet neural denoising via ONNX Runtime removes hiss, hum, traffic and crowd noise.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--blue)">⌁</div><h3>De-reverb</h3><p>The Clear model drys out room tail so recordings sound close-mic’d, not bathroom-mic’d.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--green)">↯</div><h3>Boost &amp; clarify</h3><p>FFmpeg DSP loudness shaping lifts quiet speech and keeps peaks controlled.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--amber)">≋</div><h3>Noise reduction</h3><p>On-device neural denoising strips hiss, background hum, wind, traffic and crowd noise.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--blue)">⌁</div><h3>De-reverb</h3><p>Acoustic room model dries out room tail so recordings sound close-mic’d, not bathroom-mic’d.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--green)">↯</div><h3>Boost &amp; clarify</h3><p>Hardware-accelerated loudness shaping lifts quiet speech and keeps peaks controlled.</p></article>
       <article class="card reveal"><div class="ico" style="--c:var(--cyan)">⛨</div><h3>Truly offline</h3><p>No network permission needed for processing. Your recordings are never uploaded, logged or shared.</p></article>
       <article class="card reveal"><div class="ico" style="--c:var(--magenta)">✦</div><h3>Free &amp; Pro</h3><p>Start free with daily enhancements; go Pro for unlimited, ad-free processing.</p></article>
     </div>
@@ -132,7 +132,7 @@
     <h2 class="reveal">Import → enhance → export</h2>
     <ol class="steps">
       <li class="reveal"><b class="mono">01</b><h3>Pick a recording</h3><p>Voice memo, interview, lecture, field recording — any audio on your device.</p></li>
-      <li class="reveal"><b class="mono">02</b><h3>On-device inference</h3><p>FFmpeg DSP + Clear + DeepFilterNet (Rust→C++ via JNI) run locally through ONNX Runtime.</p></li>
+      <li class="reveal"><b class="mono">02</b><h3>On-device inference</h3><p>Proprietary acoustic de-reverberation and neural speech filters run locally with hardware acceleration.</p></li>
       <li class="reveal"><b class="mono">03</b><h3>Export the clean take</h3><p>Save or share the enhanced file. The original stays untouched.</p></li>
     </ol>
   </div>
@@ -176,9 +176,9 @@
     <p class="kicker reveal">Questions</p>
     <h2 class="reveal">FAQ</h2>
     <div class="faq reveal">
-      <details><summary>Does Echo Cleaner upload my audio?</summary><p>No. All enhancement runs on-device using FFmpeg and ONNX Runtime models. Processing works in airplane mode.</p></details>
+      <details><summary>Does Echo Cleaner upload my audio?</summary><p>No. All enhancement runs 100% on-device using our proprietary neural audio engine. Processing works fully in airplane mode.</p></details>
       <details><summary>How does the free tier work?</summary><p>One free enhancement per day, plus two extra unlocks by watching a rewarded ad. Pro removes limits and ads.</p></details>
-      <details><summary>What models power it?</summary><p>DeepFilterNet (Rust→C++ via JNI) for neural denoising, the Clear model for de-reverb, and FFmpeg DSP for echo handling, boost and clarity — all through ONNX Runtime.</p></details>
+      <details><summary>How does the enhancement engine work?</summary><p>Echo Cleaner processes audio through a multi-stage acoustic pipeline: acoustic echo cancellation, deep neural denoising, acoustic room de-reverberation, and hardware-accelerated dynamic range loudness shaping.</p></details>
       <details><summary>Is my purchase tied to an account?</summary><p>No account needed. Pro is handled by Google Play Billing and restores with your Play account.</p></details>
       <details><summary>How do I report a problem?</summary><p>Email <a href="mailto:native.espresso@gmail.com">native.espresso@gmail.com</a>. An in-app feedback form is coming; it will only send what you explicitly submit.</p></details>
     </div>

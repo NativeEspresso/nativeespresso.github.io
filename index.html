@@ -31,6 +31,7 @@
     </a>
     <nav class="links" id="menu" aria-label="Primary">
       <a href="#projects">Projects</a>
+      <a href="#beta-queue">Testing Queue</a>
       <a href="#philosophy">Philosophy</a>
       <a href="#tech">Tech Stack</a>
       <a href="#contact">Contact</a>
@@ -55,7 +56,7 @@
     </div>
     <ul class="chips rise" style="--d:4">
       <li><i class="dot dot-green"></i>100% On-Device Processing</li>
-      <li><i class="dot dot-cyan"></i>Native C++ / Rust / JNI</li>
+      <li><i class="dot dot-cyan"></i>Hardware-Accelerated DSP</li>
       <li><i class="dot dot-magenta"></i>Zero Data Surveillance</li>
     </ul>
   </div>
@@ -76,45 +77,55 @@
     <div class="spotlight-grid">
       <!-- ECHO CLEANER -->
       <article class="project-card reveal">
-        <span class="badge badge-beta">Closed Beta · Android</span>
+        <span class="badge badge-beta">Closed Testing · Android</span>
         <h3>
           <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><path d="M6 16h3l2-6 3 12 3-16 3 14 2-4h4" stroke="var(--cyan)" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Echo Cleaner
         </h3>
+        <div class="platforms">
+          <span class="platform-tag queue"><b>Android</b> Closed Testing</span>
+          <span class="platform-tag"><b>Windows</b> Planning</span>
+          <span class="platform-tag"><b>iOS</b> Planning</span>
+        </div>
         <p class="desc">Studio-clear voice processing directly on your phone. Eliminates speaker-to-mic acoustic echo, hiss, drone, and room reverb without thinning voice frequencies. Operates entirely in airplane mode.</p>
         <ul class="tags">
-          <li>DeepFilterNet</li>
-          <li>ONNX Runtime</li>
-          <li>FFmpeg DSP</li>
-          <li>C++ / JNI</li>
+          <li>Neural Denoising</li>
+          <li>Echo Suppression</li>
+          <li>Room De-Reverb</li>
+          <li>Voice Clarifier</li>
           <li>100% Offline</li>
         </ul>
         <div class="project-actions">
           <a class="btn btn-primary btn-sm" href="echo-cleaner/">Explore &amp; Live Demo →</a>
+          <a class="btn btn-ghost btn-sm" href="#beta-queue">Join Testing Queue</a>
           <a class="btn btn-ghost btn-sm" href="echo-cleaner/privacy.html">Privacy</a>
-          <a class="btn btn-ghost btn-sm" href="echo-cleaner/terms.html">Terms</a>
         </div>
       </article>
 
       <!-- TRANS-TITLE -->
       <article class="project-card reveal">
-        <span class="badge badge-dev">In Development · Android</span>
+        <span class="badge badge-dev">Closed Testing · Android v1.0.16</span>
         <h3>
           <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect x="4" y="6" width="24" height="20" rx="4" stroke="var(--magenta)" stroke-width="2.2" fill="none"/><path d="M8 18h6M8 21h10M17 18h7" stroke="var(--magenta)" stroke-width="2" stroke-linecap="round"/></svg>
           Trans-Title
         </h3>
-        <p class="desc">Private on-device transcription and subtitle generation. Automatically synchronizes accurate captions, handles speech-to-text, and produces SRT/VTT subtitles without streaming personal recordings to remote cloud APIs.</p>
+        <div class="platforms">
+          <span class="platform-tag queue"><b>Android</b> Closed Testing (v1.0.16)</span>
+          <span class="platform-tag"><b>Windows</b> Planning</span>
+          <span class="platform-tag"><b>iOS</b> Planning</span>
+        </div>
+        <p class="desc">Flagship multimedia player and AI studio suite. Combines 4-tier on-device speech-to-text, neural subtitle translation, and multi-track Cross-Play video orchestration with high-res video and ambient music players.</p>
         <ul class="tags">
-          <li>Speech AI</li>
-          <li>Media3</li>
-          <li>Jetpack Compose</li>
-          <li>Subtitles</li>
-          <li>Local-First</li>
+          <li>4-Tier Speech AI</li>
+          <li>Subtitle Translation</li>
+          <li>Cross-Play Studio</li>
+          <li>Hi-Res Players</li>
+          <li>100% Private</li>
         </ul>
         <div class="project-actions">
-          <a class="btn btn-primary btn-sm" href="trans-title/">Explore Project →</a>
+          <a class="btn btn-primary btn-sm" href="trans-title/">Explore Studio →</a>
+          <a class="btn btn-ghost btn-sm" href="#beta-queue">Join Testing Queue</a>
           <a class="btn btn-ghost btn-sm" href="trans-title/privacy.html">Privacy</a>
-          <a class="btn btn-ghost btn-sm" href="trans-title/terms.html">Terms</a>
         </div>
       </article>
 
@@ -125,17 +136,68 @@
           <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><circle cx="16" cy="16" r="10" stroke="var(--green)" stroke-width="2" fill="none" stroke-dasharray="3 3"/><circle cx="16" cy="16" r="3" fill="var(--green)"/></svg>
           More in the Pipeline
         </h3>
+        <div class="platforms">
+          <span class="platform-tag"><b>Android</b> Active Lab</span>
+          <span class="platform-tag"><b>Multiplatform</b> Prototyping</span>
+        </div>
         <p class="desc">Active experiments exploring local vector memory on mobile, low-latency DSP pipelines, and hardware-accelerated ML inference for developer and creator workflows.</p>
         <ul class="tags">
-          <li>KMP</li>
-          <li>Hardware NPU</li>
-          <li>Offline Vectors</li>
+          <li>Edge Intelligence</li>
+          <li>Local Vectors</li>
           <li>Zero Telemetry</li>
+          <li>Offline First</li>
         </ul>
         <div class="project-actions">
           <a class="btn btn-ghost btn-sm" href="mailto:native.espresso@gmail.com?subject=Native%20Espresso%20Ideas">Propose an Idea →</a>
           <a class="btn btn-ghost btn-sm" href="https://github.com/NativeEspresso" target="_blank" rel="noopener">GitHub</a>
         </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- TESTING QUEUE & BETA SQUAD -->
+<section id="beta-queue" class="section" data-accent="amber">
+  <div class="wrap">
+    <p class="kicker reveal">Early Access Program</p>
+    <h2 class="reveal">Join the Closed Testing Squad</h2>
+    <p class="lede reveal">We are actively preparing major Android production tracks for <strong>Trans-Title (v1.0.16)</strong> and <strong>Echo Cleaner</strong>. Join our closed testing group to test unreleased builds directly via Google Play, influence feature roadmaps, and receive complimentary lifetime Pro perks.</p>
+
+    <div class="grid plans" style="grid-template-columns:1.2fr 1fr;margin-top:32px;max-width:1000px;">
+      <article class="plan plan-pro reveal" style="align-items:flex-start;">
+        <span class="tag">Active Recruitment</span>
+        <h3 style="font-size:1.5rem;">Google Play Closed Testing Queue</h3>
+        <p style="color:var(--muted);font-size:.95rem;line-height:1.6;">
+          Google Play requires verified active testers before public store publication. By joining our testing track, you test raw on-device AI performance on real hardware and provide valuable telemetry and feedback.
+        </p>
+        <ul style="margin:10px 0 16px;">
+          <li class="yes">Direct Google Play Store track invitation</li>
+          <li class="yes">Access to Trans-Title v1.0.16 &amp; Echo Cleaner beta builds</li>
+          <li class="yes">Free lifetime Pro upgrade for active test contributors</li>
+          <li class="yes">Direct communication with the lead engineer</li>
+        </ul>
+        <a class="btn btn-primary" href="mailto:native.espresso@gmail.com?subject=Join%20Closed%20Testing%20Queue&body=Hi%20Native%20Espresso%20Team%2C%0A%0AI%20would%20like%20to%20join%20the%20Google%20Play%20Closed%20Testing%20track%20for%3A%0A%5B%20%5D%20Trans-Title%0A%5B%20%5D%20Echo%20Cleaner%0A%0AMy%20Google%20Play%20Email%3A%20%0AMy%20Device%20Model%3A%20%0A%0AThank%20you!">Join the Closed Testing Queue →</a>
+      </article>
+
+      <article class="plan reveal" style="align-items:flex-start;">
+        <h3 style="font-size:1.3rem;">How It Works</h3>
+        <ol class="steps" style="grid-template-columns:1fr;margin-top:14px;gap:12px;width:100%;">
+          <li style="padding:16px;">
+            <b class="mono">STEP 01</b>
+            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Send Your Play Account</h4>
+            <p style="font-size:.85rem;color:var(--muted);">Email us your Google Play Store email and device model.</p>
+          </li>
+          <li style="padding:16px;">
+            <b class="mono">STEP 02</b>
+            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Receive Direct Opt-In Link</h4>
+            <p style="font-size:.85rem;color:var(--muted);">We add you to the authorized testing group and send your Play Store opt-in URL.</p>
+          </li>
+          <li style="padding:16px;">
+            <b class="mono">STEP 03</b>
+            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Install, Test &amp; Shape</h4>
+            <p style="font-size:.85rem;color:var(--muted);">Download via Google Play, test speech &amp; audio tools, and help us finalize the release.</p>
+          </li>
+        </ol>
       </article>
     </div>
   </div>
@@ -185,22 +247,22 @@
 <section id="tech" class="section" data-accent="blue">
   <div class="wrap">
     <p class="kicker reveal">Under The Hood</p>
-    <h2 class="reveal">How our stack works</h2>
+    <h2 class="reveal">How our architecture works</h2>
     <ol class="steps">
       <li class="reveal">
         <b class="mono">01</b>
-        <h3>Edge AI &amp; Inference</h3>
-        <p>Quantized neural network weights running on ONNX Runtime with NNAPI/XNNPACK acceleration, ensuring minimal memory footprint and fast inference.</p>
+        <h3>On-Device Neural Inference</h3>
+        <p>Quantized speech and acoustic models running strictly on client hardware with mobile hardware acceleration, ensuring minimal battery impact and zero cloud latency.</p>
       </li>
       <li class="reveal">
         <b class="mono">02</b>
-        <h3>C++ &amp; FFmpeg DSP</h3>
-        <p>Low-level media processing via custom native shared libraries, high-performance JNI wrappers, and optimized audio/video decoding.</p>
+        <h3>Hardware-Accelerated DSP Pipelines</h3>
+        <p>Low-level audio/video decoding, multi-track container orchestration, and custom signal-processing filters optimized for modern mobile silicon.</p>
       </li>
       <li class="reveal">
         <b class="mono">03</b>
-        <h3>Modern Jetpack Compose</h3>
-        <p>100% declarative UI built with Jetpack Compose, Kotlin Coroutines, and Flow for smooth state management and zero legacy view hierarchy overhead.</p>
+        <h3>Modern Native Architecture</h3>
+        <p>100% declarative UI built with modern Android UI toolkits, dynamic ambient glow palettes, fluid spring physics, and resilient background services with wake-lock protection.</p>
       </li>
     </ol>
   </div>

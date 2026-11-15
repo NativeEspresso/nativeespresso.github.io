@@ -125,4 +125,49 @@ The following local repositories contain the production source code and developm
 > [!IMPORTANT]
 > **Strict Read-Only Access**: Treat `C:\Projects\Android\Trans-Title` and `C:\Projects\KMP\Echo-Cleaner` strictly as read-only references (`[READ_ONLY]`). Do not run write, edit, stage, or git operations against those project paths from the `Native-Espresso` web workspace.
 
+---
+
+## 8. Application Lifecycle & Multi-Platform Status Matrix
+
+Every application in the Native Espresso portfolio may support one or multiple platforms:
+* **Platforms**: `Android`, `Windows`, `iOS`, `macOS`, `Linux`
+
+Each supported platform tracks its own independent publication lifecycle status:
+1. **Published**: Live, publicly available on the official store (e.g. Google Play Store, Microsoft Store, App Store).
+2. **Unpublished**: In progress towards public release, categorized under distinct phases:
+   * **`Planning`**: Concept, product specification, architecture design, and feasibility testing.
+   * **`Development`**: Active engineering, UI implementation, and internal alpha builds.
+   * **`Closed-Testing`**: Active pre-release testing under store-gated programs (e.g., Google Play Closed Testing).
+   * **`Testing Queue / Beta Waitlist`**: Public invitation stage where users and visitors are recruited to join active closed testing cohorts by submitting their email.
+
+### Testing Queue Recruitment Standard
+On the company portal (`index.html`) and individual app landing pages, always maintain an active **Closed Testing Queue / Early Access Waitlist**:
+* Clearly display each app's platform support and active status badge (e.g., `Android: Closed Testing`, `Windows: Planning`).
+* Provide a direct CTA inviting visitors to join closed testing by emailing `native.espresso@gmail.com` with their Google Play / test device email.
+* Emphasize the value: early access to cutting-edge features, direct communication with the engineering team, and complimentary Pro perks for active feedback contributors.
+
+---
+
+## 9. Strict Intellectual Property Protection (IP Cloaking Rule)
+
+> [!CAUTION]
+> **Zero Disclosure of Internal Implementation Toolsets**:
+> Never reveal low-level internal toolchains, specific third-party libraries, underlying neural network model architectures, or internal extraction/JNI mechanics to the public on any website page, landing page, badge, or FAQ.
+
+### Why This Rule Exists:
+Publicly documenting our exact stack (e.g., specific open-source neural checkpoints, audio DSP libraries, and JNI bridges) gives competitors and scrapers an exact blueprint to clone our products.
+
+### Forbidden Words in Public User-Facing Text:
+* **DO NOT USE**: `FFmpeg`, `ONNX`, `ONNX Runtime`, `DeepFilterNet`, `Whisper`, `GGML`, `tiny-q5`, `base-q5`, `small-q5`, `medium-q5`, `ML Kit`, `JNI`, `16kHz PCM`, `Librosa`, `PyTorch`.
+
+### Permitted User-Facing Proprietary Terms:
+Replace all technical implementation details with benefit-driven, high-level, proprietary phrasing:
+* *Instead of "FFmpeg DSP"* → **"Studio-Grade Audio Engine"** or **"Hardware-Accelerated DSP Pipeline"**
+* *Instead of "DeepFilterNet + ONNX Runtime"* → **"Proprietary On-Device Neural Voice Filter"** or **"Edge Neural Denoising"**
+* *Instead of "Whisper / Speech AI JNI"* → **"High-Precision On-Device Speech Recognition"** or **"Neural Transcription Engine"**
+* *Instead of "Model tiers (tiny-q5, base-q5...)"* → **"Accuracy Tiers: Fair, Better, High, and Superior"**
+* *Instead of "Downloading model / extracting 16kHz audio"* → **"Preparing…"**
+* *Instead of "C++ / Rust / JNI"* → **"Native Hardware Acceleration"** or **"Bare-Metal Silicon Optimization"**
+
+
 
