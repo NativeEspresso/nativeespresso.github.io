@@ -100,3 +100,14 @@ When adding a new application to the portfolio (e.g., `voice-scribe`), adhere to
    * **Developer Email**: `native.espresso@gmail.com`
    * **Developer Website**: Use the app-specific URL (e.g., `https://nativeespresso.github.io/echo-cleaner/`) or the studio root `https://nativeespresso.github.io/`.
    * **Privacy Policy URL**: Always use the direct HTTPS link to the app's policy (e.g., `https://nativeespresso.github.io/echo-cleaner/privacy.html`).
+
+---
+
+## 6. Local Toolchain & Environment Runtimes
+
+The host environment has verified access to the following runtimes in `PATH`:
+* **Node.js** (`node`): Available for modern web workflows, package management, and asset pipelines.
+* **Python** (`python`): Available for automation, model conversion, and data scripting.
+* **FFmpeg** (`ffmpeg`): Available for audio/video manipulation, DSP testing, and codec processing.
+* **Java / OpenJDK** (`java`): Available for Android Gradle builds, Kotlin scripting, and bytecode analysis.
+
