@@ -11,9 +11,9 @@ This document serves as the operational manual and architectural guide for AI ag
 * **Official Website**: [https://nativeespresso.github.io/](https://nativeespresso.github.io/)
 * **GitHub Repository**: [NativeEspresso/nativeespresso.github.io](https://github.com/NativeEspresso/nativeespresso.github.io)
 * **Core Engineering Focus**:
-  * **100% On-Device Processing**: Deep learning models (DeepFilterNet, Whisper/Speech AI, ONNX Runtime) and media DSP (FFmpeg, native C++/Rust kernels) execute strictly on the client device.
+  * **100% On-Device Processing**: Deep neural engines, speech recognition models, and high-performance audio/video DSP kernels execute strictly on the client device.
   * **Zero Cloud Surveillance**: No telemetry, no behavioral profiling, and no uploading user audio, video, or documents to remote servers.
-  * **Native Performance**: Modern Android architecture powered by Jetpack Compose, Kotlin Coroutines, and JNI bindings for maximum efficiency and 120Hz responsiveness.
+  * **Native Performance**: Modern Android architecture powered by Jetpack Compose, Kotlin Coroutines, and native low-level silicon acceleration for maximum efficiency and 120Hz responsiveness.
 
 ---
 
@@ -191,6 +191,48 @@ Replace all technical implementation details with benefit-driven, high-level, pr
 * *Instead of "Model tiers (tiny-q5, base-q5...)"* → **"Accuracy Tiers: Fair, Better, High, and Superior"**
 * *Instead of "Downloading model / extracting 16kHz audio"* → **"Preparing…"**
 * *Instead of "C++ / Rust / JNI"* → **"Native Hardware Acceleration"** or **"Bare-Metal Silicon Optimization"**
+
+---
+
+## 10. Multi-Theme Architecture (Light & Dark Mode) & Typography Tokens
+
+The website supports instant light and dark mode switching across all 7 pages with persistent user preferences (`localStorage`) and system scheme fallback (`prefers-color-scheme`).
+
+### Typography & Palette Mapping by Context:
+
+| Project | Role | Font Family | Dark Mode Primary Tokens | Light Mode Primary Tokens |
+| :--- | :--- | :--- | :--- | :--- |
+| **Native Espresso** *(Company Hub)* | Display / Headings<br>Body Copy<br>Monospace | `"Space Grotesk"`<br>`"Plus Jakarta Sans"`<br>`"JetBrains Mono"` | Bg: `#05070D`<br>Surface: `#0A0E1A`<br>Espresso Gold: `#F59E0B`<br>Text: `#EDF2FC` | Bg: `#F8FAFC`<br>Surface: `#FFFFFF`<br>Espresso Amber: `#D97706`<br>Text: `#090D16` |
+| **Trans-Title** *(Multimedia Suite)* | Wordmark<br>Headings / Titles<br>Body / Metadata<br>Readouts / Stats | `"Bree Serif"`<br>`"Plus Jakarta Sans"`<br>`"Inter"`<br>`"Share Tech Mono"` | Bg: `#0C0C0E` (OLED)<br>Surface: `#141416`<br>Primary: `#9B72E8` (Lavender)<br>Secondary: `#4FD1C5` (Teal) | Bg: `#F8F9FA`<br>Surface: `#FFFFFF`<br>Primary: `#7A45C4` (Purple)<br>Secondary: `#0E9C90` (Deep Teal) |
+| **Echo Cleaner** *(Acoustic Studio)* | App Logo<br>Headings / Titles<br>Body / Controls<br>Telemetry / dB | `"Orbitron"`<br>`"Archivo"`<br>`"Manrope"`<br>`"Fira Code"` | Bg: `#0D1117`<br>Surface: `#161B22`<br>Primary: `#22D3EE` (Acoustic Cyan)<br>Noise: `#34D399` | Bg: `#F3F6F9`<br>Surface: `#FFFFFF`<br>Primary: `#0891B2` (Deep Cyan)<br>Noise: `#10B981` |
+
+### Zero-Flash Theme Bootstrapping:
+Every HTML document includes a synchronous, render-blocking `<script>` inside `<head>`:
+```html
+<script>(()=>{const t=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t)})();</script>
+```
+This guarantees zero flicker when loading or navigating across pages.
+
+---
+
+## 11. Google Play Developer Profile & Store Presence
+
+### Developer Profile Specifications:
+* **Developer Name**: Native Espresso
+* **Public Account Details**:
+  * Address: `Street # 16, Kajoor Wala Chonk, Sargodha, Islampura - 40100, Pakistan (PK)`
+  * Phone Number: `+923087337850`
+  * Developer Email: `native.espresso@gmail.com`
+* **Developer Website**: `https://nativeespresso.github.io/`
+* **Featured App**: `TransTitle: Translate Subtitle`
+* **Promotional Text** *(Max 140 chars)*:
+  * Primary: `"High-performance Android apps and on-device AI tools. 100% local processing, zero data collection, studio-grade performance."` (120 chars)
+
+### High-Resolution Branding Assets:
+Stored in `assets/branding/` for developer page upload:
+1. `developer-icon.png` (512x512, 24-bit RGB PNG, non-transparent): Minimalist, iconic studio espresso cup with acoustic/neural steam curves and high-contrast typography.
+2. `header-image.png` & `header-image.jpg` (4096x2304, 16:9 ratio, non-transparent): Cinematic widescreen studio banner featuring deep obsidian background, sweeping neural audio waveforms, and bold branding. Tested under 1 MB for Google Play Console compatibility.
+
 
 
 

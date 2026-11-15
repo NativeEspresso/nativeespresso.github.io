@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/company.css">
+<script>(()=>{const t=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t)})();</script>
 </head>
 <body>
 <div class="grain" aria-hidden="true"></div>
@@ -37,7 +38,10 @@
       <a href="#contact">Contact</a>
       <a class="btn btn-sm btn-primary" href="https://github.com/NativeEspresso" target="_blank" rel="noopener">GitHub</a>
     </nav>
-    <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark mode"></button>
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
   </div>
 </header>
 

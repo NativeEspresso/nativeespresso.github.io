@@ -19,3 +19,11 @@ Please refer to the primary guide: [AGENT.md](file:///c:/Projects/Web/Native-Esp
 4. **Modular Styling Systems**:
    * Company Homepage has its own styling system (`assets/company.css`).
    * Each app maintains its own app-like font family, color scheme, and distinct identity (`assets/trans-title.css`, `assets/style.css`).
+5. **Light & Dark Theme Systems & Typography**:
+   * **Company Hub**: `Space Grotesk` (Display), `Plus Jakarta Sans` (Body), `JetBrains Mono` (Code/Stats).
+   * **Trans-Title**: `Bree Serif` (Wordmark), `Plus Jakarta Sans` (Titles), `Inter` (Body), `Share Tech Mono` (Telemetry).
+   * **Echo Cleaner**: `Orbitron` (Logo), `Archivo` (Headings), `Manrope` (Body), `Fira Code` (Numeric).
+   * Zero-flash synchronous theme bootloader in `<head>` and dynamic toggle on all pages.
+6. **Google Play Profile Branding Assets**:
+   * Developer Website URL: `https://nativeespresso.github.io/`
+   * Assets at `assets/branding/`: `developer-icon.png` (512x512, 24-bit RGB), `header-image.png` & `header-image.jpg` (4096x2304, 16:9, <1MB).

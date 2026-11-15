@@ -36,6 +36,28 @@
   color-scheme: dark;
 }
 
+html[data-theme="light"] {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-alt: #f1f5f9;
+  --overlay: #e2e8f0;
+  --scrim: rgba(248, 250, 252, 0.85);
+
+  --ink: #090d16;
+  --muted: #475569;
+  --line: rgba(15, 23, 42, 0.1);
+  --line-strong: rgba(15, 23, 42, 0.22);
+
+  --espresso: #d97706;
+  --espresso-gold: #b45309;
+  --cyan: #0891b2;
+  --blue: #2563eb;
+  --magenta: #db2777;
+  --green: #059669;
+  --accent: var(--cyan);
+  color-scheme: light;
+}
+
 * { box-sizing: border-box; margin: 0; }
 html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--blue) var(--surface); }
 body {
@@ -43,10 +65,30 @@ body {
   color: var(--ink);
   font: 400 16px/1.65 var(--font-b);
   overflow-x: hidden;
+  transition: background-color 0.25s, color 0.25s;
   background-image:
     radial-gradient(1200px 560px at 80% -10%, rgba(79, 124, 255, 0.13), transparent 60%),
     radial-gradient(900px 500px at -5% 35%, rgba(34, 211, 238, 0.08), transparent 60%),
     radial-gradient(1000px 550px at 70% 105%, rgba(245, 158, 11, 0.08), transparent 60%);
+}
+
+html[data-theme="light"] body {
+  background-image:
+    radial-gradient(1200px 560px at 80% -10%, rgba(37, 99, 235, 0.08), transparent 60%),
+    radial-gradient(900px 500px at -5% 35%, rgba(8, 145, 178, 0.06), transparent 60%),
+    radial-gradient(1000px 550px at 70% 105%, rgba(217, 119, 6, 0.06), transparent 60%);
+}
+
+html[data-theme="light"] .nav.scrolled {
+  background: rgba(255, 255, 255, 0.88);
+}
+
+html[data-theme="light"] .chips li {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+html[data-theme="light"] .platform-tag {
+  background: rgba(15, 23, 42, 0.04);
 }
 
 ::selection { background: rgba(34, 211, 238, 0.35); }
@@ -118,6 +160,14 @@ section { scroll-margin-top: calc(var(--nav-h) + 16px); }
 .btn-ghost { background: transparent; }
 .btn-ghost:hover { background: var(--surface-alt); }
 .btn-sm { padding: 9px 16px; font-size: 0.86rem; }
+
+/* Theme Toggle Button */
+.theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 11px;
+  border: 1px solid var(--line); background: var(--overlay); color: var(--ink); cursor: pointer; transition: transform 0.15s, border-color 0.2s, background 0.2s;
+}
+.theme-toggle:hover { border-color: var(--line-strong); transform: scale(1.05); }
+.theme-toggle svg { display: block; color: var(--espresso-gold); }
 
 /* Hero */
 .hero { position: relative; padding: calc(var(--nav-h) + clamp(60px, 10vw, 120px)) 0 clamp(90px, 12vw, 150px); overflow: hidden; }

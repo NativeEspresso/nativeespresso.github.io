@@ -1,22 +1,115 @@
 /* ============ Echo Cleaner design system ============ */
-:root{
-  --bg:#07090f; --surface:#0d1220; --overlay:#141b2e; --scrim:rgba(4,6,12,.72);
-  --ink:#e9edf8; --muted:#94a1bf; --line:rgba(148,161,191,.16);
-  --cyan:#22d3ee; --blue:#4f7cff; --green:#a3e635; --magenta:#f43f7b;
-  --amber:#fbbf24; --red:#ef4444;
-  --accent:var(--cyan);
-  --font-d:"Space Grotesk",system-ui,sans-serif;
-  --font-b:"Inter",system-ui,sans-serif;
-  --font-m:"JetBrains Mono",ui-monospace,monospace;
-  --nav-h:68px; --rad:16px;
-  color-scheme:dark;
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&family=Manrope:wght@400;500;600;700&family=Orbitron:wght@600;700;800&display=swap');
+
+:root {
+  /* Surfaces – Dark (Deep Obsidian Graphite from Echo Cleaner) */
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-alt: #1f2732;
+  --overlay: #1f2732;
+  --scrim: rgba(13, 17, 23, 0.82);
+
+  --ink: #f1f5f9;
+  --muted: #94a3b8;
+  --line: #2d3746;
+  --line-strong: #3d4a5d;
+
+  /* Acoustic Cyan & Semantic Accents */
+  --cyan: #22d3ee;
+  --blue: #38bdf8;
+  --green: #34d399;
+  --magenta: #f9a8d4;
+  --amber: #fbbf24;
+  --red: #f87171;
+  --accent: var(--cyan);
+
+  /* Echo Cleaner Typography Roles */
+  --font-logo: "Orbitron", system-ui, sans-serif;
+  --font-d: "Archivo", system-ui, -apple-system, sans-serif;
+  --font-b: "Manrope", system-ui, -apple-system, sans-serif;
+  --font-m: "Fira Code", ui-monospace, monospace;
+
+  --nav-h: 68px;
+  --rad: 16px;
+  color-scheme: dark;
 }
-*{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font:400 16px/1.65 var(--font-b);overflow-x:hidden;
-  background-image:radial-gradient(1100px 520px at 85% -10%,rgba(79,124,255,.14),transparent 60%),
-                   radial-gradient(900px 480px at -10% 30%,rgba(34,211,238,.09),transparent 60%),
-                   radial-gradient(800px 500px at 60% 110%,rgba(244,63,123,.08),transparent 60%);}
+
+html[data-theme="light"] {
+  /* Surfaces – Light (Cool Ice Slate from Echo Cleaner) */
+  --bg: #f3f6f9;
+  --surface: #ffffff;
+  --surface-alt: #e8eef4;
+  --overlay: #e8eef4;
+  --scrim: rgba(243, 246, 249, 0.85);
+
+  --ink: #0f172a;
+  --muted: #5b6b7f;
+  --line: #d5dfea;
+  --line-strong: #b6c2cf;
+
+  --cyan: #0891b2;
+  --blue: #0284c7;
+  --green: #10b981;
+  --magenta: #f472b6;
+  --amber: #d97706;
+  --red: #ef4444;
+  --accent: var(--cyan);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--blue) var(--surface); }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 16px/1.65 var(--font-b);
+  overflow-x: hidden;
+  transition: background-color 0.25s, color 0.25s;
+  background-image:
+    radial-gradient(1100px 520px at 85% -10%, rgba(56, 189, 248, 0.12), transparent 60%),
+    radial-gradient(900px 480px at -10% 30%, rgba(34, 211, 238, 0.08), transparent 60%),
+    radial-gradient(800px 500px at 60% 110%, rgba(249, 168, 212, 0.08), transparent 60%);
+}
+
+html[data-theme="light"] body {
+  background-image:
+    radial-gradient(1100px 520px at 85% -10%, rgba(2, 132, 199, 0.08), transparent 60%),
+    radial-gradient(900px 480px at -10% 30%, rgba(8, 145, 178, 0.06), transparent 60%),
+    radial-gradient(1000px 550px at 70% 105%, rgba(16, 185, 129, 0.06), transparent 60%);
+}
+
+html[data-theme="light"] .nav.scrolled {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+html[data-theme="light"] .chips li {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+html[data-theme="light"] .scope {
+  background: linear-gradient(180deg, #ffffff, #e8eef4);
+  box-shadow: inset 0 0 40px rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="light"] .scope-hud span {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+html[data-theme="light"] .platform-tag {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="light"] .privacy-strip {
+  background: rgba(243, 246, 249, 0.7);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 11px;
+  border: 1px solid var(--line); background: var(--overlay); color: var(--ink); cursor: pointer; transition: transform 0.15s, border-color 0.2s, background 0.2s;
+}
+.theme-toggle:hover { border-color: var(--line-strong); transform: scale(1.05); }
+.theme-toggle svg { display: block; color: var(--cyan); }
 ::selection{background:rgba(34,211,238,.3)}
 /* palette scrollbar */
 html{scrollbar-width:thin;scrollbar-color:var(--blue) var(--surface)}
@@ -53,7 +146,7 @@ section{scroll-margin-top:calc(var(--nav-h) + 14px)}
 .nav{position:fixed;inset:0 0 auto;z-index:100;height:var(--nav-h);transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
 .nav.scrolled{background:rgba(7,9,15,.82);backdrop-filter:blur(14px);border-color:var(--line)}
 .nav-in{height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;gap:16px}
-.brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);font-family:var(--font-d);font-weight:700;font-size:1.05rem}
+.brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);font-family:var(--font-logo);font-weight:700;font-size:1.05rem;letter-spacing:0.04em}
 .brand:hover{text-decoration:none}
 .brand svg{color:var(--cyan)}
 .links{display:flex;align-items:center;gap:22px}
