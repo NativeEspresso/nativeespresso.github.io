@@ -118,12 +118,14 @@ The host environment has verified access to the following runtimes in `PATH`:
 The following local repositories contain the production source code and development assets for the applications hosted and showcased on this web portal. AI agents and developers may read, analyze, and inspect these directories for technical context, feature sets, audio/AI pipelines, and privacy compliance requirements, but **MUST NOT modify, create, or delete** any files within them from this web repository:
 
 * `C:\Projects\Android\Trans-Title` `[READ_ONLY]`
-  * **Trans-Title**: Native Android source code for on-device transcription, subtitle generation (SRT/VTT), and Media3 integration.
+  * **Trans-Title (Android)**: Native Android source code for on-device transcription, subtitle generation (SRT/VTT), multi-track Cross-Play orchestration, and Media3 players.
+* `C:\Projects\WinUI\Trans-Title` `[READ_ONLY]`
+  * **Trans-Title (Windows Desktop / WinUI 3)**: Native Windows App SDK / WinUI 3 desktop application source code for high-performance media playback, offline voice processing, and local media indexing.
 * `C:\Projects\KMP\Echo-Cleaner` `[READ_ONLY]`
-  * **Echo Cleaner**: Kotlin Multiplatform / Android source code for on-device neural audio enhancement, ONNX Runtime inference (DeepFilterNet, Clear model), and FFmpeg DSP.
+  * **Echo Cleaner**: Kotlin Multiplatform / Android source code for on-device neural audio enhancement, acoustic de-reverberation, and noise suppression.
 
 > [!IMPORTANT]
-> **Strict Read-Only Access**: Treat `C:\Projects\Android\Trans-Title` and `C:\Projects\KMP\Echo-Cleaner` strictly as read-only references (`[READ_ONLY]`). Do not run write, edit, stage, or git operations against those project paths from the `Native-Espresso` web workspace.
+> **Strict Read-Only Access**: Treat `C:\Projects\Android\Trans-Title`, `C:\Projects\WinUI\Trans-Title`, and `C:\Projects\KMP\Echo-Cleaner` strictly as read-only references (`[READ_ONLY]`). Do not run write, edit, stage, or git operations against those project paths from the `Native-Espresso` web workspace.
 
 ---
 
@@ -140,11 +142,32 @@ Each supported platform tracks its own independent publication lifecycle status:
    * **`Closed-Testing`**: Active pre-release testing under store-gated programs (e.g., Google Play Closed Testing).
    * **`Testing Queue / Beta Waitlist`**: Public invitation stage where users and visitors are recruited to join active closed testing cohorts by submitting their email.
 
-### Testing Queue Recruitment Standard
-On the company portal (`index.html`) and individual app landing pages, always maintain an active **Closed Testing Queue / Early Access Waitlist**:
-* Clearly display each app's platform support and active status badge (e.g., `Android: Closed Testing`, `Windows: Planning`).
-* Provide a direct CTA inviting visitors to join closed testing by emailing `native.espresso@gmail.com` with their Google Play / test device email.
-* Emphasize the value: early access to cutting-edge features, direct communication with the engineering team, and complimentary Pro perks for active feedback contributors.
+### Current Portfolio Platform Statuses:
+* **Trans-Title**:
+  * `Android`: **`Closed-Testing`** (v1.0.16 active on Google Play Store)
+  * `Windows (WinUI 3)`: **`Development`** (Native Windows desktop app at `C:\Projects\WinUI\Trans-Title`)
+  * `iOS`: **`Planning`**
+  * `macOS / Linux`: **`Planning`**
+* **Echo Cleaner**:
+  * `Android`: **`Testing Queue / Closed Testing Preparation`** (Finalizing for Google Play Closed Testing release)
+  * `iOS`: **`Planning`**
+  * `Windows / Others`: **`Planning`**
+
+---
+
+## 9. Modular Styling Architecture (Company vs. App-Level Themes)
+
+To ensure the studio brand feels unified yet each app feels bespoke and prominent:
+1. **Company Portal Theme (`assets/company.css`)**:
+   * Has its **own authoritative styling system** distinct from individual apps.
+   * Typography: Display font `"Space Grotesk"`, body font `"Plus Jakarta Sans"`, monospace `"JetBrains Mono"`.
+   * Color Palette: Obsidian dark space (`#05070d`), warm espresso gold (`#f59e0b`), electric cyan (`#22d3ee`), and cobalt blue (`#4f7cff`).
+   * Tailored for executive showcase: Project spotlights, platform matrices, testing queues, and engineering principles.
+2. **App-Specific Styling Systems**:
+   * Each app keeps its own app-like font family, color scheme, and unique visual identity:
+     * **Echo Cleaner** (`assets/style.css`): Tailored for acoustic sound engineering — cyan (`#22d3ee`), electric emerald (`#a3e635`), interactive signal waveform canvas, and acoustic dB readouts.
+     * **Trans-Title** (`assets/trans-title.css`): Tailored for cinematic media and creative studios — OLED black canvas (`#04060b`), vivid neon magenta (`#f43f7b`), electric cyan (`#22d3ee`), and cinema violet (`#8b5cf6`).
+   * *Rule*: App styling can evolve independently whenever needed to highlight prominent features, as long as it remains cohesive and functional.
 
 ---
 
