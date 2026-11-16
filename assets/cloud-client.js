@@ -13,7 +13,8 @@
 (function () {
   "use strict";
 
-  const API_BASE = window.NE_API_BASE || "";
+  const DEFAULT_API_BASE = "https://native-espresso-web-function-epbhdxbxbybte6bz.centralus-01.azurewebsites.net";
+  const API_BASE = window.NE_API_BASE || DEFAULT_API_BASE;
   const STORAGE_KEY = "ne_tester_tickets";
   const ISSUE_STORAGE_KEY = "ne_submitted_tickets";
 
