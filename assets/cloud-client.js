@@ -639,8 +639,9 @@
     }
 
     function handleFile(file) {
-      if (file.size > 5 * 1024 * 1024) {
-        alert("File size exceeds 5 MB limit.");
+      const maxMb = 15;
+      if (file.size > maxMb * 1024 * 1024) {
+        alert(`File size exceeds ${maxMb} MB limit.`);
         return;
       }
 
@@ -651,12 +652,17 @@
 
         if (filePreview) {
           const isImg = file.type.startsWith("image/");
+          const isVideo = file.type.startsWith("video/");
+          const sizeKb = (file.size / 1024).toFixed(1);
+          const sizeStr = file.size > 1024 * 1024 ? `${(file.size / (1024 * 1024)).toFixed(2)} MB` : `${sizeKb} KB`;
+
           filePreview.innerHTML = `
             <div class="file-chip">
-              <span>📎 ${file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
+              <span>${isVideo ? "🎬 Video:" : "📎"} ${file.name} (${sizeStr})</span>
               <button type="button" class="chip-remove" data-remove-file title="Remove file">✕</button>
             </div>
             ${isImg ? `<img src="${e.target.result}" class="preview-thumb" alt="Upload thumbnail" />` : ""}
+            ${isVideo ? `<div style="font-size:0.75rem;color:var(--muted);margin-top:2px;">🎬 Video clip ready for Azure Blob Storage upload</div>` : ""}
           `;
           filePreview.querySelector("[data-remove-file]")?.addEventListener("click", () => {
             currentAttachment = { base64: null, fileName: null };
