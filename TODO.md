@@ -64,22 +64,23 @@ This file serves as the single source of truth for ongoing development, complete
 * [x] **Azure Blob Storage (sharedstoragepool)**:
   * Container: `support-attachments`
   * Read/Write verification: **PASS** (test blob uploaded and cleaned up).
-* [ ] **Azure Function App (native-espresso-web-function)**:
-  * Plan: Flex Consumption (.NET 10 LTS Isolated Worker, 512 MB, Linux, Central US)
-  * Deploy code package to Azure Function App.
-  * Configure Application Settings (`AZURE_SQL_CONNECTION_STRING`, `BLOB_STORAGE_CONNECTION_STRING`, `RESEND_API_KEY`, `BREVO_API_KEY`).
-  * Configure CORS to allow `https://nativeespresso.github.io`.
-  * Point `window.NE_API_BASE` in `assets/cloud-client.js` to live URL.
+* [x] **Azure Function App (native-espresso-web-function)**:
+  * Plan: Flex Consumption (.NET 10 LTS Isolated Worker, 512 MB, Linux Ubuntu 24.04, Central US)
+  * Default Domain: `native-espresso-web-function-epbhdxbxbybte6bz.centralus-01.azurewebsites.net`
+  * Code Package Deployed: **PASS** (All 5 endpoints active: `ApproveTester`, `CheckTesterStatus`, `HealthCheck`, `RegisterTester`, `ReportIssue`).
+  * App Settings Synchronized: `AZURE_SQL_CONNECTION_STRING`, `BLOB_STORAGE_CONNECTION_STRING`, `STORAGE_ACCOUNT_NAME`, `ADMIN_API_KEY`.
+  * Live `/api/health` Check: **PASS** (`status: Healthy`, `database: connected`, `blobStorage: Configured`).
+  * Frontend Web Client: Configured `DEFAULT_API_BASE` in `assets/cloud-client.js` and pushed to GitHub.
+* [x] **Live End-to-End Validation**:
+  * Tester Registration: **PASS** (Tested with `test.verification@nativeespresso.com` -> saved in `dbo.Testers` -> verified via `/api/testers/status`).
+  * Diagnostic Issue Report & Storage: **PASS** (Tested with Base64 payload -> uploaded to `sharedstoragepool/support-attachments` -> ticket `NE-DB566AF4` saved in `dbo.IssueReports` -> verified public attachment download).
 
 ---
 
-## 🟡 3. Active Next Steps
+## 🟡 3. Active Next Steps & Optional Enhancements
 
-* [ ] **Azure Function App Deployment**:
-  * Copy the exact **Default domain** from the Function App Overview tab in Azure Portal.
-  * Deploy backend binaries to `native-espresso-web-function`.
-* [ ] **Dual-Email Cascade API Keys (Free Tier)**:
-  * Resend (100 emails/day free) & Brevo (300 emails/day free) keys when ready.
-* [ ] **Live End-to-End Validation**:
-  * Join closed testing queue on web portal -> check row in `dbo.Testers`.
-  * Submit support ticket with video/image attachment -> check blob in `support-attachments` and ticket in `dbo.IssueReports`.
+* [ ] **Azure Portal CORS (30-second task)**:
+  * In Azure Portal -> `native-espresso-web-function` -> **API** -> **CORS**:
+  * Add `https://nativeespresso.github.io` (and optionally `http://localhost:5500`) to Allowed Origins and click **Save**.
+* [ ] **Dual-Email Cascade API Keys (Free Tier - When Ready)**:
+  * Optional: Generate free API keys on Resend (100 emails/day) and Brevo (300 emails/day) and paste into Azure App Settings for automated email dispatches.
