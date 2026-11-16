@@ -38,52 +38,48 @@ This file serves as the single source of truth for ongoing development, complete
   * Auto-detect OS, screen resolution, browser language, and device environment helper.
   * Drag-and-drop file attachment dropzone with thumbnail preview, size check (5MB), and Base64 encoding.
   * Ticket status lookup form (`NE-XXXXXXXX`) for returning users.
-* [x] **C# .NET 8 Isolated Worker Azure Functions Backend (Isolated Private Repo)**:
+* [x] **C# .NET 10 Isolated Worker Azure Functions Backend (Isolated Private Repo)**:
   * Repository: `https://github.com/NativeEspresso/Native-Espresso-Backend` (Private)
   * Local Project: `C:\Projects\Web\Native-Espresso-Backend`
-  * Dual-Email Cascade Service (`Resend` primary + `Brevo` fallback) for 100% cost-free operation (400 emails/day, 12,000/mo).
-  * Azure SQL database service with `schema.sql` (compatible with Azure SQL Free Tier).
-  * Azure Blob Storage service for crash logs and error screenshots.
-  * Rest API triggers: `/api/testers/register`, `/api/testers/status`, `/api/admin/approve-tester`, `/api/support/report-issue`.
-  * Verified compilation in dedicated repo: **0 warnings, 0 errors**.
+  * Upgraded to **.NET 10 (LTS)** with `Microsoft.Azure.Functions.Worker.Sdk` v2.1.0 to match Azure Flex Consumption deployment.
+  * Dual-Email Cascade Service (`Resend` primary + `Brevo` fallback) for 100% cost-free operation.
+  * Azure SQL database service with `schema.sql` (compatible with Azure SQL Free Tier, serverless auto-pause retry loop).
+  * Azure Blob Storage service for error screenshots, diagnostic logs, and short screen-recording videos up to 15 MB in container `support-attachments`.
+  * Support app reference tracking: Added `[AppName]` column and `[IX_IssueReports_AppId]` index to filter issues by Trans-Title, Echo Cleaner, or Studio/General.
+  * Rest API triggers: `/api/testers/register`, `/api/testers/status`, `/api/admin/approve-tester`, `/api/support/report-issue`, `/api/health`.
+  * Automated diagnostic test suite (`.\test-cloud.ps1`) verifying TCP Port 1433, Azure SQL authentication & schema, and Blob Storage read/write.
+  * Verified compilation in dedicated repo: **0 errors**.
   * Decoupled from public frontend repo for maximum security and IP protection.
 
 ---
 
-## 🟡 2. Active Focus: Azure Cloud Provisioning & Account Setup
+## 🟢 2. Verified Cloud Infrastructure
 
-Now that the frontend GUI is 100% complete and the backend is securely isolated in its own private repository (`Native-Espresso-Backend`), the next step is to provision the free-tier cloud resources and communication accounts:
-
-* [ ] **Azure SQL Database (Free Tier)**:
-  * Create Azure SQL Database on the free offer (32 GB storage, 100,000 vCore seconds/month free).
-  * Run `schema.sql` in Azure SQL Query Editor.
-  * Get connection string: `Server=tcp:your-server.database.windows.net...`
-* [ ] **Azure Blob Storage (Standard LRS)**:
-  * Create storage account with container `issue-attachments`.
-  * Get storage connection string: `DefaultEndpointsProtocol=https;AccountName=...`
-* [ ] **Dual-Email Cascade API Keys (100% Free)**:
-  * **Resend** (Primary: 100 emails/day free): Sign up at `resend.com`, generate API key `re_...`
-  * **Brevo** (Fallback: 300 emails/day free): Sign up at `brevo.com`, generate API key `xkeysib-...`
-* [ ] **Azure Function App (.NET 8 Isolated)**:
-  * Create Azure Function App on Consumption Plan (1 million executions/month free).
-  * Configure Application Settings in Azure Portal.
-  * Deploy from `C:\Projects\Web\Native-Espresso-Backend` via `func azure functionapp publish`.
-* [ ] **CORS & Web Linking**:
-  * Allow origin `https://nativeespresso.github.io` in Azure Function App CORS.
-  * Set `window.NE_API_BASE` in `assets/cloud-client.js`.
+* [x] **Azure SQL Database (Free Tier)**:
+  * Server: `native-espresso-web-server.database.windows.net`, Database: `Native-Espresso-Web-DB`
+  * Auto-pause enabled, Overage billing disabled (100% free tier guarantee).
+  * TCP Port 1433: **PASS**
+  * Authentication: **PASS**
+  * Tables: `dbo.Testers`, `dbo.IssueReports` verified.
+* [x] **Azure Blob Storage (sharedstoragepool)**:
+  * Container: `support-attachments`
+  * Read/Write verification: **PASS** (test blob uploaded and cleaned up).
+* [ ] **Azure Function App (native-espresso-web-function)**:
+  * Plan: Flex Consumption (.NET 10 LTS Isolated Worker, 512 MB, Linux, Central US)
+  * Deploy code package to Azure Function App.
+  * Configure Application Settings (`AZURE_SQL_CONNECTION_STRING`, `BLOB_STORAGE_CONNECTION_STRING`, `RESEND_API_KEY`, `BREVO_API_KEY`).
+  * Configure CORS to allow `https://nativeespresso.github.io`.
+  * Point `window.NE_API_BASE` in `assets/cloud-client.js` to live URL.
 
 ---
 
-## ⚪ 3. Upcoming Milestones (Post-Frontend)
+## 🟡 3. Active Next Steps
 
-* [ ] **User Azure Resource Provisioning**:
-  * User provisions Azure SQL Database (Free Tier), Azure Storage Account, and Function App.
-  * User signs up for free accounts on Resend (100/day free) and Brevo (300/day free) and generates API keys.
-* [ ] **Cloud Backend Activation & Deployment**:
-  * Run `schema.sql` in Azure SQL Query Editor.
-  * Deploy `NativeEspresso.Cloud` via Azure Functions Core Tools.
-  * Configure CORS for `https://nativeespresso.github.io`.
-  * Point `window.NE_API_BASE` in the web client to the live Azure Function App URL.
-* [ ] **End-to-End Live Validation**:
-  * Submit live test email -> verify insertion in Azure SQL -> verify welcome email receipt.
-  * Submit support ticket with screenshot -> verify storage in Azure Blob -> verify developer alert email.
+* [ ] **Azure Function App Deployment**:
+  * Copy the exact **Default domain** from the Function App Overview tab in Azure Portal.
+  * Deploy backend binaries to `native-espresso-web-function`.
+* [ ] **Dual-Email Cascade API Keys (Free Tier)**:
+  * Resend (100 emails/day free) & Brevo (300 emails/day free) keys when ready.
+* [ ] **Live End-to-End Validation**:
+  * Join closed testing queue on web portal -> check row in `dbo.Testers`.
+  * Submit support ticket with video/image attachment -> check blob in `support-attachments` and ticket in `dbo.IssueReports`.
