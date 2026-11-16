@@ -1,14 +1,3 @@
-# .NET build artifacts
-bin/
-obj/
-*.user
-*.suo
-.vs/
-_bundle/
-
-# Local Azure Functions settings (contains API keys)
-backend/**/local.settings.json
-
 # Node & package caches
 node_modules/
 

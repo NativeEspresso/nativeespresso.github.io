@@ -38,21 +38,25 @@ This file serves as the single source of truth for ongoing development, complete
   * Auto-detect OS, screen resolution, browser language, and device environment helper.
   * Drag-and-drop file attachment dropzone with thumbnail preview, size check (5MB), and Base64 encoding.
   * Ticket status lookup form (`NE-XXXXXXXX`) for returning users.
-* [x] **C# .NET 8 Isolated Worker Azure Functions Backend (`backend/NativeEspresso.Cloud/`)**:
+* [x] **C# .NET 8 Isolated Worker Azure Functions Backend (Isolated Private Repo)**:
+  * Repository: `https://github.com/NativeEspresso/Native-Espresso-Backend` (Private)
+  * Local Project: `C:\Projects\Web\Native-Espresso-Backend`
   * Dual-Email Cascade Service (`Resend` primary + `Brevo` fallback) for 100% cost-free operation (400 emails/day, 12,000/mo).
   * Azure SQL database service with `schema.sql` (compatible with Azure SQL Free Tier).
   * Azure Blob Storage service for crash logs and error screenshots.
   * Rest API triggers: `/api/testers/register`, `/api/testers/status`, `/api/admin/approve-tester`, `/api/support/report-issue`.
-  * Verified compilation: **0 warnings, 0 errors**.
+  * Verified compilation in dedicated repo: **0 warnings, 0 errors**.
+  * Decoupled from public frontend repo for maximum security and IP protection.
 
 ---
 
 ## 🟡 2. Active Focus: Azure Cloud Provisioning & Account Setup
 
-Now that the frontend GUI is 100% complete and fully verified across all pages, the next step is for the user to provision the free-tier cloud resources and communication accounts:
+Now that the frontend GUI is 100% complete and the backend is securely isolated in its own private repository (`Native-Espresso-Backend`), the next step is to provision the free-tier cloud resources and communication accounts:
 
 * [ ] **Azure SQL Database (Free Tier)**:
   * Create Azure SQL Database on the free offer (32 GB storage, 100,000 vCore seconds/month free).
+  * Run `schema.sql` in Azure SQL Query Editor.
   * Get connection string: `Server=tcp:your-server.database.windows.net...`
 * [ ] **Azure Blob Storage (Standard LRS)**:
   * Create storage account with container `issue-attachments`.
@@ -62,8 +66,11 @@ Now that the frontend GUI is 100% complete and fully verified across all pages, 
   * **Brevo** (Fallback: 300 emails/day free): Sign up at `brevo.com`, generate API key `xkeysib-...`
 * [ ] **Azure Function App (.NET 8 Isolated)**:
   * Create Azure Function App on Consumption Plan (1 million executions/month free).
-  * Set Application Settings (`local.settings.json` keys).
-  * Deploy backend via `func azure functionapp publish`.
+  * Configure Application Settings in Azure Portal.
+  * Deploy from `C:\Projects\Web\Native-Espresso-Backend` via `func azure functionapp publish`.
+* [ ] **CORS & Web Linking**:
+  * Allow origin `https://nativeespresso.github.io` in Azure Function App CORS.
+  * Set `window.NE_API_BASE` in `assets/cloud-client.js`.
 
 ---
 
