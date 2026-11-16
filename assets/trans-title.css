@@ -287,11 +287,103 @@ section { scroll-margin-top: calc(var(--nav-h) + 14px); }
 .foot-in p { font-size: 0.88rem; margin-top: 10px; }
 .foot-base { margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
 
+/* ==========================================================================
+   Interactive Testing Queue & Issue Diagnostic Portal
+   ========================================================================== */
+.queue-card {
+  border: 1px solid var(--line); border-radius: var(--rad); background: var(--surface);
+  padding: clamp(24px, 4vw, 36px); position: relative; overflow: hidden; transition: border-color 0.25s, box-shadow 0.25s;
+}
+.queue-card:hover { border-color: var(--line-strong); }
+.queue-header { margin-bottom: 22px; }
+.queue-badge {
+  display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-m); font-size: 0.74rem;
+  padding: 4px 12px; border-radius: 999px; background: var(--overlay); border: 1px solid var(--line);
+  color: var(--primary); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.queue-badge.pending { color: var(--amber); border-color: rgba(251, 191, 36, 0.3); }
+.queue-badge.approved { color: var(--green); border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.08); }
+
+.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 10px var(--primary); animation: pulse 2s infinite; }
+.pulse-dot-amber { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 10px var(--amber); animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
+
+.queue-desc { color: var(--muted); font-size: 0.95rem; margin-top: 6px; max-width: 60ch; }
+.input-wrap { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.queue-input {
+  flex: 1; min-width: 260px; background: var(--overlay); border: 1px solid var(--line); border-radius: 12px;
+  padding: 13px 18px; color: var(--ink); font: 500 0.95rem var(--font-b); outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.queue-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(155, 114, 232, 0.18); }
+.queue-btn { padding: 13px 24px; white-space: nowrap; }
+.queue-meta {
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 14px;
+  font-size: 0.78rem; color: var(--muted); font-family: var(--font-m);
+}
+.queue-note { opacity: 0.8; }
+
+/* Approved state deck & QR code */
+.approved-deck {
+  display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; margin-top: 20px;
+  padding-top: 20px; border-top: 1px solid var(--line);
+}
+.qr-box {
+  display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; border-radius: 14px;
+  background: #ffffff; color: #000000; border: 1px solid var(--line); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+.qr-canvas svg { display: block; border-radius: 4px; }
+.qr-caption { font: 600 0.7rem var(--font-m); color: #334155; text-align: center; text-transform: uppercase; letter-spacing: 0.05em; }
+.approved-actions { display: flex; flex-direction: column; gap: 14px; }
+.steps-mini { display: flex; flex-direction: column; gap: 6px; font-size: 0.88rem; color: var(--muted); }
+.step-m b { color: var(--ink); margin-right: 4px; }
+
+/* Pending state notice */
+.pending-notice {
+  margin-top: 18px; padding: 18px; border-radius: 14px; background: var(--overlay); border: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.pending-notice p { color: var(--muted); font-size: 0.92rem; }
+.ticket-status-pill {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-family: var(--font-m); font-size: 0.82rem; color: var(--amber);
+}
+.ticket-status-pill b { color: var(--ink); }
+
+/* Support & Diagnostic Portal */
+.support-portal {
+  margin-top: 32px; border: 1px solid var(--line); border-radius: var(--rad); background: var(--surface);
+  padding: clamp(24px, 4vw, 36px); display: flex; flex-direction: column; gap: 24px;
+}
+.support-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.troubleshoot-box {
+  padding: 18px 22px; border-radius: 14px; background: rgba(155, 114, 232, 0.08); border: 1px solid rgba(155, 114, 232, 0.25);
+  margin-bottom: 16px;
+}
+.tb-title { font: 700 0.94rem var(--font-b); color: var(--primary); margin-bottom: 8px; }
+.tb-steps { padding-left: 20px; font-size: 0.9rem; color: var(--muted); display: flex; flex-direction: column; gap: 8px; line-height: 1.5; }
+.tb-steps code { font-family: var(--font-m); background: var(--overlay); padding: 2px 6px; border-radius: 4px; color: var(--ink); }
+.tb-steps kbd { font-family: var(--font-m); background: var(--overlay); border: 1px solid var(--line); padding: 1px 5px; border-radius: 4px; font-size: 0.8rem; }
+.form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.form-row label { font-size: 0.86rem; font-weight: 600; color: var(--ink); }
+.form-select, .form-textarea {
+  background: var(--overlay); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px;
+  color: var(--ink); font: 400 0.92rem var(--font-b); outline: none; transition: border-color 0.2s;
+}
+.form-select:focus, .form-textarea:focus { border-color: var(--primary); }
+.form-textarea { resize: vertical; min-height: 90px; }
+.alert-success {
+  padding: 18px 22px; border-radius: 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--ink);
+}
+.alert-success b { color: var(--green); display: block; margin-bottom: 4px; font-size: 1rem; }
+.alert-success p { color: var(--muted); font-size: 0.92rem; margin: 0; }
+
 /* Responsive */
 @media (max-width: 960px) {
   .cards { grid-template-columns: 1fr 1fr; }
   .foot-in { grid-template-columns: 1fr 1fr; }
   .legal-in { grid-template-columns: 1fr; }
+  .support-grid { grid-template-columns: 1fr; }
+  .approved-deck { grid-template-columns: 1fr; justify-items: center; text-align: center; }
   .toc { position: static; flex-direction: row; flex-wrap: wrap; border-left: 0; border-bottom: 1px solid var(--line); padding: 0 0 14px; }
 }
 @media (max-width: 720px) {

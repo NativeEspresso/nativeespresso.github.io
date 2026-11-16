@@ -33,6 +33,7 @@
     <nav class="links" id="menu" aria-label="Primary">
       <a href="#projects">Projects</a>
       <a href="#beta-queue">Testing Queue</a>
+      <a href="#support">Support &amp; Diagnostic</a>
       <a href="#philosophy">Philosophy</a>
       <a href="#tech">Tech Stack</a>
       <a href="#contact">Contact</a>
@@ -167,42 +168,113 @@
     <h2 class="reveal">Join the Closed Testing Squad</h2>
     <p class="lede reveal">We are actively preparing major Android production tracks for <strong>Trans-Title (v1.0.16)</strong> and <strong>Echo Cleaner</strong>. Join our closed testing group to test unreleased builds directly via Google Play, influence feature roadmaps, and receive complimentary lifetime Pro perks.</p>
 
-    <div class="grid plans" style="grid-template-columns:1.2fr 1fr;margin-top:32px;max-width:1000px;">
+    <div style="margin-top:32px;">
+      <!-- Interactive Cloud Testing Queue Widget -->
+      <div data-beta-widget data-app-id="trans-title" data-app-name="Trans-Title &amp; Echo Cleaner"></div>
+    </div>
+
+    <div class="grid plans" style="grid-template-columns:1fr 1fr;margin-top:28px;">
       <article class="plan plan-pro reveal" style="align-items:flex-start;">
-        <span class="tag">Active Recruitment</span>
-        <h3 style="font-size:1.5rem;">Google Play Closed Testing Queue</h3>
-        <p style="color:var(--muted);font-size:.95rem;line-height:1.6;">
+        <span class="tag">Cohort Perks</span>
+        <h3 style="font-size:1.35rem;">Why Join Our Closed Testing?</h3>
+        <p style="color:var(--muted);font-size:.93rem;line-height:1.6;">
           Google Play requires verified active testers before public store publication. By joining our testing track, you test raw on-device AI performance on real hardware and provide valuable telemetry and feedback.
         </p>
-        <ul style="margin:10px 0 16px;">
+        <ul style="margin:10px 0 0;">
           <li class="yes">Direct Google Play Store track invitation</li>
           <li class="yes">Access to Trans-Title v1.0.16 &amp; Echo Cleaner beta builds</li>
           <li class="yes">Free lifetime Pro upgrade for active test contributors</li>
           <li class="yes">Direct communication with the lead engineer</li>
         </ul>
-        <a class="btn btn-primary" href="mailto:native.espresso@gmail.com?subject=Join%20Closed%20Testing%20Queue&body=Hi%20Native%20Espresso%20Team%2C%0A%0AI%20would%20like%20to%20join%20the%20Google%20Play%20Closed%20Testing%20track%20for%3A%0A%5B%20%5D%20Trans-Title%0A%5B%20%5D%20Echo%20Cleaner%0A%0AMy%20Google%20Play%20Email%3A%20%0AMy%20Device%20Model%3A%20%0A%0AThank%20you!">Join the Closed Testing Queue →</a>
       </article>
 
       <article class="plan reveal" style="align-items:flex-start;">
-        <h3 style="font-size:1.3rem;">How It Works</h3>
+        <h3 style="font-size:1.3rem;">How Closed Testing Works</h3>
         <ol class="steps" style="grid-template-columns:1fr;margin-top:14px;gap:12px;width:100%;">
           <li style="padding:16px;">
             <b class="mono">STEP 01</b>
-            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Send Your Play Account</h4>
-            <p style="font-size:.85rem;color:var(--muted);">Email us your Google Play Store email and device model.</p>
+            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Submit Your Play Account</h4>
+            <p style="font-size:.85rem;color:var(--muted);">Submit your Google Play email above to reserve your spot.</p>
           </li>
           <li style="padding:16px;">
             <b class="mono">STEP 02</b>
-            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Receive Direct Opt-In Link</h4>
-            <p style="font-size:.85rem;color:var(--muted);">We add you to the authorized testing group and send your Play Store opt-in URL.</p>
+            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Automatic Approval &amp; QR Code</h4>
+            <p style="font-size:.85rem;color:var(--muted);">Once provisioned, return here to scan your instant Play Store QR Code or check your inbox.</p>
           </li>
           <li style="padding:16px;">
             <b class="mono">STEP 03</b>
             <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Install, Test &amp; Shape</h4>
-            <p style="font-size:.85rem;color:var(--muted);">Download via Google Play, test speech &amp; audio tools, and help us finalize the release.</p>
+            <p style="font-size:.85rem;color:var(--muted);">Download via Google Play, test on-device tools, and help us finalize the public release.</p>
           </li>
         </ol>
       </article>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPORT & ISSUE DIAGNOSTIC PORTAL -->
+<section id="support" class="section" data-accent="cyan">
+  <div class="wrap">
+    <p class="kicker reveal">Self-Service Diagnostic &amp; Issue Portal</p>
+    <h2 class="reveal">Having Trouble Installing or Running an App?</h2>
+    <p class="lede reveal">Whether Microsoft Store is stuck downloading our Windows desktop app, or an Android build encountered an issue — troubleshoot immediately below or submit a ticket directly to our engineering studio.</p>
+
+    <div class="support-portal reveal" data-support-portal>
+      <div id="issue-alert" data-issue-alert></div>
+      <div class="support-grid">
+        <!-- Left: Diagnostic Helper -->
+        <div>
+          <h3 style="font-size:1.15rem;margin-bottom:12px;">Instant Self-Service Diagnostics</h3>
+          <p style="color:var(--muted);font-size:.92rem;margin-bottom:16px;">Select the symptom you are experiencing for immediate resolution instructions before submitting a ticket:</p>
+          <div class="form-row">
+            <label for="issue-category-sel">Common Troubleshooting Scenarios:</label>
+            <select id="issue-category-sel" class="form-select" data-issue-category>
+              <option value="">-- Choose an issue for instant tips --</option>
+              <option value="windows-store">Windows: Microsoft Store download stuck or failing</option>
+              <option value="android-install">Android: Google Play Closed Testing track not showing app</option>
+              <option value="audio-permission">Audio: Missing microphone or storage permission error</option>
+            </select>
+          </div>
+          <div data-dynamic-troubleshooting></div>
+        </div>
+
+        <!-- Right: Direct Cloud Issue Ticket Submission -->
+        <div>
+          <h3 style="font-size:1.15rem;margin-bottom:12px;">Submit a Support Ticket to Cloud</h3>
+          <form data-issue-form>
+            <div class="form-row">
+              <label for="sup-email">Your Contact Email:</label>
+              <input type="email" id="sup-email" name="email" required placeholder="name@example.com" class="queue-input" autocomplete="email">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="form-row">
+                <label for="sup-app">Application:</label>
+                <select id="sup-app" name="appId" class="form-select">
+                  <option value="trans-title">Trans-Title</option>
+                  <option value="echo-cleaner">Echo Cleaner</option>
+                  <option value="company">Other / Studio</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label for="sup-platform">Platform:</label>
+                <select id="sup-platform" name="platform" class="form-select">
+                  <option value="Android">Android</option>
+                  <option value="Windows">Windows Desktop</option>
+                  <option value="iOS">iOS</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <label for="sup-desc">Issue Description &amp; Error Details:</label>
+              <textarea id="sup-desc" name="description" required placeholder="Describe what happened, any error code, or device model..." class="form-textarea"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;margin-top:6px;">
+              <span>Submit Issue Report</span>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -325,5 +397,6 @@
 </footer>
 
 <script src="assets/main.js"></script>
+<script src="assets/cloud-client.js"></script>
 </body>
 </html>

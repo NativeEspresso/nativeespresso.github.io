@@ -233,6 +233,30 @@ Stored in `assets/branding/` for developer page upload:
 1. `developer-icon.png` (512x512, 24-bit RGB PNG, non-transparent): Minimalist, iconic studio espresso cup with acoustic/neural steam curves and high-contrast typography.
 2. `header-image.png` & `header-image.jpg` (4096x2304, 16:9 ratio, non-transparent): Cinematic widescreen studio banner featuring deep obsidian background, sweeping neural audio waveforms, and bold branding. Tested under 1 MB for Google Play Console compatibility.
 
+---
+
+## 12. Cloud Integration, Dual-Email Cascade & Web Diagnostics
+
+### Backend Serverless Architecture (`backend/NativeEspresso.Cloud/`):
+* **Runtime**: C# (.NET 8.0 Isolated Worker Model) running on Azure Functions v4.
+* **Database**: Azure SQL Database (Free Tier / Serverless) with `Testers` and `IssueReports` schemas.
+* **Cloud Storage**: Azure Blob Storage (`support-attachments` container) for diagnostic logs and user screenshots.
+* **Dual-Email Cascade Strategy**:
+  * **Primary**: Resend API (100 free/day, 3,000/month).
+  * **Fallback**: Brevo / Sendinblue API (300 free/day, 9,000/month).
+  * Total combined free capacity: **400 emails/day (up to 12,000/month)** at **$0 cost**.
+
+### Frontend Diagnostic & State Hydration (`assets/cloud-client.js`):
+1. **Testing Queue**:
+   * Uses `localStorage` (`ne_tester_tickets`) for instant client state persistence.
+   * Renders instant queue confirmation.
+   * When approved by admin, generates an **inline vector SVG QR Code** (zero external dependencies) and reveals direct Google Play Closed Testing invitation URL.
+2. **Support & Issue Diagnostic Portal**:
+   * Independent web fail-safe for when in-app Android/Windows reporting is unreachable or when Microsoft Store downloads fail.
+   * Instant self-service advice for common issues (`wsreset.exe`, `winget` installation, Google Play cache clearing).
+   * Direct cloud submission to `POST /api/support/report-issue`.
+
+
 
 
 

@@ -27,3 +27,7 @@ Please refer to the primary guide: [AGENT.md](file:///c:/Projects/Web/Native-Esp
 6. **Google Play Profile Branding Assets**:
    * Developer Website URL: `https://nativeespresso.github.io/`
    * Assets at `assets/branding/`: `developer-icon.png` (512x512, 24-bit RGB), `header-image.png` & `header-image.jpg` (4096x2304, 16:9, <1MB).
+7. **Cloud Architecture & Support Fail-Safe**:
+   * Backend in `backend/NativeEspresso.Cloud/`: C# .NET 8 Isolated Worker Azure Functions.
+   * Dual Email Cascade: Resend (Primary: 100/day free) + Brevo (Fallback: 300/day free) for 100% cost-free operation.
+   * Frontend Client in `assets/cloud-client.js`: `localStorage` state caching, inline SVG QR code generator, and web-based issue reporting for when in-app forms or store downloads encounter issues.
