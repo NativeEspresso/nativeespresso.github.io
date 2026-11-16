@@ -224,15 +224,21 @@
       <div class="support-grid">
         <!-- Left: Diagnostic Helper -->
         <div>
-          <h3 style="font-size:1.15rem;margin-bottom:12px;">Instant Self-Service Diagnostics</h3>
-          <p style="color:var(--muted);font-size:.92rem;margin-bottom:16px;">Select the symptom you are experiencing for immediate resolution instructions before submitting a ticket:</p>
+          <h3 style="font-size:1.15rem;margin-bottom:8px;">Instant Self-Service Diagnostics</h3>
+          <p style="color:var(--muted);font-size:.92rem;margin-bottom:14px;">Select the symptom you are experiencing for instant resolution steps before submitting a ticket:</p>
+          
+          <!-- Interactive Clickable Symptom Pills -->
+          <div class="symptom-pills" data-symptom-pills></div>
+
           <div class="form-row">
-            <label for="issue-category-sel">Common Troubleshooting Scenarios:</label>
+            <label for="issue-category-sel">Troubleshooting Topic:</label>
             <select id="issue-category-sel" class="form-select" data-issue-category>
-              <option value="">-- Choose an issue for instant tips --</option>
+              <option value="">-- Choose a scenario for instant advice --</option>
               <option value="windows-store">Windows: Microsoft Store download stuck or failing</option>
               <option value="android-install">Android: Google Play Closed Testing track not showing app</option>
               <option value="audio-permission">Audio: Missing microphone or storage permission error</option>
+              <option value="app-crash">App Crash: Startup crash or unexpected termination</option>
+              <option value="general">General: Feedback or questions for our lead engineer</option>
             </select>
           </div>
           <div data-dynamic-troubleshooting></div>
@@ -240,7 +246,8 @@
 
         <!-- Right: Direct Cloud Issue Ticket Submission -->
         <div>
-          <h3 style="font-size:1.15rem;margin-bottom:12px;">Submit a Support Ticket to Cloud</h3>
+          <h3 style="font-size:1.15rem;margin-bottom:8px;">Submit a Support Ticket to Cloud</h3>
+          <p style="color:var(--muted);font-size:.92rem;margin-bottom:14px;">Direct fail-safe issue submission if in-app forms or store downloads encounter issues:</p>
           <form data-issue-form>
             <div class="form-row">
               <label for="sup-email">Your Contact Email:</label>
@@ -265,15 +272,46 @@
               </div>
             </div>
             <div class="form-row">
-              <label for="sup-desc">Issue Description &amp; Error Details:</label>
-              <textarea id="sup-desc" name="description" required placeholder="Describe what happened, any error code, or device model..." class="form-textarea"></textarea>
+              <label for="sup-desc">
+                <span>Issue Description &amp; Error Details:</span>
+                <button type="button" class="btn-auto-spec" data-auto-detect-specs>⚡ Auto-Detect Specs</button>
+              </label>
+              <textarea id="sup-desc" name="description" required placeholder="Describe what happened, error code, or device model..." class="form-textarea"></textarea>
             </div>
+
+            <!-- Screenshot / Crash Log Dropzone -->
+            <div class="form-row">
+              <label>Attach Screenshot or Log File (Optional):</label>
+              <div class="file-dropzone" data-file-dropzone>
+                <input type="file" data-file-input style="display:none;" accept="image/*,.log,.txt">
+                <div class="dropzone-in">
+                  <span class="drop-ico">📎</span>
+                  <span>Drop error screenshot or crash log here, or <u>browse</u></span>
+                  <span class="drop-hint">PNG, JPG, TXT up to 5 MB · Ready for Azure Blob Storage</span>
+                </div>
+              </div>
+              <div class="file-preview" data-file-preview></div>
+            </div>
+
             <button type="submit" class="btn btn-primary" style="width:100%;margin-top:6px;">
               <span>Submit Issue Report</span>
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </form>
         </div>
+      </div>
+
+      <!-- Ticket Status Lookup Tab -->
+      <div class="portal-lookup-tab">
+        <div class="portal-lookup-header">
+          <h4 style="font-size:0.95rem;margin:0;color:var(--ink);">Already submitted a ticket?</h4>
+          <span style="font-size:0.78rem;color:var(--muted);font-family:var(--font-m);">Local &amp; Cloud Tracking</span>
+        </div>
+        <form data-lookup-form class="lookup-form">
+          <input type="text" name="ticketQuery" placeholder="Enter Ticket # (e.g. NE-B891A4F2) or your registered email" class="queue-input" style="flex:1;min-width:260px;padding:10px 16px;font-size:0.88rem;">
+          <button type="submit" class="btn btn-ghost" style="padding:10px 20px;font-size:0.88rem;">Check Status</button>
+        </form>
+        <div data-lookup-result></div>
       </div>
     </div>
   </div>
