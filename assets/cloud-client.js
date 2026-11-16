@@ -687,12 +687,14 @@
         const platform = issueForm.querySelector("[name='platform']")?.value || "Android";
         const category = categorySelect ? categorySelect.value : "general";
         const description = issueForm.querySelector("[name='description']").value.trim();
+        const appName = APP_CONFIG[appId]?.name || (appId === "trans-title" ? "Trans-Title" : appId === "echo-cleaner" ? "Echo Cleaner" : "General / Studio");
 
         const ticketNum = "NE-" + Math.random().toString(36).substring(2, 10).toUpperCase();
 
         const payload = {
           email: email,
           appId: appId,
+          appName: appName,
           platform: platform,
           category: category,
           description: description,
