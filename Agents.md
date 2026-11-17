@@ -27,7 +27,10 @@ Please refer to the primary guide: [AGENT.md](file:///c:/Projects/Web/Native-Esp
 6. **Google Play Profile Branding Assets**:
    * Developer Website URL: `https://nativeespresso.github.io/`
    * Assets at `assets/branding/`: `developer-icon.png` (512x512, 24-bit RGB), `header-image.png` & `header-image.jpg` (4096x2304, 16:9, <1MB).
-7. **Cloud Architecture & Support Fail-Safe**:
-   * Backend in `backend/NativeEspresso.Cloud/`: C# .NET 8 Isolated Worker Azure Functions.
-   * Dual Email Cascade: Resend (Primary: 100/day free) + Brevo (Fallback: 300/day free) for 100% cost-free operation.
-   * Frontend Client in `assets/cloud-client.js`: `localStorage` state caching, inline SVG QR code generator, and web-based issue reporting for when in-app forms or store downloads encounter issues.
+7. **Cloud Architecture, Multi-App Registry & Studio Control Center**:
+   * Isolated Private Backend (`C:\Projects\Web\Native-Espresso-Backend` -> `NativeEspresso/Native-Espresso-Backend`): C# **.NET 10 (LTS)** Isolated Worker on Azure Functions Flex Consumption (Ubuntu 24.04).
+   * Azure SQL Database (Free Tier Serverless): `dbo.Apps` (dynamic multi-app registry with `AndroidStatus`, `JoinWebUrl`, `JoinAndroidUrl`), `dbo.Testers`, and `dbo.IssueReports` (indexed by `AppId` + `AppName`).
+   * Azure Blob Storage (`sharedstoragepool/support-attachments`): Error screenshots, diagnostic logs, and short video clips up to 15 MB.
+   * Dual-Email Cascade: Resend (Primary: 100/day free) + Brevo (Active Fallback: 300/day free, verified sender `native.espresso@gmail.com`).
+   * Frontend Client (`assets/cloud-client.js`): Auto-hydrates apps from `GET /api/apps`, renders **ISO/IEC 18004 scannable QR codes** for Android Play Store installation on desktop, dual `Join via Web` + `Join via Android` links for approved testers, and web-based diagnostic issue reporting.
+   * Desktop Control Center (`C:\Projects\WinUI\Native-Espresso` -> `ChTalhaArain/Native-Espresso`, `master` branch): Native WinUI 3 (.NET 10) packaged app authenticated via `X-Admin-Key` stored in Windows Credential Locker (`PasswordVault`), managing Overview, Closed Testing Queue, Support Issues, and Apps & Links via `/api/studio/*`.

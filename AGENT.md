@@ -235,26 +235,37 @@ Stored in `assets/branding/` for developer page upload:
 
 ---
 
-## 12. Cloud Integration, Dual-Email Cascade & Web Diagnostics
+## 12. Cloud Integration, Multi-App Registry, Email Alerts & WinUI 3 Control Center
 
-### Backend Serverless Architecture (`backend/NativeEspresso.Cloud/`):
-* **Runtime**: C# (.NET 8.0 Isolated Worker Model) running on Azure Functions v4.
-* **Database**: Azure SQL Database (Free Tier / Serverless) with `Testers` and `IssueReports` schemas.
-* **Cloud Storage**: Azure Blob Storage (`support-attachments` container) for diagnostic logs and user screenshots.
+### Isolated Private Serverless Backend (`C:\Projects\Web\Native-Espresso-Backend`):
+* **Repository**: `https://github.com/NativeEspresso/Native-Espresso-Backend` (Private, `main` branch — completely decoupled from the public GitHub Pages repo).
+* **Runtime**: C# **.NET 10.0 (LTS)** Isolated Worker Model on **Azure Functions Flex Consumption** (Linux Ubuntu 24.04, 512 MB instance, Central US).
+* **Live Base URL**: `https://native-espresso-web-function-epbhdxbxbybte6bz.centralus-01.azurewebsites.net` (CORS whitelisted for `https://nativeespresso.github.io`).
+* **Database**: Azure SQL Database (Free Tier Serverless, overage billing disabled, auto-pause wake-up retry loop) with 3 tables:
+  * `dbo.Apps`: Dynamic multi-app registry (`AppId`, `AppName`, `AndroidStatus`, `JoinWebUrl`, `JoinAndroidUrl`).
+  * `dbo.Testers`: Closed testing waitlist and approval state (`Pending` / `Approved`).
+  * `dbo.IssueReports`: Multi-app support tickets (`AppId`, `AppName`, `Platform`, `Category`, `AttachmentUrl`, `Status`, `AdminNotes`).
+* **Cloud Storage**: Azure Blob Storage (`sharedstoragepool`, container `support-attachments`) for error screenshots, logs, and short video recordings up to 15 MB.
 * **Dual-Email Cascade Strategy**:
-  * **Primary**: Resend API (100 free/day, 3,000/month).
-  * **Fallback**: Brevo / Sendinblue API (300 free/day, 9,000/month).
-  * Total combined free capacity: **400 emails/day (up to 12,000/month)** at **$0 cost**.
+  * **Primary**: Resend API (100 free/day — optional once a custom domain is configured).
+  * **Active Provider / Fallback**: Brevo API (300 free/day, 9,000/month — verified sender `native.espresso@gmail.com`).
+  * Serverless-safe awaited dispatch (`await` / `Task.WhenAll`) for Beta Queue confirmations, Developer signup alerts, dual-link VIP Play Store approvals, and Support Ticket notifications.
 
-### Frontend Diagnostic & State Hydration (`assets/cloud-client.js`):
-1. **Testing Queue**:
-   * Uses `localStorage` (`ne_tester_tickets`) for instant client state persistence.
-   * Renders instant queue confirmation.
-   * When approved by admin, generates an **inline vector SVG QR Code** (zero external dependencies) and reveals direct Google Play Closed Testing invitation URL.
+### Frontend Client & Scannable QR Engine (`assets/cloud-client.js`):
+1. **Dynamic Multi-App Closed Testing Queue**:
+   * Automatically fetches live app configs (`GET /api/apps`) so new apps and updated links appear without frontend JS edits.
+   * Uses `localStorage` (`ne_tester_tickets`) plus automatic cloud status checks (`GET /api/testers/status` & `POST /api/testers/register`).
+   * When an approved tester submits their email (or refreshes status):
+     * Displays both **`Join via Web`** (`joinWebUrl`) and **`Join via Android (Play Store)`** (`joinAndroidUrl`).
+     * On desktop, renders a **standards-compliant ISO/IEC 18004 QR Code** (Byte mode, EC Level M, Reed-Solomon GF(256), white quiet zone) encoding `joinAndroidUrl` so scanning with an Android phone opens Google Play directly to the app.
 2. **Support & Issue Diagnostic Portal**:
-   * Independent web fail-safe for when in-app Android/Windows reporting is unreachable or when Microsoft Store downloads fail.
-   * Instant self-service advice for common issues (`wsreset.exe`, `winget` installation, Google Play cache clearing).
-   * Direct cloud submission to `POST /api/support/report-issue`.
+   * Independent web fail-safe for when in-app Android/Windows reporting is unreachable or store downloads fail.
+   * Instant self-service advice (`wsreset.exe`, `winget`, Play Store cache), OS auto-detect, drag-and-drop image/log/video upload (up to 15 MB), and direct submission to `POST /api/support/report-issue` with explicit `appId` + `appName`.
+
+### Native Desktop Studio Control Center (`C:\Projects\WinUI\Native-Espresso`):
+* **Repository**: `https://github.com/ChTalhaArain/Native-Espresso` (Private, `master` branch).
+* **Framework**: Packaged WinUI 3 (.NET 10, Mica backdrop) authenticating against `/api/studio/*` using constant-time `X-Admin-Key` validation stored in **Windows Credential Locker (`PasswordVault`)**.
+* **Modules**: **Overview** (live cloud health & KPIs), **Closed Testing** (dynamic app filters, 1-click Play Console comma/line copy, bulk VIP approve), **Support Issues** (master-detail triage + blob attachment launcher), **Apps & Links** (add future apps, activate Closed Testing, update Web & Android links anytime), and **Settings**.
 
 
 
