@@ -67,15 +67,18 @@ This file serves as the single source of truth for ongoing development, complete
 * [x] **Azure Function App (native-espresso-web-function)**:
   * Plan: Flex Consumption (.NET 10 LTS Isolated Worker, 512 MB, Linux Ubuntu 24.04, Central US)
   * Default Domain: `native-espresso-web-function-epbhdxbxbybte6bz.centralus-01.azurewebsites.net`
-  * Code Package Deployed: **PASS** (All 5 endpoints active: `ApproveTester`, `CheckTesterStatus`, `HealthCheck`, `RegisterTester`, `ReportIssue`).
-  * App Settings Synchronized: `AZURE_SQL_CONNECTION_STRING`, `BLOB_STORAGE_CONNECTION_STRING`, `STORAGE_ACCOUNT_NAME`, `BREVO_API_KEY`, `ADMIN_API_KEY`.
+  * Code Package Deployed: **PASS** (All 10 endpoints active: public queue/support/health + `/api/studio/*` authenticated admin API).
+  * App Settings Synchronized: `AZURE_SQL_CONNECTION_STRING`, `BLOB_STORAGE_CONNECTION_STRING`, `STORAGE_ACCOUNT_NAME`, `BREVO_API_KEY`, `ADMIN_API_KEY` (36-char cryptographic key).
   * Live `/api/health` Check: **PASS** (`status: Healthy`, `database: connected`, `blobStorage: Configured`, `emailCascade: Configured`).
   * CORS Configured: `https://nativeespresso.github.io` allowed.
   * Frontend Web Client: Configured `DEFAULT_API_BASE` in `assets/cloud-client.js` and pushed to GitHub.
 * [x] **Email Alerts (Brevo Free Tier — 300 emails/day)**:
-  * Verified sender `native.espresso@gmail.com` via Brevo API.
+  * Verified sender `native.espresso@gmail.com` (`active: True`) on Brevo.
   * Hardened serverless delivery (`await` / `Task.WhenAll`) for Beta Queue confirmations, Developer signup alerts, VIP Play Store approvals, and Support Ticket notifications.
-  * Local `--test-email` dispatch verified to `native.espresso@gmail.com`.
+  * Live delivery confirmed **`delivered`** by Brevo SMTP relay to `native.espresso@gmail.com`.
+* [x] **Studio Admin REST API (`/api/studio/*`) & WinUI 3 Control Center**:
+  * Authenticated endpoints (`X-Admin-Key` constant-time check): `summary`, `testers`, `approve-testers-bulk`, `issues`, `issues/update` (verified HTTP `401` when unauthenticated, `200` when authorized).
+  * WinUI 3 Packaged Desktop App (`C:\Projects\WinUI\Native-Espresso`, private repo `ChTalhaArain/Native-Espresso` on `master`): Overview, Closed Testing Queue (1-click Play Console copy + bulk VIP approve), Support Issues inspector with attachment viewer, and Windows Credential Locker (`PasswordVault`) settings.
 * [x] **Live End-to-End Validation**:
   * Tester Registration: **PASS** (Tested with `test.verification@nativeespresso.com` -> saved in `dbo.Testers` -> verified via `/api/testers/status`).
   * Diagnostic Issue Report & Storage: **PASS** (Tested with Base64 payload -> uploaded to `sharedstoragepool/support-attachments` -> ticket `NE-DB566AF4` saved in `dbo.IssueReports` -> verified public attachment download).
