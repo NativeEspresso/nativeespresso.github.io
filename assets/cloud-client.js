@@ -64,117 +64,433 @@
   }
 
   /* ==========================================================================
-     2. Minimalist Vector QR Code Generator (Zero-Dependency SVG)
+     2. Standards-Compliant ISO/IEC 18004 QR Code Generator (Zero-Dependency SVG)
+        Byte mode, Error Correction Level M (15%), Versions 1-10 (up to 214 bytes)
      ========================================================================== */
   const QR = (function () {
-    function generateSVG(text, size = 160) {
-      const modules = createMatrix(text);
-      const count = modules.length;
-      const cellSize = size / count;
-      let rects = "";
+    const GF_EXP = new Uint8Array(512);
+    const GF_LOG = new Uint8Array(256);
+    for (let x = 1, i = 0; i < 255; i++) {
+      GF_EXP[i] = x;
+      GF_LOG[x] = i;
+      x <<= 1;
+      if (x & 256) x ^= 0x11d;
+    }
+    for (let i = 255; i < 512; i++) GF_EXP[i] = GF_EXP[i - 255];
 
-      for (let r = 0; r < count; r++) {
-        for (let c = 0; c < count; c++) {
-          if (modules[r][c]) {
-            const x = (c * cellSize).toFixed(2);
-            const y = (r * cellSize).toFixed(2);
-            const w = cellSize.toFixed(2);
-            rects += `<rect x="${x}" y="${y}" width="${w}" height="${w}" fill="currentColor"/>`;
+    function gfMul(a, b) {
+      return a === 0 || b === 0 ? 0 : GF_EXP[GF_LOG[a] + GF_LOG[b]];
+    }
+
+    function rsGeneratorPoly(degree) {
+      let poly = [1];
+      for (let i = 0; i < degree; i++) {
+        const next = new Array(poly.length + 1).fill(0);
+        for (let j = 0; j < poly.length; j++) {
+          next[j] ^= poly[j];
+          next[j + 1] ^= gfMul(poly[j], GF_EXP[i]);
+        }
+        poly = next;
+      }
+      return poly;
+    }
+
+    function rsEncode(data, ecCount) {
+      const gen = rsGeneratorPoly(ecCount);
+      const res = new Uint8Array(data.length + ecCount);
+      res.set(data);
+      for (let i = 0; i < data.length; i++) {
+        const factor = res[i];
+        if (factor !== 0) {
+          for (let j = 0; j < gen.length; j++) {
+            res[i + j] ^= gfMul(gen[j], factor);
           }
         }
       }
+      return res.slice(data.length);
+    }
 
-      return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-label="QR code for Google Play Store">${rects}</svg>`;
+    // [version, totalDataBytes, ecPerBlock, [[numBlocks, dataBytesPerBlock], ...]] for EC Level M
+    const VERSION_M = [
+      null,
+      [1, 16, 10, [[1, 16]]],
+      [2, 28, 16, [[1, 28]]],
+      [3, 44, 26, [[1, 44]]],
+      [4, 64, 18, [[2, 32]]],
+      [5, 86, 24, [[2, 43]]],
+      [6, 108, 16, [[4, 27]]],
+      [7, 124, 18, [[4, 31]]],
+      [8, 154, 22, [[2, 38], [2, 39]]],
+      [9, 182, 22, [[3, 36], [2, 37]]],
+      [10, 216, 26, [[4, 43], [1, 44]]]
+    ];
+
+    const ALIGN_POS = [
+      [], [], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34],
+      [6, 22, 38], [6, 24, 42], [6, 26, 46], [6, 28, 50]
+    ];
+
+    // Precomputed 15-bit format info for EC Level M (00) and masks 0..7
+    const FORMAT_INFO_M = [
+      0x5412, 0x5125, 0x5e7c, 0x5b4b, 0x45f9, 0x40ce, 0x4f97, 0x4aa0
+    ];
+
+    // Precomputed 18-bit version info for versions 7..10
+    const VERSION_INFO = {
+      7: 0x07c94, 8: 0x085bc, 9: 0x09a99, 10: 0x0a4d3
+    };
+
+    function encodeBytes(str) {
+      if (typeof TextEncoder !== "undefined") {
+        return Array.from(new TextEncoder().encode(str));
+      }
+      const out = [];
+      for (let i = 0; i < str.length; i++) out.push(str.charCodeAt(i) & 0xff);
+      return out;
     }
 
     function createMatrix(text) {
-      const n = text.length > 50 ? 33 : 29;
-      const m = Array.from({ length: n }, () => Array(n).fill(0));
+      const bytes = encodeBytes(text);
+      let spec = null;
+      for (let v = 1; v <= 10; v++) {
+        const countBits = v <= 9 ? 8 : 16;
+        const capBits = VERSION_M[v][1] * 8;
+        if (4 + countBits + bytes.length * 8 <= capBits) {
+          spec = VERSION_M[v];
+          break;
+        }
+      }
+      if (!spec) spec = VERSION_M[10];
 
-      function finder(row, col) {
+      const version = spec[0];
+      const totalData = spec[1];
+      const ecPerBlock = spec[2];
+      const groups = spec[3];
+      const size = version * 4 + 17;
+
+      // Build bit stream: Mode 0100 + length + UTF-8 bytes + terminator + pad bytes
+      const bits = [];
+      const pushBits = (val, len) => {
+        for (let i = len - 1; i >= 0; i--) bits.push((val >> i) & 1);
+      };
+      pushBits(0b0100, 4);
+      pushBits(bytes.length, version <= 9 ? 8 : 16);
+      for (const b of bytes) pushBits(b, 8);
+
+      const capBits = totalData * 8;
+      for (let i = 0; i < 4 && bits.length < capBits; i++) bits.push(0);
+      while (bits.length % 8 !== 0) bits.push(0);
+
+      const dataCodewords = new Uint8Array(totalData);
+      let idx = 0;
+      for (let i = 0; i < bits.length; i += 8) {
+        let v = 0;
+        for (let b = 0; b < 8; b++) v = (v << 1) | bits[i + b];
+        dataCodewords[idx++] = v;
+      }
+      const padSeq = [0xec, 0x11];
+      for (let p = 0; idx < totalData; p++) dataCodewords[idx++] = padSeq[p & 1];
+
+      // Split into blocks and compute Reed-Solomon EC codewords
+      const dataBlocks = [];
+      const ecBlocks = [];
+      let offset = 0;
+      for (const [count, dcLen] of groups) {
+        for (let b = 0; b < count; b++) {
+          const blk = dataCodewords.slice(offset, offset + dcLen);
+          offset += dcLen;
+          dataBlocks.push(blk);
+          ecBlocks.push(rsEncode(blk, ecPerBlock));
+        }
+      }
+
+      // Interleave data codewords, then EC codewords
+      const finalBytes = [];
+      const maxDataLen = Math.max(...dataBlocks.map((b) => b.length));
+      for (let i = 0; i < maxDataLen; i++) {
+        for (const blk of dataBlocks) if (i < blk.length) finalBytes.push(blk[i]);
+      }
+      for (let i = 0; i < ecPerBlock; i++) {
+        for (const blk of ecBlocks) finalBytes.push(blk[i]);
+      }
+
+      // Build function module template
+      const modules = Array.from({ length: size }, () => new Int8Array(size));
+      const isFunc = Array.from({ length: size }, () => new Uint8Array(size));
+
+      const setFunc = (r, c, dark) => {
+        if (r >= 0 && r < size && c >= 0 && c < size) {
+          modules[r][c] = dark ? 1 : 0;
+          isFunc[r][c] = 1;
+        }
+      };
+
+      // Finder patterns + separators
+      const drawFinder = (r0, c0) => {
         for (let r = -1; r <= 7; r++) {
           for (let c = -1; c <= 7; c++) {
-            const tr = row + r, tc = col + c;
-            if (tr >= 0 && tr < n && tc >= 0 && tc < n) {
-              const border = r === 0 || r === 6 || c === 0 || c === 6;
-              const inner = r >= 2 && r <= 4 && c >= 2 && c <= 4;
-              m[tr][tc] = (border || inner) ? 1 : 0;
-            }
+            const inBox = r >= 0 && r <= 6 && c >= 0 && c <= 6;
+            const dark = inBox && (r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4));
+            setFunc(r0 + r, c0 + c, dark);
           }
         }
-      }
-      finder(0, 0);
-      finder(0, n - 7);
-      finder(n - 7, 0);
+      };
+      drawFinder(0, 0);
+      drawFinder(0, size - 7);
+      drawFinder(size - 7, 0);
 
-      if (n === 33) {
-        const ar = 24, ac = 24;
-        for (let r = -2; r <= 2; r++) {
-          for (let c = -2; c <= 2; c++) {
-            m[ar + r][ac + c] = (Math.max(Math.abs(r), Math.abs(c)) !== 1) ? 1 : 0;
-          }
-        }
-      }
-
-      for (let i = 8; i < n - 8; i++) {
-        m[6][i] = i % 2 === 0 ? 1 : 0;
-        m[i][6] = i % 2 === 0 ? 1 : 0;
-      }
-      m[n - 8][8] = 1;
-
-      let hash = 0;
-      for (let i = 0; i < text.length; i++) {
-        hash = (hash << 5) - hash + text.charCodeAt(i);
-        hash |= 0;
-      }
-
-      let bitIdx = 0;
-      for (let c = n - 1; c > 0; c -= 2) {
-        if (c === 6) c--;
-        for (let r = 0; r < n; r++) {
-          const row = ((c + 1) / 2) % 2 === 0 ? n - 1 - r : r;
-          for (let b = 0; b < 2; b++) {
-            const col = c - b;
-            const isFinder = (row < 9 && (col < 9 || col >= n - 8)) || (row >= n - 8 && col < 9);
-            const isTiming = row === 6 || col === 6;
-            const isAlign = n === 33 && Math.abs(row - 24) <= 2 && Math.abs(col - 24) <= 2;
-            if (!isFinder && !isTiming && !isAlign) {
-              const char = text.charCodeAt(bitIdx % text.length);
-              const seed = (hash ^ (row * 31 + col * 17) ^ (char << 2));
-              m[row][col] = (seed & 1) === 1 ? 1 : 0;
-              bitIdx++;
+      // Alignment patterns
+      const pos = ALIGN_POS[version];
+      for (let i = 0; i < pos.length; i++) {
+        for (let j = 0; j < pos.length; j++) {
+          const r0 = pos[i], c0 = pos[j];
+          if ((r0 === 6 && c0 === 6) || (r0 === 6 && c0 === size - 7) || (r0 === size - 7 && c0 === 6)) continue;
+          for (let dr = -2; dr <= 2; dr++) {
+            for (let dc = -2; dc <= 2; dc++) {
+              setFunc(r0 + dr, c0 + dc, Math.max(Math.abs(dr), Math.abs(dc)) !== 1);
             }
           }
         }
       }
 
-      return m;
+      // Timing patterns
+      for (let i = 8; i < size - 8; i++) {
+        setFunc(6, i, i % 2 === 0);
+        setFunc(i, 6, i % 2 === 0);
+      }
+
+      // Reserve format info + dark module
+      for (let i = 0; i <= 8; i++) {
+        if (i !== 6) { setFunc(8, i, false); setFunc(i, 8, false); }
+      }
+      for (let i = 0; i < 8; i++) setFunc(8, size - 1 - i, false);
+      for (let i = 0; i < 7; i++) setFunc(size - 1 - i, 8, false);
+      setFunc(size - 8, 8, true);
+
+      // Version info (v >= 7)
+      if (version >= 7 && VERSION_INFO[version]) {
+        const vi = VERSION_INFO[version];
+        for (let i = 0; i < 18; i++) {
+          const bit = ((vi >> i) & 1) === 1;
+          const a = Math.floor(i / 3);
+          const b = size - 11 + (i % 3);
+          setFunc(a, b, bit);
+          setFunc(b, a, bit);
+        }
+      }
+
+      // Place data bits in zig-zag columns
+      const allBits = [];
+      for (const byte of finalBytes) {
+        for (let b = 7; b >= 0; b--) allBits.push((byte >> b) & 1);
+      }
+
+      let bitPtr = 0;
+      let upward = true;
+      for (let col = size - 1; col >= 1; col -= 2) {
+        if (col === 6) col = 5;
+        for (let i = 0; i < size; i++) {
+          const row = upward ? size - 1 - i : i;
+          for (let dx = 0; dx < 2; dx++) {
+            const c = col - dx;
+            if (!isFunc[row][c]) {
+              modules[row][c] = bitPtr < allBits.length ? allBits[bitPtr++] : 0;
+            }
+          }
+        }
+        upward = !upward;
+      }
+
+      // Apply mask and pick lowest penalty (ISO/IEC 18004)
+      const maskPreds = [
+        (r, c) => (r + c) % 2 === 0,
+        (r) => r % 2 === 0,
+        (_, c) => c % 3 === 0,
+        (r, c) => (r + c) % 3 === 0,
+        (r, c) => (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0,
+        (r, c) => ((r * c) % 2) + ((r * c) % 3) === 0,
+        (r, c) => (((r * c) % 2) + ((r * c) % 3)) % 2 === 0,
+        (r, c) => (((r + c) % 2) + ((r * c) % 3)) % 2 === 0
+      ];
+
+      function writeFormat(grid, mask) {
+        const bits15 = FORMAT_INFO_M[mask];
+        const b = (k) => (bits15 >> k) & 1;
+        // Around top-left
+        for (let i = 0; i <= 5; i++) grid[8][i] = b(14 - i);
+        grid[8][7] = b(8);
+        grid[8][8] = b(7);
+        grid[7][8] = b(6);
+        for (let i = 0; i <= 5; i++) grid[5 - i][8] = b(5 - i);
+        // Bottom-left & top-right
+        for (let i = 0; i < 7; i++) grid[size - 1 - i][8] = b(14 - i);
+        for (let i = 0; i < 8; i++) grid[8][size - 8 + i] = b(7 - i);
+      }
+
+      function calcPenalty(grid) {
+        let p = 0;
+        for (let r = 0; r < size; r++) {
+          let runR = 1, runC = 1;
+          for (let c = 1; c < size; c++) {
+            if (grid[r][c] === grid[r][c - 1]) { runR++; if (runR === 5) p += 3; else if (runR > 5) p++; }
+            else runR = 1;
+            if (grid[c][r] === grid[c - 1][r]) { runC++; if (runC === 5) p += 3; else if (runC > 5) p++; }
+            else runC = 1;
+          }
+        }
+        for (let r = 0; r < size - 1; r++) {
+          for (let c = 0; c < size - 1; c++) {
+            const v = grid[r][c];
+            if (v === grid[r][c + 1] && v === grid[r + 1][c] && v === grid[r + 1][c + 1]) p += 3;
+          }
+        }
+        return p;
+      }
+
+      let bestGrid = null;
+      let bestPenalty = Infinity;
+      for (let mask = 0; mask < 8; mask++) {
+        const g = modules.map((row, r) => {
+          const copy = new Int8Array(row);
+          for (let c = 0; c < size; c++) {
+            if (!isFunc[r][c] && maskPreds[mask](r, c)) copy[c] ^= 1;
+          }
+          return copy;
+        });
+        writeFormat(g, mask);
+        const pen = calcPenalty(g);
+        if (pen < bestPenalty) {
+          bestPenalty = pen;
+          bestGrid = g;
+        }
+      }
+
+      return bestGrid;
     }
 
-    return { generateSVG };
+    function generateSVG(text, size = 168) {
+      const grid = createMatrix(text);
+      const count = grid.length;
+      const quiet = 3; // ISO quiet zone modules
+      const total = count + quiet * 2;
+      let pathD = "";
+
+      for (let r = 0; r < count; r++) {
+        for (let c = 0; c < count; c++) {
+          if (grid[r][c]) {
+            pathD += `M${c + quiet},${r + quiet}h1v1h-1z`;
+          }
+        }
+      }
+
+      return `<svg viewBox="0 0 ${total} ${total}" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Scannable QR code for Google Play Store"><rect width="${total}" height="${total}" fill="#ffffff" rx="1.5"/><path d="${pathD}" fill="#0f172a"/></svg>`;
+    }
+
+    return { generateSVG, createMatrix };
   })();
 
   /* ==========================================================================
-     3. Closed Testing Queue Controller (Multi-App & Platform Aware)
+     3. Closed Testing Queue Controller (Multi-App & Dynamic Cloud Registry)
      ========================================================================== */
   const APP_CONFIG = {
     "trans-title": {
       name: "Trans-Title",
       subtitle: "Flagship Multimedia Suite & On-Device AI Studio",
       badge: "Android: Closed-Testing (v1.0.16) · Windows: Development",
+      androidStatus: "ClosedTesting",
       accent: "var(--magenta, #f43f7b)",
       platforms: ["Android (Closed Testing v1.0.16)", "Windows (WinUI 3 Beta)"],
-      playStoreUrl: "https://play.google.com/apps/testing/com.espressonative.transtitle"
+      joinWebUrl: "https://play.google.com/apps/testing/com.espressonative.transtitle",
+      joinAndroidUrl: "https://play.google.com/store/apps/details?id=com.espressonative.transtitle",
+      icon: "🎬",
+      pill: "Active"
     },
     "echo-cleaner": {
       name: "Echo Cleaner",
       subtitle: "On-Device Neural Audio Enhancement Engine",
       badge: "Android: Closed Testing Queue (Finalizing)",
+      androidStatus: "TestingQueue",
       accent: "var(--cyan, #22d3ee)",
       platforms: ["Android (Closed Testing Queue)", "iOS (Planning Waitlist)"],
-      playStoreUrl: "https://play.google.com/apps/testing/com.espressonative.echocleaner"
+      joinWebUrl: null,
+      joinAndroidUrl: null,
+      icon: "🎙️",
+      pill: "Queue"
     }
   };
+
+  function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
+  }
+
+  function formatStatusBadge(androidStatus) {
+    switch ((androidStatus || "").toLowerCase()) {
+      case "closedtesting": return { label: "Android: Closed Testing Active", pill: "Active" };
+      case "published": return { label: "Android: Published on Google Play", pill: "Live" };
+      case "planning": return { label: "Android: Planning Waitlist", pill: "Plan" };
+      default: return { label: "Android: Closed Testing Queue", pill: "Queue" };
+    }
+  }
+
+  async function hydrateAppsFromCloud(containers) {
+    if (!API_BASE) return;
+    try {
+      const res = await fetch(`${API_BASE}/api/apps`);
+      if (!res.ok) return;
+      const apps = await res.json();
+      if (!Array.isArray(apps) || !apps.length) return;
+
+      apps.forEach((a) => {
+        if (!a.appId) return;
+        const id = a.appId.toLowerCase();
+        const statusMeta = formatStatusBadge(a.androidStatus);
+        if (APP_CONFIG[id]) {
+          APP_CONFIG[id].name = a.appName || APP_CONFIG[id].name;
+          APP_CONFIG[id].androidStatus = a.androidStatus || APP_CONFIG[id].androidStatus;
+          APP_CONFIG[id].joinWebUrl = a.joinWebUrl || APP_CONFIG[id].joinWebUrl;
+          APP_CONFIG[id].joinAndroidUrl = a.joinAndroidUrl || APP_CONFIG[id].joinAndroidUrl;
+          APP_CONFIG[id].pill = statusMeta.pill;
+        } else {
+          APP_CONFIG[id] = {
+            name: a.appName || id,
+            subtitle: "Native Espresso Studio Application",
+            badge: statusMeta.label,
+            androidStatus: a.androidStatus || "TestingQueue",
+            accent: "var(--cyan, #22d3ee)",
+            platforms: [`Android (${statusMeta.pill})`],
+            joinWebUrl: a.joinWebUrl || null,
+            joinAndroidUrl: a.joinAndroidUrl || null,
+            icon: "📱",
+            pill: statusMeta.pill
+          };
+        }
+      });
+
+      // Re-render widgets with fresh cloud links & any new apps
+      containers.forEach((container) => {
+        const currentApp = container.getAttribute("data-current-app") || container.getAttribute("data-app-id") || "trans-title";
+        renderQueueShell(container, APP_CONFIG[currentApp] ? currentApp : "trans-title");
+      });
+
+      // Also sync any new apps into the homepage support dropdown
+      const supportSelect = document.getElementById("sup-app");
+      if (supportSelect) {
+        const existingValues = new Set(Array.from(supportSelect.options).map((o) => o.value.toLowerCase()));
+        apps.forEach((a) => {
+          const id = (a.appId || "").toLowerCase();
+          if (id && !existingValues.has(id)) {
+            const opt = document.createElement("option");
+            opt.value = id;
+            opt.textContent = a.appName || id;
+            const companyOpt = supportSelect.querySelector("option[value='company']");
+            supportSelect.insertBefore(opt, companyOpt || null);
+          }
+        });
+      }
+    } catch (_) {
+      // Graceful fallback to static defaults
+    }
+  }
 
   function initTestingQueue() {
     const containers = document.querySelectorAll("[data-beta-widget]");
@@ -182,14 +498,15 @@
 
     containers.forEach((container) => {
       let activeAppId = container.getAttribute("data-app-id") || "trans-title";
-      // If company multi-app container, default to trans-title
       if (!APP_CONFIG[activeAppId]) activeAppId = "trans-title";
-
       renderQueueShell(container, activeAppId);
     });
+
+    hydrateAppsFromCloud(containers);
   }
 
   function renderQueueShell(container, currentAppId) {
+    container.setAttribute("data-current-app", currentAppId);
     const isMultiApp = !container.getAttribute("data-single-app");
     const cfg = APP_CONFIG[currentAppId] || APP_CONFIG["trans-title"];
     const tickets = getTickets();
@@ -197,20 +514,17 @@
 
     let tabsHtml = "";
     if (isMultiApp) {
-      tabsHtml = `
-        <div class="queue-tabs" role="tablist">
-          <button class="queue-tab ${currentAppId === 'trans-title' ? 'active' : ''}" data-switch-app="trans-title">
-            <span class="tab-icon">🎬</span>
-            <span>Trans-Title</span>
-            <span class="tab-pill">v1.0.16</span>
+      const buttons = Object.keys(APP_CONFIG).map((id) => {
+        const item = APP_CONFIG[id];
+        return `
+          <button class="queue-tab ${currentAppId === id ? 'active' : ''}" data-switch-app="${id}">
+            <span class="tab-icon">${item.icon || "📱"}</span>
+            <span>${item.name}</span>
+            <span class="tab-pill">${item.pill || "Beta"}</span>
           </button>
-          <button class="queue-tab ${currentAppId === 'echo-cleaner' ? 'active' : ''}" data-switch-app="echo-cleaner">
-            <span class="tab-icon">🎙️</span>
-            <span>Echo Cleaner</span>
-            <span class="tab-pill">Queue</span>
-          </button>
-        </div>
-      `;
+        `;
+      }).join("");
+      tabsHtml = `<div class="queue-tabs" role="tablist">${buttons}</div>`;
     }
 
     container.innerHTML = `
@@ -220,7 +534,6 @@
       </div>
     `;
 
-    // Tab click handlers
     if (isMultiApp) {
       container.querySelectorAll("[data-switch-app]").forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -250,7 +563,7 @@
       <div class="queue-header">
         <div class="queue-badge"><span class="pulse-dot"></span> ${cfg.badge}</div>
         <h3>Join the ${cfg.name} Closed Testing Squad</h3>
-        <p class="queue-desc">${cfg.subtitle}. Submit your Google Play email below to be whitelisted on our active testing track.</p>
+        <p class="queue-desc">${cfg.subtitle}. Enter your Google Play email to join the waitlist — or if you're already approved, unlock your direct Web &amp; Android install links instantly.</p>
       </div>
 
       <form class="queue-form" data-queue-form>
@@ -262,14 +575,14 @@
         <div class="input-wrap">
           <input type="email" required placeholder="Enter your Google Play account email" class="queue-input" data-email-input autocomplete="email">
           <button type="submit" class="btn btn-primary queue-btn">
-            <span>Join Closed Testing</span>
+            <span>Join / Check Access</span>
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
         </div>
 
         <div class="queue-meta">
           <span>⛨ 100% Free · Zero Spam · Direct Play Store Invitation</span>
-          <span class="queue-note">Instant ticket hydration via local state.</span>
+          <span class="queue-note">Already approved? Typing your email unlocks your links &amp; QR pass immediately.</span>
         </div>
       </form>
     `;
@@ -283,10 +596,9 @@
       if (!email || !email.includes("@")) return;
 
       const checkedPlatform = form.querySelector(`input[name="queue_platform_${appId}"]:checked`)?.value || "Android";
-
       const submitBtn = form.querySelector("button[type='submit']");
       submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span>Registering in Cloud...</span>`;
+      submitBtn.innerHTML = `<span>Checking Cloud Access...</span>`;
 
       const newTicket = {
         email: email,
@@ -294,7 +606,9 @@
         appName: cfg.name,
         platform: checkedPlatform,
         status: "Pending",
-        playStoreUrl: cfg.playStoreUrl,
+        joinWebUrl: cfg.joinWebUrl,
+        joinAndroidUrl: cfg.joinAndroidUrl,
+        androidStatus: cfg.androidStatus,
         registeredAt: Date.now()
       };
 
@@ -308,7 +622,9 @@
           if (res.ok) {
             const data = await res.json();
             if (data.status) newTicket.status = data.status;
-            if (data.playStoreUrl) newTicket.playStoreUrl = data.playStoreUrl;
+            if (data.joinWebUrl || data.playStoreUrl) newTicket.joinWebUrl = data.joinWebUrl || data.playStoreUrl;
+            if (data.joinAndroidUrl) newTicket.joinAndroidUrl = data.joinAndroidUrl;
+            if (data.androidStatus) newTicket.androidStatus = data.androidStatus;
           }
         }
       } catch (err) {
@@ -321,93 +637,117 @@
   }
 
   function renderStatusView(bodyEl, appId, cfg, ticket, container) {
-    const isApproved = ticket.status === "Approved";
-    const playUrl = ticket.playStoreUrl || cfg.playStoreUrl;
+    const isApproved = (ticket.status || "").toLowerCase() === "approved";
+    const joinWebUrl = cfg.joinWebUrl || ticket.joinWebUrl || ticket.playStoreUrl || "";
+    const joinAndroidUrl = cfg.joinAndroidUrl || ticket.joinAndroidUrl || joinWebUrl;
+    const hasLinks = Boolean(joinWebUrl || joinAndroidUrl);
+    const mobile = isMobileDevice();
 
     if (isApproved) {
-      const qrSvg = QR.generateSVG(playUrl, 150);
-      bodyEl.innerHTML = `
-        <div class="queue-status-in approved-view">
-          <div class="queue-header">
-            <div class="queue-badge approved"><span class="dot-green"></span> VIP Tester Access Granted</div>
-            <h3>You are an Approved Tester for ${cfg.name}!</h3>
-            <p class="queue-desc">Registered Account: <strong>${ticket.email}</strong> · Platform: <strong>${ticket.platform || 'Android'}</strong></p>
-          </div>
-
-          <div class="approved-deck">
-            <div class="qr-box">
-              <div class="qr-target-frame">
-                <span class="reticle r-tl"></span><span class="reticle r-tr"></span>
-                <span class="reticle r-bl"></span><span class="reticle r-br"></span>
-                <div class="qr-canvas">${qrSvg}</div>
-              </div>
-              <span class="qr-caption">Scan with Phone Camera</span>
+      if (!hasLinks) {
+        bodyEl.innerHTML = `
+          <div class="queue-status-in approved-view">
+            <div class="queue-header">
+              <div class="queue-badge approved"><span class="dot-green"></span> Pre-Approved Tester</div>
+              <h3>You are Approved for ${cfg.name}!</h3>
+              <p class="queue-desc">Registered Account: <strong>${ticket.email}</strong></p>
             </div>
-
-            <div class="approved-actions">
-              <div class="steps-mini">
-                <div class="step-m"><b>1.</b> Tap button below or scan QR with your phone camera</div>
-                <div class="step-m"><b>2.</b> Tap <b>"Accept Invite"</b> on the Google Play opt-in page</div>
-                <div class="step-m"><b>3.</b> Download direct from Google Play with lifetime Pro perks</div>
+            <div class="pending-notice">
+              <div class="notice-text">
+                <p>Your Google Play account is pre-approved! As soon as <strong>${cfg.name}</strong> transitions from Testing Queue to Active Closed Testing, your <strong>Join via Web</strong> and <strong>Android Play Store QR / Install</strong> links will unlock right here automatically.</p>
               </div>
-
-              <div class="approved-btn-row">
-                <a href="${playUrl}" target="_blank" rel="noopener" class="btn btn-primary">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8c-.3.3-.5.8-.5 1.5v17.4c0 .7.2 1.2.5 1.5l9.2-9.6L3.6 1.8zm11.4 8.4l2.5-1.4L4.8.8l10.2 9.4zm0 3.6L4.8 23.2l12.7-7.6-2.5-1.8zm1.2-1.2l3.4 2c.9.5.9 1.4 0 1.9l-3.4 2-1.5-1.5 1.5-4.4z"/></svg>
-                  <span>Open Google Play Testing Track</span>
-                </a>
-                <button class="btn btn-ghost" data-copy-link>
-                  <span>📋 Copy Invite Link</span>
-                </button>
-              </div>
-
               <div class="ticket-footer-actions">
-                <button class="btn-text-action" data-toggle-preview title="Switch back to pending view for review">Switch to Pending View</button>
+                <button class="btn-text-action" data-check-status>Refresh Links</button>
                 <span class="sep">·</span>
                 <button class="btn-text-action" data-reset-ticket>Change / Reset Account</button>
               </div>
             </div>
           </div>
-        </div>
-      `;
+        `;
+      } else {
+        const qrTargetUrl = joinAndroidUrl || joinWebUrl;
+        const qrSvg = QR.generateSVG(qrTargetUrl, 168);
 
-      const copyBtn = bodyEl.querySelector("[data-copy-link]");
-      if (copyBtn) {
-        copyBtn.addEventListener("click", () => {
-          navigator.clipboard.writeText(playUrl).then(() => {
-            copyBtn.innerHTML = "<span>✓ Copied to Clipboard!</span>";
-            setTimeout(() => { copyBtn.innerHTML = "<span>📋 Copy Invite Link</span>"; }, 2500);
-          }).catch(() => {});
-        });
-      }
+        bodyEl.innerHTML = `
+          <div class="queue-status-in approved-view">
+            <div class="queue-header">
+              <div class="queue-badge approved"><span class="dot-green"></span> VIP Tester Access Granted</div>
+              <h3>You are an Approved Tester for ${cfg.name}!</h3>
+              <p class="queue-desc">Approved Account: <strong>${ticket.email}</strong> · Platform: <strong>${ticket.platform || 'Android'}</strong></p>
+            </div>
 
-      const previewBtn = bodyEl.querySelector("[data-toggle-preview]");
-      if (previewBtn) {
-        previewBtn.addEventListener("click", () => {
-          ticket.status = "Pending";
-          saveTicket(appId, ticket);
-          renderStatusView(bodyEl, appId, cfg, ticket, container);
-        });
+            <div class="approved-deck">
+              ${!mobile ? `
+                <div class="qr-box">
+                  <div class="qr-target-frame">
+                    <span class="reticle r-tl"></span><span class="reticle r-tr"></span>
+                    <span class="reticle r-bl"></span><span class="reticle r-br"></span>
+                    <div class="qr-canvas">${qrSvg}</div>
+                  </div>
+                  <span class="qr-caption">Scan on Android to Open Play Store</span>
+                </div>
+              ` : ""}
+
+              <div class="approved-actions">
+                <div class="steps-mini">
+                  <div class="step-m"><b>1.</b> Click <b>Join via Web</b> to accept the closed testing invite in your browser</div>
+                  <div class="step-m"><b>2.</b> ${mobile ? "Tap <b>Join via Android</b> below to open Google Play and install" : "Scan the <b>QR Code</b> with your Android phone (or click <b>Join via Android</b>) to install from Google Play"}</div>
+                  <div class="step-m"><b>3.</b> Make sure Google Play is signed in with <b>${ticket.email}</b></div>
+                </div>
+
+                <div class="approved-btn-row">
+                  ${joinWebUrl ? `
+                    <a href="${joinWebUrl}" target="_blank" rel="noopener" class="btn btn-primary">
+                      <span>🌐 Join via Web</span>
+                    </a>
+                  ` : ""}
+                  ${joinAndroidUrl ? `
+                    <a href="${joinAndroidUrl}" target="_blank" rel="noopener" class="btn ${joinWebUrl ? 'btn-ghost' : 'btn-primary'}">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8c-.3.3-.5.8-.5 1.5v17.4c0 .7.2 1.2.5 1.5l9.2-9.6L3.6 1.8zm11.4 8.4l2.5-1.4L4.8.8l10.2 9.4zm0 3.6L4.8 23.2l12.7-7.6-2.5-1.8zm1.2-1.2l3.4 2c.9.5.9 1.4 0 1.9l-3.4 2-1.5-1.5 1.5-4.4z"/></svg>
+                      <span>Join via Android (Play Store)</span>
+                    </a>
+                  ` : ""}
+                  <button class="btn btn-ghost" data-copy-link>
+                    <span>📋 Copy Link</span>
+                  </button>
+                </div>
+
+                <div class="ticket-footer-actions">
+                  <button class="btn-text-action" data-reset-ticket>Change / Check Another Email</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const copyBtn = bodyEl.querySelector("[data-copy-link]");
+        if (copyBtn) {
+          copyBtn.addEventListener("click", () => {
+            navigator.clipboard.writeText(joinWebUrl || joinAndroidUrl).then(() => {
+              copyBtn.innerHTML = "<span>✓ Copied!</span>";
+              setTimeout(() => { copyBtn.innerHTML = "<span>📋 Copy Link</span>"; }, 2500);
+            }).catch(() => {});
+          });
+        }
       }
     } else {
       bodyEl.innerHTML = `
         <div class="queue-status-in pending-view">
           <div class="queue-header">
             <div class="queue-badge pending"><span class="pulse-dot-amber"></span> Queue Spot Confirmed</div>
-            <h3>Waiting for Closed Testing Cohort Opening</h3>
+            <h3>Waiting for Closed Testing Approval</h3>
             <p class="queue-desc">Registered Account: <strong>${ticket.email}</strong> · Platform: <strong>${ticket.platform || 'Android'}</strong></p>
           </div>
 
           <div class="pending-notice">
             <div class="notice-text">
-              <p>Your request is confirmed and logged in our priority queue. As soon as your account is whitelisted on Google Play Console, you will receive an invitation email.</p>
+              <p>Your request is confirmed and logged in our priority queue. As soon as your account is whitelisted on Google Play Console, you will receive an email — and revisiting this page will automatically unlock your Web link and Android Play Store QR code.</p>
             </div>
 
             <div class="ticket-status-pill">
               <span class="pill-label">Cloud Status: <b>In Queue (Waiting Approval)</b></span>
               <div class="pill-buttons">
-                <button class="btn btn-sm btn-ghost" data-check-status title="Check cloud status">Refresh Status</button>
-                <button class="btn btn-sm btn-primary" data-preview-approved title="Preview the VIP Approved state">⚡ Preview VIP Approved Pass</button>
+                <button class="btn btn-sm btn-primary" data-check-status title="Check live status from cloud">Refresh Status</button>
                 <button class="btn btn-sm btn-ghost" data-reset-ticket>Change Email</button>
               </div>
             </div>
@@ -415,46 +755,57 @@
         </div>
       `;
 
-      const previewBtn = bodyEl.querySelector("[data-preview-approved]");
-      if (previewBtn) {
-        previewBtn.addEventListener("click", () => {
-          ticket.status = "Approved";
-          saveTicket(appId, ticket);
-          renderStatusView(bodyEl, appId, cfg, ticket, container);
-        });
+      // Quietly auto-check cloud once on load in case tester was recently approved
+      if (API_BASE && !ticket._autoCheckedThisLoad) {
+        ticket._autoCheckedThisLoad = true;
+        fetch(`${API_BASE}/api/testers/status?email=${encodeURIComponent(ticket.email)}&appId=${encodeURIComponent(appId)}`)
+          .then((r) => (r.ok ? r.json() : null))
+          .then((data) => {
+            if (data && (data.status || "").toLowerCase() === "approved") {
+              ticket.status = "Approved";
+              ticket.joinWebUrl = data.joinWebUrl || data.playStoreUrl || ticket.joinWebUrl;
+              ticket.joinAndroidUrl = data.joinAndroidUrl || ticket.joinAndroidUrl;
+              ticket.androidStatus = data.androidStatus || ticket.androidStatus;
+              saveTicket(appId, ticket);
+              renderStatusView(bodyEl, appId, cfg, ticket, container);
+            }
+          })
+          .catch(() => {});
       }
+    }
 
-      const checkBtn = bodyEl.querySelector("[data-check-status]");
-      if (checkBtn) {
-        checkBtn.addEventListener("click", async () => {
-          checkBtn.textContent = "Checking...";
-          checkBtn.disabled = true;
+    const checkBtn = bodyEl.querySelector("[data-check-status]");
+    if (checkBtn) {
+      checkBtn.addEventListener("click", async () => {
+        checkBtn.textContent = "Checking...";
+        checkBtn.disabled = true;
 
-          if (API_BASE) {
-            try {
-              const res = await fetch(`${API_BASE}/api/testers/status?email=${encodeURIComponent(ticket.email)}&appId=${encodeURIComponent(appId)}`);
-              if (res.ok) {
-                const data = await res.json();
-                if (data.status === "Approved") {
-                  ticket.status = "Approved";
-                  ticket.playStoreUrl = data.playStoreUrl || ticket.playStoreUrl;
-                  saveTicket(appId, ticket);
-                  renderStatusView(bodyEl, appId, cfg, ticket, container);
-                  return;
-                }
+        if (API_BASE) {
+          try {
+            const res = await fetch(`${API_BASE}/api/testers/status?email=${encodeURIComponent(ticket.email)}&appId=${encodeURIComponent(appId)}`);
+            if (res.ok) {
+              const data = await res.json();
+              ticket.joinWebUrl = data.joinWebUrl || data.playStoreUrl || ticket.joinWebUrl;
+              ticket.joinAndroidUrl = data.joinAndroidUrl || ticket.joinAndroidUrl;
+              ticket.androidStatus = data.androidStatus || ticket.androidStatus;
+              if ((data.status || "").toLowerCase() === "approved") {
+                ticket.status = "Approved";
+                saveTicket(appId, ticket);
+                renderStatusView(bodyEl, appId, cfg, ticket, container);
+                return;
               }
-            } catch (_) {}
-          }
+            }
+          } catch (_) {}
+        }
 
+        setTimeout(() => {
+          checkBtn.textContent = "Still in Queue (Pending)";
           setTimeout(() => {
-            checkBtn.textContent = "Still in Queue (Pending)";
-            setTimeout(() => {
-              checkBtn.disabled = false;
-              checkBtn.textContent = "Refresh Status";
-            }, 2500);
-          }, 800);
-        });
-      }
+            checkBtn.disabled = false;
+            checkBtn.textContent = "Refresh Status";
+          }, 2500);
+        }, 600);
+      });
     }
 
     const resetBtn = bodyEl.querySelector("[data-reset-ticket]");
