@@ -68,19 +68,21 @@ This file serves as the single source of truth for ongoing development, complete
   * Plan: Flex Consumption (.NET 10 LTS Isolated Worker, 512 MB, Linux Ubuntu 24.04, Central US)
   * Default Domain: `native-espresso-web-function-epbhdxbxbybte6bz.centralus-01.azurewebsites.net`
   * Code Package Deployed: **PASS** (All 5 endpoints active: `ApproveTester`, `CheckTesterStatus`, `HealthCheck`, `RegisterTester`, `ReportIssue`).
-  * App Settings Synchronized: `AZURE_SQL_CONNECTION_STRING`, `BLOB_STORAGE_CONNECTION_STRING`, `STORAGE_ACCOUNT_NAME`, `ADMIN_API_KEY`.
-  * Live `/api/health` Check: **PASS** (`status: Healthy`, `database: connected`, `blobStorage: Configured`).
+  * App Settings Synchronized: `AZURE_SQL_CONNECTION_STRING`, `BLOB_STORAGE_CONNECTION_STRING`, `STORAGE_ACCOUNT_NAME`, `BREVO_API_KEY`, `ADMIN_API_KEY`.
+  * Live `/api/health` Check: **PASS** (`status: Healthy`, `database: connected`, `blobStorage: Configured`, `emailCascade: Configured`).
+  * CORS Configured: `https://nativeespresso.github.io` allowed.
   * Frontend Web Client: Configured `DEFAULT_API_BASE` in `assets/cloud-client.js` and pushed to GitHub.
+* [x] **Email Alerts (Brevo Free Tier — 300 emails/day)**:
+  * Verified sender `native.espresso@gmail.com` via Brevo API.
+  * Hardened serverless delivery (`await` / `Task.WhenAll`) for Beta Queue confirmations, Developer signup alerts, VIP Play Store approvals, and Support Ticket notifications.
+  * Local `--test-email` dispatch verified to `native.espresso@gmail.com`.
 * [x] **Live End-to-End Validation**:
   * Tester Registration: **PASS** (Tested with `test.verification@nativeespresso.com` -> saved in `dbo.Testers` -> verified via `/api/testers/status`).
   * Diagnostic Issue Report & Storage: **PASS** (Tested with Base64 payload -> uploaded to `sharedstoragepool/support-attachments` -> ticket `NE-DB566AF4` saved in `dbo.IssueReports` -> verified public attachment download).
 
 ---
 
-## 🟡 3. Active Next Steps & Optional Enhancements
+## ⚪ 3. Optional Future Enhancements
 
-* [ ] **Azure Portal CORS (30-second task)**:
-  * In Azure Portal -> `native-espresso-web-function` -> **API** -> **CORS**:
-  * Add `https://nativeespresso.github.io` (and optionally `http://localhost:5500`) to Allowed Origins and click **Save**.
-* [ ] **Dual-Email Cascade API Keys (Free Tier - When Ready)**:
-  * Optional: Generate free API keys on Resend (100 emails/day) and Brevo (300 emails/day) and paste into Azure App Settings for automated email dispatches.
+* [ ] **Custom Domain + Resend Primary Cascade (Optional)**:
+  * When purchasing a custom domain (e.g., `nativeespresso.com`), optionally add `RESEND_API_KEY` (100 emails/day free) as primary alongside Brevo fallback.
