@@ -29,8 +29,13 @@ nativeespresso.github.io/
 ├── googlec843c5927d99b442.html  <-- Google Search Console ownership verification
 │
 ├── assets/                      <-- Shared Design System
-│   ├── style.css                <-- Unified dark theme, typography, spotlight cards
-│   └── main.js                  <-- Shared animations, navigation, dynamic dates
+│   ├── company.css              <-- Company Hub Atelier theme
+│   ├── trans-title.css          <-- Trans-Title Studio Console theme
+│   ├── style.css                <-- Echo Cleaner Acoustic Studio theme
+│   ├── spatial-ui.css           <-- 3D Tilt Phone Stage, Studio Workbenches, Reviews & Floating Dock
+│   ├── media/                   <-- Verified product icons & high-res mobile screenshots
+│   ├── main.js                  <-- Shared animations, 3D tilt, workbenches, accordion & Lightbox
+│   └── cloud-client.js          <-- Dynamic Apps/Platforms, Closed Testing Intelligence, Reviews & Support
 │
 ├── echo-cleaner/                <-- LEVEL 2: App #1 (Echo Cleaner)
 │   ├── index.html               <-- App landing page + interactive signal demo
@@ -156,10 +161,11 @@ Each supported platform tracks its own independent publication lifecycle status:
 
 ### Current Portfolio Platform Statuses:
 * **Trans-Title**:
-  * `Android`: **`Closed-Testing`** (v1.0.16 active on Google Play Store)
-  * `Windows (WinUI 3)`: **`Development`** (Native Windows desktop app at `C:\Projects\WinUI\Trans-Title`)
-  * `iOS`: **`Planning`**
-  * `macOS / Linux`: **`Planning`**
+  * `Android`: **`Closed-Testing`** (v1.0.17 active on Google Play Store)
+  * `Windows (WinUI 3)`: **`Development`** (Native Windows desktop app at `C:\Projects\WinUI\Trans-Title`, replacing an earlier JavaFX player prototype)
+  * `iOS`: **`Roadmap`** (Planned after Apple Mac hardware provisioning)
+  * `macOS`: **`Roadmap`** (Planned alongside iOS on Mac hardware)
+  * `Linux`: **`Roadmap`** (Planned as engineering capacity allows)
 * **Echo Cleaner**:
   * `Android`: **`Testing Queue / Closed Testing Preparation`** (Finalizing for Google Play Closed Testing release)
   * `iOS`: **`Planning`**
@@ -254,24 +260,28 @@ Stored in `assets/branding/` for developer page upload:
 * **Repository**: `https://github.com/NativeEspresso/Native-Espresso-Backend` (Private, `main` branch — completely decoupled from the public GitHub Pages repo).
 * **Runtime**: C# **.NET 10.0 (LTS)** Isolated Worker Model on **Azure Functions Flex Consumption** (Linux Ubuntu 24.04, 512 MB instance, Central US).
 * **Live Base URL**: `https://native-espresso-web-function-epbhdxbxbybte6bz.centralus-01.azurewebsites.net` (CORS whitelisted for `https://nativeespresso.github.io`).
-* **Database**: Azure SQL Database (Free Tier Serverless, overage billing disabled, auto-pause wake-up retry loop) with 3 tables:
-  * `dbo.Apps`: Dynamic multi-app registry (`AppId`, `AppName`, `AndroidStatus`, `JoinWebUrl`, `JoinAndroidUrl`).
-  * `dbo.Testers`: Closed testing waitlist and approval state (`Pending` / `Approved`).
+* **Database**: Azure SQL Database (Free Tier Serverless, overage billing disabled, auto-pause wake-up retry loop) with 4 tables:
+  * `dbo.Apps`: Dynamic multi-app registry (`AppId`, `AppName`, `AndroidStatus`, `WindowsStatus`, `IosStatus`, `MacosStatus`, `LinuxStatus`, `ClosedTestingStartDate`, `ClosedTestingDays`, `LatestVersion`, `LatestReleaseNotes`, `JoinWebUrl`, `JoinAndroidUrl`, `MicrosoftStoreUrl`).
+  * `dbo.Testers`: Closed testing waitlist, approval state, installation confirmation (`InstallConfirmed`, `InstalledVersion`), Day-2 engagement tracking (`LastEngagedAt`, `Day2ReminderSentAt`), and update alert tracking (`LastUpdateVersionNotified`).
   * `dbo.IssueReports`: Multi-app support tickets (`AppId`, `AppName`, `Platform`, `Category`, `AttachmentUrl`, `Status`, `AdminNotes`).
+  * `dbo.AppReviews`: Community star ratings, platform tags, moderation state (`Pending`, `Approved`, `Rejected`), pinning, and official studio replies (`DeveloperReply`, `RepliedAt`).
+* **Background Automation**: 6-hour `TesterEngagementTimer` (`0 0 */6 * * *`) checks approved closed-testing cohorts (≥ 24h after approval) and dispatches adaptive Day-2 engagement or install-check reminders via Brevo.
 * **Cloud Storage**: Azure Blob Storage (`sharedstoragepool`, container `support-attachments`) for error screenshots, logs, and short video recordings up to 15 MB.
 * **Dual-Email Cascade Strategy**:
   * **Primary**: Resend API (100 free/day — optional once a custom domain is configured).
   * **Active Provider / Fallback**: Brevo API (300 free/day, 9,000/month — verified sender `native.espresso@gmail.com`).
-  * Serverless-safe awaited dispatch (`await` / `Task.WhenAll`) for Beta Queue confirmations, Developer signup alerts, dual-link VIP Play Store approvals, and Support Ticket notifications.
+  * Serverless-safe awaited dispatch (`await` / `Task.WhenAll`) for Beta Queue confirmations, Developer alerts, dual-link VIP Play Store approvals, Day-2 engagement reminders, new version update announcements (`AppUpdateApproved`), review reply notifications, and Support Ticket receipts.
 
-### Frontend Client & Scannable QR Engine (`assets/cloud-client.js`):
-1. **Dynamic Multi-App Closed Testing Queue**:
-   * Automatically fetches live app configs (`GET /api/apps`) so new apps and updated links appear without frontend JS edits.
-   * Uses `localStorage` (`ne_tester_tickets`) plus automatic cloud status checks (`GET /api/testers/status` & `POST /api/testers/register`).
-   * When an approved tester submits their email (or refreshes status):
-     * Displays both **`Join via Web`** (`joinWebUrl`) and **`Join via Android (Play Store)`** (`joinAndroidUrl`).
-     * On desktop, renders a **standards-compliant ISO/IEC 18004 QR Code** (Byte mode, EC Level M, Reed-Solomon GF(256), white quiet zone) encoding `joinAndroidUrl` so scanning with an Android phone opens Google Play directly to the app.
-2. **Support & Issue Diagnostic Portal**:
+### Frontend Client, 3D Spatial Stage & Reviews (`assets/cloud-client.js`, `assets/main.js`):
+1. **3D Interactive Showcase & Floating Command Dock**:
+   * All primary pages feature above-the-fold product identity lockups, live **5-Platform Matrices**, cursor-reactive **3D Tilt Phone Stages** with fullscreen zoom lightbox, interactive tabbed **Studio / Acoustic Workbenches**, exclusive accordion FAQs, expandable Support drawers, and a frosted glass `.floating-dock`.
+2. **Dynamic Multi-App Closed Testing Queue & Engagement Intelligence**:
+   * Automatically fetches live app configs (`GET /api/apps`) so new apps, 5-platform statuses (`Android`, `Windows`, `iOS`, `macOS`, `Linux`), closed-testing countdowns, and approved app update alerts (`LatestVersion`) hydrate without frontend HTML edits.
+   * Uses `localStorage` (`ne_tester_tickets`) plus automatic cloud checks (`GET /api/testers/status`, `POST /api/testers/register`, `POST /api/testers/engagement`) and `?checkin=installed|engaged|updated` URL deep links.
+   * When an approved tester unlocks access, displays dual Google Play links, **ISO/IEC 18004 QR Code**, an interactive **Install & Day-2 Engagement Tracker**, and an alert banner whenever a newer build version is approved.
+3. **Community Reviews & Official Studio Replies (`[data-reviews-widget]`)**:
+   * Publicly renders moderated `Approved` reviews (`GET /api/reviews`) with indented **Official Reply · Native Espresso Studio** cards and submits new 1–5 star reviews (`POST /api/reviews`).
+4. **Support & Issue Diagnostic Portal**:
    * Independent web fail-safe for when in-app Android/Windows reporting is unreachable or store downloads fail.
    * Instant self-service advice (`wsreset.exe`, `winget`, Play Store cache), OS auto-detect, drag-and-drop image/log/video upload (up to 15 MB), and direct submission to `POST /api/support/report-issue` with explicit `appId` + `appName`.
 
@@ -279,7 +289,7 @@ Stored in `assets/branding/` for developer page upload:
 * **Role**: Linear secondary administrative project — editable as needed, though not on every web update (usually synced when the Azure backend is updated).
 * **Repository**: `https://github.com/ChTalhaArain/Native-Espresso` (Private, `master` branch).
 * **Framework**: Packaged WinUI 3 (.NET 10, Mica backdrop) authenticating against `/api/studio/*` using constant-time `X-Admin-Key` validation stored in **Windows Credential Locker (`PasswordVault`)**.
-* **Modules**: **Overview** (live cloud health & KPIs), **Closed Testing** (dynamic app filters, 1-click Play Console comma/line copy, bulk VIP approve), **Support Issues** (master-detail triage + blob attachment launcher), **Apps & Links** (add future apps, activate Closed Testing, update Web & Android links anytime), and **Settings**.
+* **Modules**: **Overview** (live cloud health & KPIs including review counts), **Closed Testing** (dynamic app filters, install/engagement badges, 1-click Play Console copy, bulk VIP approve, manual install mark & Day-2/Install reminder dispatcher), **Support Issues** (master-detail triage + blob attachment launcher), **Reviews & Comments** (pin/approve/reject + Official Studio Reply & Brevo notification), **Apps & Links** (5-platform live status dropdowns including `iOS`, `macOS`, `Linux`, countdown controls, `LatestVersion` + `New Update Approved` broadcasts, Play Store & Microsoft Store links), and **Settings**.
 
 
 

@@ -8,10 +8,11 @@
 <meta name="theme-color" content="#08080c">
 <meta property="og:title" content="Trans-Title — Flagship Multimedia Suite &amp; On-Device AI Studio">
 <meta property="og:description" content="On-device speech transcription, subtitle translation, Cross-Play video orchestration, and flagship media players. Zero cloud uploads.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2308080c'/%3E%3Crect x='6' y='8' width='20' height='16' rx='3' stroke='%23f43f7b' stroke-width='2' fill='none'/%3E%3Cpath d='M10 16h6M10 19h10' stroke='%234fd1c5' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" href="../assets/media/trans-title/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="../assets/trans-title.css?v=20261118e">
+<link rel="stylesheet" href="../assets/trans-title.css?v=20261119">
+<link rel="stylesheet" href="../assets/spatial-ui.css?v=20261119">
 <script>(()=>{const t=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t)})();</script>
 </head>
 <body>
@@ -26,17 +27,15 @@
       </a>
       <span class="crumb-sep">/</span>
       <a class="brand" href="#top" aria-label="Trans-Title home">
-        <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect x="4" y="6" width="24" height="20" rx="4" stroke="var(--magenta)" stroke-width="2.2" fill="none"/><path d="M8 18h6M8 21h10M17 18h7" stroke="var(--magenta)" stroke-width="2" stroke-linecap="round"/></svg>
+        <img src="../assets/media/trans-title/icon.png" width="24" height="24" style="border-radius:6px;object-fit:cover;" alt="">
         <span>Trans-Title</span>
       </a>
     </div>
     <nav class="links" id="menu" aria-label="Primary">
-      <a href="#studios">Studios</a>
-      <a href="#transcribe">Transcribe</a>
-      <a href="#translate">Translate</a>
-      <a href="#crossplay">Cross-Play</a>
-      <a href="#players">Players</a>
-      <a href="#support">Support</a>
+      <a href="#top">Platforms</a>
+      <a href="#studios">3D Studios</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#support">Support &amp; FAQ</a>
       <a href="privacy.html">Privacy</a>
       <a class="btn btn-sm btn-primary" href="#beta-queue">Closed Testing</a>
     </nav>
@@ -48,221 +47,254 @@
 </header>
 
 <main>
-<!-- HERO -->
-<section class="hero">
+<!-- PRODUCT-FIRST 3D SPATIAL HERO -->
+<section class="hero" id="overview">
   <div class="hero-grid-bg" aria-hidden="true"></div>
   <div class="orb orb-a" aria-hidden="true" style="background:radial-gradient(circle,rgba(244,63,123,.48),rgba(155,114,232,.18) 55%,transparent 70%);"></div>
   <div class="orb orb-b" aria-hidden="true" style="background:radial-gradient(circle,rgba(79,209,197,.42),rgba(77,163,255,.18) 55%,transparent 70%);"></div>
+
+  <!-- Live Closed Testing Top Strip (Visible to Everyone) -->
   <div class="wrap live-testing-top" data-hero-countdown="trans-title" hidden></div>
-  <div class="wrap hero-in">
-    <div class="hero-kicker-pill rise" style="--d:0">
-      <i class="dot dot-magenta" aria-hidden="true"></i>
-      <span>Android · Multimedia Suite &amp; On-Device AI Studio</span>
-    </div>
-    <h1 class="rise" style="--d:1">Your Media Studio.<br><span class="grad">100% On-Device.</span></h1>
-    <p class="lede rise" style="--d:2">Trans-Title combines high-precision on-device speech transcription, neural subtitle translation, and multi-track Cross-Play orchestration with flagship OLED video and ambient music players. Everything runs locally on your silicon — zero cloud latency, zero surveillance.</p>
 
-    <div class="platforms rise" style="--d:2.5;margin-bottom:20px;" data-app-platforms="trans-title">
-      <span class="platform-tag active" data-platform-android><b>Android</b> Closed Testing</span>
-      <span class="platform-tag dev" data-platform-windows><b>Windows (WinUI 3)</b> In Active Development</span>
-      <span class="platform-tag"><b>iOS</b> In Planning</span>
-      <span class="platform-tag"><b>macOS / Linux</b> Roadmap</span>
+  <div class="wrap hero-split">
+    <!-- Left Column: Official Icon, Wordmark, Platform Matrix & CTAs -->
+    <div class="hero-identity-col">
+      <div class="app-identity-lockup rise" style="--d:0">
+        <div class="app-icon-medallion">
+          <img src="../assets/media/trans-title/icon.png" alt="Trans-Title official icon">
+        </div>
+        <div class="app-identity-text">
+          <h1 class="app-wordmark is-transtitle">Trans-Title</h1>
+          <span class="app-tagline-pill">
+            <i class="dot dot-magenta" aria-hidden="true"></i>
+            Multimedia Suite &amp; On-Device AI Studio
+          </span>
+        </div>
+      </div>
+
+      <!-- Platform & Development Matrix Placed Prominently First -->
+      <div class="platform-matrix-card rise" style="--d:1">
+        <div class="pmc-head">
+          <span class="pmc-label">Platforms &amp; Development Status</span>
+          <a class="pmc-action" href="#beta-queue">Get Store Access ↓</a>
+        </div>
+        <div class="platforms" data-app-platforms="trans-title">
+          <span class="platform-tag active" data-platform-android><b>Android</b> Closed Testing</span>
+          <span class="platform-tag dev" data-platform-windows><b>Windows (WinUI 3)</b> In Active Development</span>
+          <span class="platform-tag" data-platform-ios><b>iOS</b> On Roadmap</span>
+          <span class="platform-tag" data-platform-macos><b>macOS</b> On Roadmap</span>
+          <span class="platform-tag" data-platform-linux><b>Linux</b> On Roadmap</span>
+        </div>
+        <p class="pmc-note">Replaced an early JavaFX desktop prototype with native <strong>WinUI 3</strong> on Windows first; <strong>iOS &amp; macOS</strong> follow once Apple hardware is provisioned, then <strong>Linux</strong>.</p>
+      </div>
+
+      <div data-app-access-banner="trans-title" hidden style="margin-bottom:16px;"></div>
+
+      <h2 class="hero-sub-headline rise" style="--d:2">Four Studios. Flagship Players. <span class="grad">100% On-Device.</span></h2>
+      <p class="lede rise" style="--d:2.5;margin:0 0 22px;">Transcribe speech into subtitles, translate across languages offline, orchestrate multi-track dubbed playback, and watch in OLED dark mode — all running locally on your hardware with zero uploads.</p>
+
+      <div class="hero-cta rise" style="--d:3;margin-top:20px;">
+        <a class="btn btn-primary" href="#beta-queue">
+          <span>Join Closed Testing</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#studios">Interactive 3D Studios</a>
+        <a class="btn btn-ghost" href="#reviews">Reviews</a>
+      </div>
+
+      <ul class="chips rise" style="--d:4">
+        <li><i class="dot dot-green"></i>100% On-Device</li>
+        <li><i class="dot dot-cyan"></i>4-Tier Speech Accuracy</li>
+        <li><i class="dot dot-magenta"></i>Lock-Screen Processing</li>
+      </ul>
     </div>
 
-    <div data-app-access-banner="trans-title" hidden style="margin-bottom:18px;"></div>
+    <!-- Right Column: Interactive 3D Tilt Phone Stage -->
+    <div class="hero-stage-col rise" style="--d:1.5" data-3d-stage>
+      <div class="stage-3d-wrap">
+        <div class="stage-3d-aura" aria-hidden="true"></div>
+        <div class="phone-3d-frame" title="Click to inspect fullscreen">
+          <div class="phone-3d-screen">
+            <img src="../assets/media/trans-title/01-home-hub.png" alt="Trans-Title Studio Home Hub">
+            <div class="phone-3d-glare" aria-hidden="true"></div>
+          </div>
+          <div class="phone-3d-badge">
+            <i class="dot dot-cyan" aria-hidden="true"></i>
+            <span>Studio Home Hub · Tap to Zoom</span>
+          </div>
+        </div>
+      </div>
 
-    <div class="hero-cta rise" style="--d:3">
-      <a class="btn btn-primary" href="#beta-queue">
-        <span>Join Closed Testing</span>
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
-      <a class="btn btn-ghost" href="#studios">Explore the Studios</a>
+      <div class="stage-shot-pills" aria-label="Quick app screenshot switcher">
+        <button type="button" class="shot-pill active" data-shot-src="../assets/media/trans-title/01-home-hub.png" data-shot-label="Studio Home Hub">Home Hub</button>
+        <button type="button" class="shot-pill" data-shot-src="../assets/media/trans-title/02-transcribe.png" data-shot-label="AI Transcribe Studio">Transcribe</button>
+        <button type="button" class="shot-pill" data-shot-src="../assets/media/trans-title/03-translate.png" data-shot-label="Smart Translation Studio">Translate</button>
+        <button type="button" class="shot-pill" data-shot-src="../assets/media/trans-title/05-cross-play.png" data-shot-label="Cross-Play Dub &amp; Sync">Cross-Play</button>
+        <button type="button" class="shot-pill" data-shot-src="../assets/media/trans-title/06-video-player.png" data-shot-label="HD Subtitle Video Player">Video Player</button>
+        <button type="button" class="shot-pill" data-shot-src="../assets/media/trans-title/08-music-player.png" data-shot-label="Ambient Music Wave Player">Music Wave</button>
+      </div>
+      <span class="stage-hint">Move pointer to tilt in 3D · Click device to open lightbox</span>
     </div>
-    <ul class="chips rise" style="--d:4">
-      <li><i class="dot dot-green"></i>100% On-Device Processing</li>
-      <li><i class="dot dot-cyan"></i>4-Tier Speech Accuracy</li>
-      <li><i class="dot dot-magenta"></i>Lock-Screen Background Processing</li>
-    </ul>
   </div>
-  <svg class="hero-wave" id="heroWave" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
-    <defs><linearGradient id="hw2" x1="0" x2="1"><stop offset="0" stop-color="#f43f7b"/><stop offset=".5" stop-color="#9b72e8"/><stop offset="1" stop-color="#4fd1c5"/></linearGradient></defs>
-    <path class="w1" d="M0 110 C 100 40 200 180 300 110 S 500 40 600 110 S 800 180 900 110 S 1100 40 1200 110" fill="none" stroke="url(#hw2)" stroke-width="2.5"/>
-    <path class="w2" d="M0 110 C 100 170 200 50 300 110 S 500 170 600 110 S 800 50 900 110 S 1100 170 1200 110" fill="none" stroke="url(#hw2)" stroke-width="1.4" opacity=".45"/>
-  </svg>
 </section>
 
-<!-- STUDIOS OVERVIEW -->
+<!-- INTERACTIVE 3D TABBED STUDIO WORKBENCH -->
 <section id="studios" class="section" data-accent="magenta">
   <div class="wrap">
-    <p class="kicker reveal">Creative Workstation</p>
+    <p class="kicker reveal">Interactive Studio Switcher</p>
     <div class="section-title-row reveal">
       <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Four Integrated Production Studios</h2>
+      <h2>Explore Every Production Studio</h2>
     </div>
-    <p class="lede reveal">More than just a media player — Trans-Title delivers a cohesive studio workbench for transcribing, translating, orchestrating, and experiencing your local library.</p>
+    <p class="lede reveal">Switch tabs below to inspect each on-device workstation synced directly with real Android screenshots.</p>
 
-    <div class="grid cards" style="grid-template-columns:repeat(2,1fr);margin-top:36px;">
-      <!-- STUDIO 1 -->
-      <article class="card reveal" style="border-left:3px solid var(--magenta);">
-        <div class="ico" style="--c:var(--magenta)">✍</div>
-        <h3 style="font-size:1.28rem;">AI Transcribe Studio</h3>
-        <p>High-precision on-device speech recognition turning spoken dialogue into synchronized subtitles. Features 4 accuracy tiers (Fair, Better, High, Superior), 5-minute continuous pipelining with 3-second overlap stitching, and crash-safe checkpoint recovery.</p>
-        <a class="card-link" href="#transcribe" style="color:var(--magenta);">Explore Transcribe Engine →</a>
-      </article>
+    <div class="workbench-shell reveal" data-studio-deck>
+      <div class="studio-tabs-rail" role="tablist" aria-label="Trans-Title Studios">
+        <button type="button" class="studio-tab-btn active" role="tab" aria-selected="true" data-studio-tab="transcribe">✍ AI Transcribe</button>
+        <button type="button" class="studio-tab-btn" role="tab" aria-selected="false" data-studio-tab="translate">🌐 Smart Translate</button>
+        <button type="button" class="studio-tab-btn" role="tab" aria-selected="false" data-studio-tab="crossplay">🎛 Cross-Play</button>
+        <button type="button" class="studio-tab-btn" role="tab" aria-selected="false" data-studio-tab="players">▶ Video &amp; Music Players</button>
+      </div>
 
-      <!-- STUDIO 2 -->
-      <article class="card reveal" style="border-left:3px solid var(--cyan);">
-        <div class="ico" style="--c:var(--cyan)">🌐</div>
-        <h3 style="font-size:1.28rem;">Smart Translation Studio</h3>
-        <p>Neural subtitle translation operating completely offline. Automatically discover and extract embedded subtitle streams from video containers, translate cues across languages, and fine-tune text and timing in an interactive editor.</p>
-        <a class="card-link" href="#translate" style="color:var(--cyan);">Explore Translation Suite →</a>
-      </article>
+      <div class="studio-deck-grid">
+        <!-- Left: Active Studio Content Panes -->
+        <div>
+          <!-- PANE 1: AI TRANSCRIBE -->
+          <div class="studio-pane active" data-studio-pane="transcribe">
+            <div class="studio-pane-head">
+              <span class="kicker" style="--accent:var(--cyan)">Speech-to-Text Workstation</span>
+              <h3>AI Transcribe Studio: Pure On-Device Precision</h3>
+              <p>Turn voice memos, interviews, lectures, and long videos into millisecond-accurate subtitle cues without sending a single byte off your device.</p>
+            </div>
+            <div class="studio-feature-grid">
+              <div class="mini-feature-tile">
+                <h4>⚡ 4-Tier Accuracy Ladder</h4>
+                <p>Choose <strong>Fair</strong>, <strong>Better</strong>, <strong>High</strong>, or <strong>Superior</strong> — protected automatically by device memory safety gates.</p>
+              </div>
+              <div class="mini-feature-tile">
+                <h4>∞ 5-Min Chunk Pipelining</h4>
+                <p>5-minute continuous windows with 3-second overlap stitching prevent severed words or skipped lines across seams.</p>
+              </div>
+              <div class="mini-feature-tile">
+                <h4>🛡 Lock-Screen Resilience</h4>
+                <p>Foreground media service with CPU wake-lock protection keeps transcribing even when locked or multitasking.</p>
+              </div>
+              <div class="mini-feature-tile">
+                <h4>💾 Atomic Checkpoints &amp; Export</h4>
+                <p>Saves verified checkpoints per slice and exports cleanly to standard <code>.SRT</code>, <code>.VTT</code>, or plain transcripts.</p>
+              </div>
+            </div>
+          </div>
 
-      <!-- STUDIO 3 -->
-      <article class="card reveal" style="border-left:3px solid var(--blue);">
-        <div class="ico" style="--c:var(--blue)">🎛</div>
-        <h3 style="font-size:1.28rem;">Cross-Play Studio</h3>
-        <p>Multi-track video orchestration workbench. Pair videos with external dubbed audio tracks (with millisecond delay tuning for exact lip-sync) and multi-language sidecar subtitles (<code>.srt</code>, <code>.vtt</code>, <code>.ass</code>, <code>.ttml</code>).</p>
-        <a class="card-link" href="#crossplay" style="color:var(--blue);">Explore Cross-Play →</a>
-      </article>
+          <!-- PANE 2: SMART TRANSLATION -->
+          <div class="studio-pane" data-studio-pane="translate">
+            <div class="studio-pane-head">
+              <span class="kicker" style="--accent:var(--green)">Global Subtitle Localization</span>
+              <h3>Smart Translation &amp; Interactive Cue Editor</h3>
+              <p>Inspect embedded subtitle streams inside media containers, translate dialogue offline across dozens of languages, and refine wording line by line.</p>
+            </div>
+            <div class="studio-feature-grid">
+              <div class="mini-feature-tile">
+                <h4>🔍 Embedded Stream Extractor</h4>
+                <p>Imports videos directly and exposes embedded subtitle tracks inside MKV, MP4, and WebM containers.</p>
+              </div>
+              <div class="mini-feature-tile">
+                <h4>🌐 Offline Neural Translation</h4>
+                <p>Local language packages translate English, Spanish, Chinese, Hindi, Arabic, Russian, and more without API keys.</p>
+              </div>
+              <div class="mini-feature-tile">
+                <h4>✏ Visual Subtitle Editor</h4>
+                <p>Edit cue wording, inspect timestamps, shift timing, and preview clean subtitle formatting before exporting.</p>
+              </div>
+              <div class="mini-feature-tile">
+                <h4>⚡ Language Setup Shortcuts</h4>
+                <p>Saved preferred languages from onboarding appear as one-tap shortcuts across both transcription and translation.</p>
+              </div>
+            </div>
+          </div>
 
-      <!-- STUDIO 4 -->
-      <article class="card reveal" style="border-left:3px solid var(--amber);">
-        <div class="ico" style="--c:var(--amber)">▶</div>
-        <h3 style="font-size:1.28rem;">Flagship Video &amp; Music Players</h3>
-        <p>OLED dark mode video player with live subtitle styling, audio-timing sync, GPU picture adjustments, and tactile gesture HUDs — paired with an ambient music player featuring gapless playback, crossfade, and dynamic artwork lighting.</p>
-        <a class="card-link" href="#players" style="color:var(--amber);">Explore Players →</a>
-      </article>
-    </div>
-  </div>
-</section>
+          <!-- PANE 3: CROSS-PLAY -->
+          <div class="studio-pane" data-studio-pane="crossplay">
+            <div class="studio-pane-head">
+              <span class="kicker" style="--accent:var(--blue)">Multi-Track Media Orchestrator</span>
+              <h3>Cross-Play Studio: Audio Dubbing &amp; Lip-Sync</h3>
+              <p>Pair any video master with external dubbed audio tracks or secondary container streams and align subtitles on a live multi-track timeline.</p>
+            </div>
+            <div class="studio-feature-grid">
+              <div class="mini-feature-tile">
+                <h4>🎚 Millisecond Lip-Sync Offset</h4>
+                <p>Shift external audio earlier or later with positive and negative millisecond offsets until lip-sync locks in live.</p>
+              </div>
+              <div class="mini-feature-tile">
+                <h4>📂 Sidecar &amp; Embedded Subs</h4>
+                <p>Combine <code>.srt</code>, <code>.vtt</code>, <code>.ass</code>, and <code>.ttml</code> subtitles seamlessly alongside internal streams.</p>
+              </div>
+              <div class="mini-feature-tile">
+                <h4>📽 Virtual Video Projects</h4>
+                <p>Save multi-track pairings as virtual projects for instant full-screen playback without duplicating source video files.</p>
+              </div>
+              <div class="mini-feature-tile">
+                <h4>📦 Direct Container Export</h4>
+                <p>Package composite video, external dub audio, and styled subtitles cleanly into shareable media output.</p>
+              </div>
+            </div>
+          </div>
 
-<!-- TRANSCRIBE DEEP DIVE -->
-<section id="transcribe" class="section" data-accent="cyan">
-  <div class="wrap">
-    <p class="kicker reveal">Speech-to-Text</p>
-    <div class="section-title-row reveal">
-      <span class="channel-notch" aria-hidden="true"></span>
-      <h2>AI Transcribe Studio: Pure On-Device Precision</h2>
-    </div>
-    <p class="lede reveal">Convert voice memos, interviews, lectures, and long videos into millisecond-accurate subtitle cues without streaming a single byte to remote servers.</p>
+          <!-- PANE 4: VIDEO & MUSIC PLAYERS -->
+          <div class="studio-pane" data-studio-pane="players">
+            <div class="studio-pane-head">
+              <span class="kicker" style="--accent:var(--magenta)">Flagship Local Libraries &amp; Playback</span>
+              <h3>OLED Dark Mode Video &amp; Ambient Wave Music</h3>
+              <p>Hardware-accelerated video playback paired with live subtitle customization, GPU visual tuning, and an ambient artwork-reactive audio engine.</p>
+            </div>
+            <div class="studio-feature-grid">
+              <div class="mini-feature-tile">
+                <h4>🎬 Subtitle Styling &amp; 0.1s Sync</h4>
+                <p>Live inline subtitle colors, outline/shadow edges, background opacity, plus independent 0.1s audio &amp; subtitle timing offsets.</p>
+              </div>
+              <div class="mini-feature-tile">
+                <h4>🎨 GPU Video Adjustments &amp; Gestures</h4>
+                <p>Real-time GPU picture sliders, pinch-to-zoom framing, per-video memory, PiP, and frosted brightness/volume HUDs.</p>
+              </div>
+              <div class="mini-feature-tile">
+                <h4>🎵 Gapless &amp; Crossfade Audio</h4>
+                <p>High-res audio playback with live waveform visualizer, dynamic album-art aura, gapless transitions, and crossfade blending.</p>
+              </div>
+              <div class="mini-feature-tile">
+                <h4>🗂 Folder &amp; History Control</h4>
+                <p>Videos/Folders &amp; Tracks/Folders views, unified Recently Played, folder exclusion filters, and queue restoration.</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <div class="grid cards" style="margin-top:32px;">
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--cyan)">⚡</div>
-        <h3>4-Tier Accuracy Ladder</h3>
-        <p>Choose from <strong>Fair</strong> (lightweight &amp; fast), <strong>Better</strong> (everyday balance), <strong>High</strong> (complex multi-speaker dialogue), and <strong>Superior</strong> (maximum precision), protected by intelligent device memory guards.</p>
-      </article>
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--green)">∞</div>
-        <h3>5-Min Chunk Pipelining</h3>
-        <p>Continuous 5-minute processing windows paired with 3-second overlap stitching eliminate cut-off words at boundaries and guarantee seamless subtitle continuity.</p>
-      </article>
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--magenta)">🛡</div>
-        <h3>Lock-Screen Backgrounding</h3>
-        <p>Resilient foreground media processing with wake-lock protection. Lock your screen, slip your phone in your pocket, or switch apps — transcription finishes reliably.</p>
-      </article>
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--amber)">💾</div>
-        <h3>Atomic Checkpoint Recovery</h3>
-        <p>Tasks save verified checkpoints after every completed audio slice. If interrupted by a reboot or battery event, transcription resumes right where it left off.</p>
-      </article>
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--blue)">⏱</div>
-        <h3>Millisecond Timestamp Sync</h3>
-        <p>Speech boundaries map automatically to crisp start and end cues, with saved language shortcuts and auto-detect ready from first-time setup.</p>
-      </article>
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--cyan)">📄</div>
-        <h3>Standard Export Formats</h3>
-        <p>Export directly to industry-standard <code>.SRT</code>, <code>.VTT</code>, or clean transcripts compatible with desktop editors, players, and publishing platforms.</p>
-      </article>
-    </div>
-  </div>
-</section>
+        <!-- Right: Synced 3D Studio Phone Stage -->
+        <div class="hero-stage-col" data-3d-stage data-studio-stage>
+          <div class="stage-3d-wrap">
+            <div class="stage-3d-aura" aria-hidden="true"></div>
+            <div class="phone-3d-frame" title="Click to inspect fullscreen">
+              <div class="phone-3d-screen">
+                <img src="../assets/media/trans-title/02-transcribe.png" alt="Trans-Title AI Transcribe screenshot">
+                <div class="phone-3d-glare" aria-hidden="true"></div>
+              </div>
+              <div class="phone-3d-badge">
+                <i class="dot dot-cyan" aria-hidden="true"></i>
+                <span>AI Transcribe · Tap to Zoom</span>
+              </div>
+            </div>
+          </div>
 
-<!-- TRANSLATE DEEP DIVE -->
-<section id="translate" class="section" data-accent="green">
-  <div class="wrap">
-    <p class="kicker reveal">Global Reach</p>
-    <div class="section-title-row reveal">
-      <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Smart Translation Studio &amp; Subtitle Editor</h2>
-    </div>
-    <p class="lede reveal">Break language barriers privately. Translate subtitles into dozens of global languages right on your device, complete with an interactive viewer and cue editor.</p>
-
-    <div class="grid cards" style="grid-template-columns:repeat(3,1fr);margin-top:32px;">
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--green)">🔍</div>
-        <h3>Embedded Stream Extractor</h3>
-        <p>Import video files directly — Trans-Title automatically inspects and extracts embedded subtitle streams from MKV, MP4, and WebM containers.</p>
-      </article>
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--cyan)">🌐</div>
-        <h3>On-Device Neural Translation</h3>
-        <p>Offline neural language packages translate dialogue across English, Spanish, Chinese, Hindi, Arabic, Russian, and dozens more with zero API keys.</p>
-      </article>
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--magenta)">✏</div>
-        <h3>Interactive Subtitle Editor</h3>
-        <p>Inspect cues, refine phrasing, shift subtitle timing by tenths of a second, and export clean files with one tap.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- CROSS-PLAY STUDIO DEEP DIVE -->
-<section id="crossplay" class="section" data-accent="blue">
-  <div class="wrap">
-    <p class="kicker reveal">Multi-Track Orchestrator</p>
-    <div class="section-title-row reveal">
-      <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Cross-Play Studio: Audio &amp; Subtitle Workbench</h2>
-    </div>
-    <p class="lede reveal">Take creative control of multi-track media. Pair foreign films with external dubbed audio, align sidecar subtitles, and fine-tune lip-sync live on a single console.</p>
-
-    <div class="grid cards" style="grid-template-columns:repeat(3,1fr);margin-top:32px;">
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--blue)">🎚</div>
-        <h3>Millisecond Audio Lip-Sync</h3>
-        <p>Compensate for audio delay with positive or negative millisecond sync offsets, delivering frame-accurate lip-sync between video and external dubbed tracks.</p>
-      </article>
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--amber)">📂</div>
-        <h3>External &amp; Sidecar Subtitles</h3>
-        <p>Load external <code>.srt</code>, <code>.vtt</code>, <code>.ass</code>, and <code>.ttml</code> sidecars cleanly over any video container without slow re-encoding.</p>
-      </article>
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--magenta)">📽</div>
-        <h3>Virtual Video Projects</h3>
-        <p>Save multi-track pairings as lightweight virtual projects for instant full-screen playback anytime, or export composite media packages.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- PLAYERS DEEP DIVE -->
-<section id="players" class="section" data-accent="magenta">
-  <div class="wrap">
-    <p class="kicker reveal">Audio &amp; Video Experience</p>
-    <div class="section-title-row reveal">
-      <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Flagship Media Browsing &amp; Playback</h2>
-    </div>
-    <p class="lede reveal">Engineered for media enthusiasts who expect tactile 120Hz glass design, hardware-accelerated playback, and granular per-video precision.</p>
-
-    <div class="grid cards" style="grid-template-columns:repeat(2,1fr);margin-top:32px;">
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--cyan)">🎬</div>
-        <h3 style="font-size:1.25rem;">OLED Dark Mode Video Player</h3>
-        <p>Hardware-accelerated playback with real-time GPU picture adjustments, live subtitle color &amp; edge styling, 0.1s audio/subtitle timing offsets, customizable skip intervals, pinch-to-zoom framing, PiP, and per-video memory for tracks, speed, and brightness.</p>
-      </article>
-      <article class="card reveal">
-        <div class="ico" style="--c:var(--magenta)">🎵</div>
-        <h3 style="font-size:1.25rem;">Ambient Audio Player &amp; Visualizer</h3>
-        <p>High-resolution local music player with dynamic artwork-driven ambient lighting, real-time audio waveform visualizer, gapless playback and smooth configurable crossfade, folder drill-downs, and automatic queue restoration.</p>
-      </article>
+          <div class="stage-shot-pills">
+            <button type="button" class="shot-pill active" data-shot-group="transcribe" data-shot-src="../assets/media/trans-title/02-transcribe.png" data-shot-label="AI Transcribe — 4 Accuracy Tiers">Transcribe View</button>
+            <button type="button" class="shot-pill" hidden data-shot-group="translate" data-shot-src="../assets/media/trans-title/03-translate.png" data-shot-label="Smart Translation Suite">Translate Suite</button>
+            <button type="button" class="shot-pill" hidden data-shot-group="translate" data-shot-src="../assets/media/trans-title/04-subtitle-editor.png" data-shot-label="Interactive Subtitle Viewer &amp; Editor">Cue Editor</button>
+            <button type="button" class="shot-pill" hidden data-shot-group="crossplay" data-shot-src="../assets/media/trans-title/05-cross-play.png" data-shot-label="Cross-Play Multi-Track Composer">Cross-Play Console</button>
+            <button type="button" class="shot-pill" hidden data-shot-group="players" data-shot-src="../assets/media/trans-title/06-video-player.png" data-shot-label="OLED Video Player &amp; Subtitle Styling">Video Player</button>
+            <button type="button" class="shot-pill" hidden data-shot-group="players" data-shot-src="../assets/media/trans-title/07-video-library.png" data-shot-label="Video Library &amp; Reels">Video Library</button>
+            <button type="button" class="shot-pill" hidden data-shot-group="players" data-shot-src="../assets/media/trans-title/08-music-player.png" data-shot-label="Ambient Music Wave Player">Music Wave</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -273,74 +305,86 @@
     <p class="kicker reveal">Closed Beta Program</p>
     <div class="section-title-row reveal">
       <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Join the Trans-Title Closed Testing Queue</h2>
+      <h2>Closed Testing &amp; Store Access</h2>
     </div>
-    <p class="lede reveal">Trans-Title is in active Closed Testing on the Google Play Store. Join our tester cohort to receive direct Play Store access, test on your device, and unlock lifetime Pro contributor perks.</p>
+    <p class="lede reveal">Trans-Title is actively running Closed Testing on Google Play. Join anytime during a running cycle to get direct store links, QR pass access, and contributor Pro perks.</p>
 
-    <div style="margin-top:32px;">
+    <div style="margin-top:26px;">
       <div data-beta-widget data-app-id="trans-title" data-app-name="Trans-Title" data-single-app="true"></div>
     </div>
 
-    <div class="grid plans" style="grid-template-columns:1fr 1fr;margin-top:28px;">
+    <div class="grid plans" style="grid-template-columns:1fr 1fr;margin-top:24px;">
       <article class="plan plan-pro reveal" style="align-items:flex-start;">
         <span class="tag">Cohort Perks</span>
-        <h3 style="font-size:1.35rem;">Join the Testing Cohort</h3>
-        <p style="color:var(--muted);font-size:.93rem;line-height:1.6;">
-          Google Play requires verified active testers prior to public launch. By joining, you help validate our on-device speech engine and media suite across real Android hardware and accents.
-        </p>
-        <ul style="margin:10px 0 0;">
-          <li class="yes">Direct Google Play Store Closed Testing invite</li>
-          <li class="yes">Early access to subtitle styling, audio sync &amp; new studio tools</li>
-          <li class="yes">Free lifetime Pro upgrade for active test contributors</li>
-          <li class="yes">Direct engineering feedback channel</li>
+        <h3 style="font-size:1.3rem;">Join the Testing Cohort</h3>
+        <ul style="margin:6px 0 0;">
+          <li class="yes">Direct Google Play Closed Testing invite &amp; QR pass</li>
+          <li class="yes">Early builds with live subtitle styling &amp; audio sync</li>
+          <li class="yes">Free lifetime Pro upgrade for active contributors</li>
         </ul>
       </article>
 
       <article class="plan reveal" style="align-items:flex-start;">
-        <h3 style="font-size:1.3rem;">Onboarding Steps</h3>
-        <ol class="steps" style="grid-template-columns:1fr;margin-top:14px;gap:12px;width:100%;">
-          <li style="padding:16px;">
-            <b class="mono">01</b>
-            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Submit Your Play Email</h4>
-            <p style="font-size:.85rem;color:var(--muted);">Enter your Google Play email above to claim your priority test ticket.</p>
-          </li>
-          <li style="padding:16px;">
-            <b class="mono">02</b>
-            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Instant QR Code &amp; Opt-In Link</h4>
-            <p style="font-size:.85rem;color:var(--muted);">Once approved, scan the generated QR pass or click your Play Store invite link.</p>
-          </li>
-          <li style="padding:16px;">
-            <b class="mono">03</b>
-            <h4 style="font-size:1rem;margin:6px 0 4px;color:var(--ink);">Test &amp; Unlock Pro</h4>
-            <p style="font-size:.85rem;color:var(--muted);">Install the build, explore transcription and playback, and enjoy permanent Pro status.</p>
-          </li>
+        <h3 style="font-size:1.28rem;">3-Step Setup</h3>
+        <ol class="steps" style="grid-template-columns:1fr;margin-top:10px;gap:10px;width:100%;">
+          <li style="padding:13px 16px;"><b class="mono">01 ·</b> Submit your Google Play email above</li>
+          <li style="padding:13px 16px;"><b class="mono">02 ·</b> Scan the unlocked QR code or tap Join via Web</li>
+          <li style="padding:13px 16px;"><b class="mono">03 ·</b> Install from Google Play &amp; keep testing</li>
         </ol>
       </article>
     </div>
   </div>
 </section>
 
-<!-- SUPPORT & ISSUE DIAGNOSTIC PORTAL -->
-<section id="support" class="section" data-accent="magenta">
+<!-- COMMUNITY REVIEWS & OFFICIAL STUDIO REPLIES -->
+<section id="reviews" class="section" data-accent="cyan">
   <div class="wrap">
-    <p class="kicker reveal">Troubleshooting &amp; Support</p>
+    <p class="kicker reveal">Community Feedback</p>
     <div class="section-title-row reveal">
       <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Encountered an Issue with Trans-Title?</h2>
+      <h2>Trans-Title Reviews &amp; Studio Replies</h2>
     </div>
-    <p class="lede reveal">Whether Microsoft Store has trouble downloading a desktop build, an Android closed testing invite is delayed, or a media container failed to parse — troubleshoot immediately or submit a diagnostic ticket.</p>
+    <p class="lede reveal">Read feedback from real testers across devices or post your own review — approved reviews and official studio replies appear right below.</p>
 
-    <div class="support-portal reveal" data-support-portal data-support-scope="trans-title">
-      <div id="issue-alert" data-issue-alert></div>
-      <div class="support-grid">
-        <!-- Left: Diagnostic Helper -->
-        <div>
-          <h3 style="font-size:1.15rem;margin-bottom:8px;">Instant Diagnostic Solutions</h3>
-          <p style="color:var(--muted);font-size:.92rem;margin-bottom:14px;">Select an issue scenario below for immediate resolution steps:</p>
+    <div style="margin-top:26px;" class="reveal" data-reviews-widget data-app-id="trans-title" data-app-name="Trans-Title"></div>
+  </div>
+</section>
 
-          <!-- Interactive Clickable Symptom Pills -->
+<!-- COMPACT EXPANDABLE SUPPORT & FAQ DRAWER -->
+<section id="support" class="section" data-accent="magenta">
+  <div class="wrap">
+    <div class="support-compact-shell reveal" data-support-portal data-support-scope="trans-title" data-expandable="true">
+      <div class="support-compact-bar">
+        <div class="support-compact-copy">
+          <span class="kicker" style="margin-bottom:4px;">Support &amp; FAQ</span>
+          <h3>Need help, quick answers, or diagnostics?</h3>
+          <p>Open instant troubleshooting tips, submit a diagnostic report with screenshots/logs, track a ticket, or browse Trans-Title FAQs.</p>
+        </div>
+        <div class="support-quick-actions">
+          <button type="button" class="support-trigger" data-support-open="troubleshoot">Quick Help</button>
+          <button type="button" class="support-trigger" data-support-open="ticket">Submit Ticket</button>
+          <button type="button" class="support-trigger" data-support-open="lookup">Track Ticket</button>
+          <button type="button" class="support-trigger" data-support-open="faq">FAQ</button>
+        </div>
+      </div>
+
+      <div class="support-drawer" data-support-drawer aria-hidden="true">
+        <div id="issue-alert" data-issue-alert></div>
+
+        <div class="support-drawer-bar">
+          <div class="support-drawer-tabs" role="tablist">
+            <button type="button" class="support-tab" data-support-tab="troubleshoot">Quick Help</button>
+            <button type="button" class="support-tab" data-support-tab="ticket">Submit Ticket</button>
+            <button type="button" class="support-tab" data-support-tab="lookup">Track Ticket</button>
+            <button type="button" class="support-tab" data-support-tab="faq">FAQ</button>
+          </div>
+          <button type="button" class="support-collapse-btn" data-support-close>Collapse ↑</button>
+        </div>
+
+        <!-- PANE 1: QUICK HELP -->
+        <div class="support-pane" data-support-pane="troubleshoot">
+          <p class="muted" style="font-size:0.88rem;margin-bottom:12px;">Select an issue scenario below for immediate resolution steps:</p>
           <div class="symptom-pills" data-symptom-pills></div>
-
           <div class="form-row">
             <label for="issue-category-sel-tt">Common Scenarios:</label>
             <select id="issue-category-sel-tt" class="form-select" data-issue-category>
@@ -355,23 +399,23 @@
           <div data-dynamic-troubleshooting></div>
         </div>
 
-        <!-- Right: Direct Cloud Issue Ticket Submission -->
-        <div>
-          <h3 style="font-size:1.15rem;margin-bottom:8px;">Submit a Trans-Title Support Ticket</h3>
-          <p style="color:var(--muted);font-size:.92rem;margin-bottom:14px;">Direct fail-safe issue submission if store downloads or in-app forms fail:</p>
+        <!-- PANE 2: SUBMIT TICKET -->
+        <div class="support-pane" data-support-pane="ticket">
           <form data-issue-form>
             <input type="hidden" name="appId" value="trans-title">
-            <div class="form-row">
-              <label for="sup-email-tt">Your Contact Email:</label>
-              <input type="email" id="sup-email-tt" name="email" required placeholder="name@example.com" class="queue-input" autocomplete="email">
-            </div>
-            <div class="form-row">
-              <label for="sup-platform-tt">Platform / OS:</label>
-              <select id="sup-platform-tt" name="platform" class="form-select">
-                <option value="Android">Android</option>
-                <option value="Windows">Windows Desktop (WinUI 3)</option>
-                <option value="iOS">iOS</option>
-              </select>
+            <div class="form-grid-2">
+              <div class="form-row">
+                <label for="sup-email-tt">Your Contact Email:</label>
+                <input type="email" id="sup-email-tt" name="email" required placeholder="name@example.com" class="queue-input" autocomplete="email">
+              </div>
+              <div class="form-row">
+                <label for="sup-platform-tt">Platform / OS:</label>
+                <select id="sup-platform-tt" name="platform" class="form-select">
+                  <option value="Android">Android</option>
+                  <option value="Windows">Windows Desktop (WinUI 3)</option>
+                  <option value="iOS">iOS</option>
+                </select>
+              </div>
             </div>
             <div class="form-row">
               <label for="sup-desc-tt">
@@ -380,8 +424,6 @@
               </label>
               <textarea id="sup-desc-tt" name="description" required placeholder="Device model, Android/Windows version, error code, or description..." class="form-textarea"></textarea>
             </div>
-
-            <!-- Screenshot / Video / Crash Log Dropzone -->
             <div class="form-row">
               <label>Attach Screenshot, Video Clip, or Log (Optional):</label>
               <div class="file-dropzone" data-file-dropzone>
@@ -394,68 +436,66 @@
               </div>
               <div class="file-preview" data-file-preview></div>
             </div>
-
-            <button type="submit" class="btn btn-primary" style="width:100%;margin-top:6px;">
+            <button type="submit" class="btn btn-primary" style="margin-top:6px;">
               <span>Submit Issue Report</span>
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </form>
         </div>
-      </div>
 
-      <!-- Ticket Status Lookup Tab -->
-      <div class="portal-lookup-tab">
-        <div class="portal-lookup-header">
-          <h4 style="font-size:0.95rem;margin:0;color:var(--ink);">Already submitted a ticket?</h4>
-          <span style="font-size:0.78rem;color:var(--muted);font-family:var(--font-m);">Local &amp; Cloud Tracking</span>
+        <!-- PANE 3: TICKET LOOKUP -->
+        <div class="support-pane" data-support-pane="lookup">
+          <p class="muted" style="font-size:0.88rem;margin-bottom:12px;">Enter your ticket reference or email to view recent submissions stored on this device:</p>
+          <form data-lookup-form class="lookup-form">
+            <input type="text" name="ticketQuery" placeholder="Enter Ticket # (e.g. NE-B891A4F2) or your registered email" class="queue-input" style="flex:1;min-width:260px;">
+            <button type="submit" class="btn btn-ghost">Check Status</button>
+          </form>
+          <div data-lookup-result></div>
         </div>
-        <form data-lookup-form class="lookup-form">
-          <input type="text" name="ticketQuery" placeholder="Enter Ticket # (e.g. NE-B891A4F2) or your registered email" class="queue-input" style="flex:1;min-width:260px;padding:10px 16px;font-size:0.88rem;">
-          <button type="submit" class="btn btn-ghost" style="padding:10px 20px;font-size:0.88rem;">Check Status</button>
-        </form>
-        <div data-lookup-result></div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- FAQ -->
-<section id="faq" class="section" data-accent="cyan">
-  <div class="wrap narrow">
-    <p class="kicker reveal">Common Questions</p>
-    <div class="section-title-row reveal">
-      <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Frequently Asked Questions</h2>
-    </div>
-    <div class="faq reveal" style="margin-top:24px;">
-      <details>
-        <summary>Does Trans-Title upload my audio, videos, or transcripts?</summary>
-        <p>No. Trans-Title is built on an absolute privacy architecture. All speech-to-text recognition, subtitle translation, and video processing runs 100% on your hardware. Your media never leaves your device and the app functions fully in airplane mode.</p>
-      </details>
-      <details>
-        <summary>What are the 4 accuracy tiers in AI Transcribe?</summary>
-        <p>We provide four optimized on-device accuracy levels: <strong>Fair</strong> (ultra-lightweight for quick notes), <strong>Better</strong> (balanced for everyday dialogue), <strong>High</strong> (high-precision for multi-speaker discussions), and <strong>Superior</strong> (maximum recognition fidelity for studio work, safely gated for devices with &ge; 5 GB RAM).</p>
-      </details>
-      <details>
-        <summary>Can it transcribe long videos and podcasts without cutting off words?</summary>
-        <p>Yes. Trans-Title uses 5-minute continuous pipelining combined with a 3-second overlap stitching algorithm that ensures words at chunk boundaries are never truncated or duplicated.</p>
-      </details>
-      <details>
-        <summary>Does transcription continue when the screen is locked?</summary>
-        <p>Yes. Trans-Title runs a resilient foreground media service with wake-lock protection so you can lock your screen or switch apps without interrupting progress.</p>
-      </details>
-      <details>
-        <summary>What is Cross-Play Studio?</summary>
-        <p>Cross-Play is our video workbench that lets you pair a video container with external dubbed audio tracks (with positive or negative millisecond delay adjustment for lip-sync) and subtitle sidecars, allowing you to preview or export multi-track media effortlessly.</p>
-      </details>
-      <details>
-        <summary>How do I become an official closed tester?</summary>
-        <p>Register in the <a href="#beta-queue">Closed Testing section</a> above or email <a href="mailto:native.espresso@gmail.com">native.espresso@gmail.com</a> with your Google Play Store email address. Once approved, your Play Store links and QR pass unlock right on this page.</p>
-      </details>
+        <!-- PANE 4: COLLAPSIBLE FAQ -->
+        <div class="support-pane" data-support-pane="faq" id="faq">
+          <div class="faq" style="margin-top:0;">
+            <details open>
+              <summary>Does Trans-Title upload my audio, videos, or transcripts?</summary>
+              <p>No. Trans-Title is built on an absolute privacy architecture. All speech-to-text recognition, subtitle translation, and video processing runs 100% on your hardware. Your media never leaves your device and the app functions fully in airplane mode.</p>
+            </details>
+            <details>
+              <summary>What are the 4 accuracy tiers in AI Transcribe?</summary>
+              <p>We provide four optimized on-device accuracy levels: <strong>Fair</strong> (ultra-lightweight for quick notes), <strong>Better</strong> (balanced for everyday dialogue), <strong>High</strong> (high-precision for multi-speaker discussions), and <strong>Superior</strong> (maximum recognition fidelity for studio work, safely gated for devices with &ge; 5 GB RAM).</p>
+            </details>
+            <details>
+              <summary>Can it transcribe long videos and podcasts without cutting off words?</summary>
+              <p>Yes. Trans-Title uses 5-minute continuous pipelining combined with a 3-second overlap stitching algorithm that ensures words at chunk boundaries are never truncated or duplicated.</p>
+            </details>
+            <details>
+              <summary>Does transcription continue when the screen is locked?</summary>
+              <p>Yes. Trans-Title runs a resilient foreground media service with wake-lock protection so you can lock your screen or switch apps without interrupting progress.</p>
+            </details>
+            <details>
+              <summary>What is Cross-Play Studio?</summary>
+              <p>Cross-Play is our video workbench that lets you pair a video container with external dubbed audio tracks (with positive or negative millisecond delay adjustment for lip-sync) and subtitle sidecars, allowing you to preview or export multi-track media effortlessly.</p>
+            </details>
+            <details>
+              <summary>What is the desktop &amp; multi-platform roadmap (Windows, iOS, macOS, Linux)?</summary>
+              <p>After testing an early JavaFX player prototype, we moved desktop engineering to native <strong>WinUI 3</strong> on Windows for superior GPU smoothness and system integration (currently in active development alongside Android Closed Testing). Native <strong>iOS and macOS</strong> editions will follow once dedicated Apple Mac build hardware is provisioned, with a <strong>Linux</strong> edition planned as studio bandwidth permits.</p>
+            </details>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 </main>
+
+<!-- FLOATING FROSTED GLASS BOTTOM COMMAND DOCK -->
+<nav class="floating-dock" aria-label="Trans-Title quick navigation">
+  <a class="dock-item active" href="#overview">Overview</a>
+  <a class="dock-item" href="#studios">3D Studios</a>
+  <a class="dock-item" href="#beta-queue">Beta Queue</a>
+  <a class="dock-item" href="#reviews">Reviews</a>
+  <a class="dock-item" href="#support">Support &amp; FAQ</a>
+</nav>
 
 <!-- FOOTER -->
 <footer class="footer">
@@ -466,7 +506,7 @@
     </div>
     <nav aria-label="Trans-Title">
       <b>Trans-Title</b>
-      <a href="#studios">Studios</a>
+      <a href="#studios">3D Studios</a>
       <a href="#transcribe">AI Transcribe</a>
       <a href="#translate">Translation</a>
       <a href="#crossplay">Cross-Play</a>
@@ -482,6 +522,7 @@
       <b>Native Espresso</b>
       <a href="../index.html">Company Home</a>
       <a href="../echo-cleaner/">Echo Cleaner</a>
+      <a href="#reviews">Community Reviews</a>
     </nav>
   </div>
   <div class="wrap foot-base mono">
@@ -489,7 +530,7 @@
   </div>
 </footer>
 
-<script src="../assets/main.js?v=20261118e"></script>
-<script src="../assets/cloud-client.js?v=20261118e"></script>
+<script src="../assets/main.js?v=20261119"></script>
+<script src="../assets/cloud-client.js?v=20261119"></script>
 </body>
 </html>

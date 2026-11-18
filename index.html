@@ -11,8 +11,9 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230d0805'/%3E%3Cg transform='translate(-14,7)'%3E%3Cpath d='M136 252 A120 120 0 0 0 376 252 Z' fill='%23f59e0b'/%3E%3Crect x='124' y='236' width='264' height='16' rx='8' fill='%23fcd34d'/%3E%3Cpath d='M380 268 A40 40 0 0 1 380 348' fill='none' stroke='%23f59e0b' stroke-width='20' stroke-linecap='round'/%3E%3Crect x='150' y='396' width='212' height='14' rx='7' fill='%23b45309'/%3E%3Cpath d='M286 88 L214 238 L252 238 L218 344 L306 204 L266 204 L312 88 Z' fill='%230d0805'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/company.css?v=20261118e">
+<link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/company.css?v=20261119">
+<link rel="stylesheet" href="assets/spatial-ui.css?v=20261119">
 <script>(()=>{const t=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t)})();</script>
 </head>
 <body>
@@ -39,6 +40,7 @@
     <nav class="links" id="menu" aria-label="Primary">
       <a href="#products">Products</a>
       <a href="#closed-testing">Closed Testing</a>
+      <a href="#reviews">Reviews</a>
       <a href="#support">Support</a>
       <a href="#studio">Studio</a>
     </nav>
@@ -66,7 +68,7 @@
     <p class="lede rise" style="--d:2">Native Espresso crafts focused, high-performance apps and on-device intelligence that run directly on your silicon — tactile, offline-first, and built without cloud surveillance.</p>
     <div class="hero-cta rise" style="--d:3">
       <a class="btn btn-primary" href="#products">
-        <span>Browse Products</span>
+        <span>Explore Apps &amp; Platforms</span>
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
       <a class="btn btn-ghost" href="#closed-testing">Join Closed Testing</a>
@@ -79,7 +81,7 @@
   </div>
 </section>
 
-<!-- PRODUCT PORTFOLIO GALLERY -->
+<!-- 3D PRODUCT PORTFOLIO GALLERY -->
 <section id="products" class="section">
   <div class="wrap">
     <div class="section-head reveal">
@@ -87,84 +89,133 @@
         <span class="kicker">Portfolio</span>
         <div class="section-head-title">
           <span class="channel-notch" aria-hidden="true"></span>
-          <h2>Products</h2>
+          <h2>Studio Products &amp; Platform Matrix</h2>
         </div>
       </div>
-      <p class="muted" style="font-size:0.9rem;">Select a product to explore features, live platform status, interactive previews, and store access.</p>
+      <p class="muted" style="font-size:0.9rem;">Inspect live platform availability, preview app screenshots in 3D, or jump into a product studio.</p>
     </div>
 
-    <div class="product-list reveal" data-product-directory>
-      <!-- TRANS-TITLE -->
-      <a class="product-row" href="trans-title/" data-product-row="trans-title" style="--row-accent:#9b72e8">
-        <div class="product-icon" style="--item-accent:#9b72e8" aria-hidden="true">
-          <svg viewBox="0 0 32 32" width="24" height="24" fill="none">
-            <rect x="4" y="6" width="24" height="20" rx="4" stroke="currentColor" stroke-width="2.1"/>
-            <path d="M8 18h6M8 21h10M17 18h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="product-info">
-          <div class="product-title-row">
-            <h3>Trans-Title</h3>
-            <span data-row-access="trans-title"></span>
+    <div class="product-showcase-grid" data-product-directory>
+      <!-- TRANS-TITLE 3D SHOWCASE CARD -->
+      <article class="product-card-3d reveal" data-product-row="trans-title" style="--row-accent:#9b72e8" data-lightbox-group>
+        <div class="pc3d-left">
+          <div class="pc3d-head">
+            <div class="pc3d-icon">
+              <img src="assets/media/trans-title/icon.png" alt="Trans-Title app icon" loading="lazy">
+            </div>
+            <div class="pc3d-title-wrap">
+              <div class="pc3d-title-row">
+                <h3 class="pc3d-title is-transtitle">Trans-Title</h3>
+                <span data-row-access="trans-title"></span>
+              </div>
+              <span class="pc3d-sub">Multimedia Suite &amp; On-Device AI Studio</span>
+            </div>
           </div>
-          <p>Flagship on-device multimedia studio for 4-tier speech transcription, neural subtitle translation, Cross-Play orchestration, and OLED playback.</p>
-        </div>
-        <div class="product-platforms" aria-label="Target platforms">
-          <span class="platform-chip">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.46 11.46 0 0 0-8.94 0L5.65 5.67c-.19-.28-.54-.37-.83-.22-.3.16-.42.54-.26.85L6.4 9.48C3.3 11.25 1.28 14.44 1 18h22c-.28-3.56-2.3-6.75-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg>
-            Android
-          </span>
-          <span class="platform-chip">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M3 5.5L11 4.4V11.5H3V5.5zm9-1.2L21 3V11.5H12V4.3zM3 12.5H11V19.6L3 18.5V12.5zm9 0H21V21L12 19.7V12.5z"/></svg>
-            Windows
-          </span>
-          <span class="platform-chip">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M16.5 3c-1.2.1-2.5.8-3.2 1.7-.7.8-1.3 2.1-1.1 3.3 1.3.1 2.6-.7 3.3-1.6.7-.9 1.1-2.1 1-3.4zM20.3 17.2c-.5 1.1-1.1 2.1-1.9 3-.8.9-1.7 1.8-2.9 1.8-1.2 0-1.6-.7-3-.7-1.4 0-1.8.7-3 .7-1.2 0-2.1-1-2.9-1.9-1.6-2-2.8-5.6-1.2-8.1.8-1.2 2.2-2 3.7-2 1.2 0 2.2.8 3 .8.7 0 2-.9 3.4-.8.6 0 2.2.2 3.3 1.8-.1.1-2 1.1-2 3.4 0 2.7 2.4 3.6 2.5 3.6-.1.2-.4 1.3-1 2.4z"/></svg>
-            iOS
-          </span>
-        </div>
-        <span class="product-arrow">Explore →</span>
-      </a>
 
-      <!-- ECHO CLEANER -->
-      <a class="product-row" href="echo-cleaner/" data-product-row="echo-cleaner" style="--row-accent:#22d3ee">
-        <div class="product-icon" style="--item-accent:#22d3ee" aria-hidden="true">
-          <svg viewBox="0 0 32 32" width="24" height="24" fill="none">
-            <path d="M5 16h3l2.2-6.5L13.5 22l3.3-15 3.2 13.5 2-4.5H27" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="product-info">
-          <div class="product-title-row">
-            <h3>Echo Cleaner</h3>
-            <span data-row-access="echo-cleaner"></span>
+          <p class="pc3d-desc">4-tier on-device speech transcription, offline neural subtitle translation, Cross-Play multi-track dubbing with millisecond lip-sync, and flagship OLED video &amp; wave music players.</p>
+
+          <div class="pc3d-matrix" data-app-platforms="trans-title" aria-label="Trans-Title platform status">
+            <span class="pc3d-plat-pill is-active" data-platform-android>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.46 11.46 0 0 0-8.94 0L5.65 5.67c-.19-.28-.54-.37-.83-.22-.3.16-.42.54-.26.85L6.4 9.48C3.3 11.25 1.28 14.44 1 18h22c-.28-3.56-2.3-6.75-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg>
+              <b>Android</b> <span data-plat-state>Closed Testing</span>
+            </span>
+            <span class="pc3d-plat-pill is-dev" data-platform-windows>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M3 5.5L11 4.4V11.5H3V5.5zm9-1.2L21 3V11.5H12V4.3zM3 12.5H11V19.6L3 18.5V12.5zm9 0H21V21L12 19.7V12.5z"/></svg>
+              <b>Windows</b> <span data-plat-state>In Active Development</span>
+            </span>
+            <span class="pc3d-plat-pill" data-platform-ios>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M16.5 3c-1.2.1-2.5.8-3.2 1.7-.7.8-1.3 2.1-1.1 3.3 1.3.1 2.6-.7 3.3-1.6.7-.9 1.1-2.1 1-3.4zM20.3 17.2c-.5 1.1-1.1 2.1-1.9 3-.8.9-1.7 1.8-2.9 1.8-1.2 0-1.6-.7-3-.7-1.4 0-1.8.7-3 .7-1.2 0-2.1-1-2.9-1.9-1.6-2-2.8-5.6-1.2-8.1.8-1.2 2.2-2 3.7-2 1.2 0 2.2.8 3 .8.7 0 2-.9 3.4-.8.6 0 2.2.2 3.3 1.8-.1.1-2 1.1-2 3.4 0 2.7 2.4 3.6 2.5 3.6-.1.2-.4 1.3-1 2.4z"/></svg>
+              <b>iOS</b> <span data-plat-state>On Roadmap</span>
+            </span>
+            <span class="pc3d-plat-pill" data-platform-macos>
+              <b>macOS</b> <span data-plat-state>On Roadmap</span>
+            </span>
+            <span class="pc3d-plat-pill" data-platform-linux>
+              <b>Linux</b> <span data-plat-state>On Roadmap</span>
+            </span>
           </div>
-          <p>Offline acoustic voice studio with dual neural engines for echo cancellation, noise suppression, room de-reverberation, and live A/B comparison.</p>
-        </div>
-        <div class="product-platforms" aria-label="Target platforms">
-          <span class="platform-chip">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.46 11.46 0 0 0-8.94 0L5.65 5.67c-.19-.28-.54-.37-.83-.22-.3.16-.42.54-.26.85L6.4 9.48C3.3 11.25 1.28 14.44 1 18h22c-.28-3.56-2.3-6.75-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg>
-            Android
-          </span>
-          <span class="platform-chip">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M16.5 3c-1.2.1-2.5.8-3.2 1.7-.7.8-1.3 2.1-1.1 3.3 1.3.1 2.6-.7 3.3-1.6.7-.9 1.1-2.1 1-3.4zM20.3 17.2c-.5 1.1-1.1 2.1-1.9 3-.8.9-1.7 1.8-2.9 1.8-1.2 0-1.6-.7-3-.7-1.4 0-1.8.7-3 .7-1.2 0-2.1-1-2.9-1.9-1.6-2-2.8-5.6-1.2-8.1.8-1.2 2.2-2 3.7-2 1.2 0 2.2.8 3 .8.7 0 2-.9 3.4-.8.6 0 2.2.2 3.3 1.8-.1.1-2 1.1-2 3.4 0 2.7 2.4 3.6 2.5 3.6-.1.2-.4 1.3-1 2.4z"/></svg>
-            iOS
-          </span>
-          <span class="platform-chip">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M3 5.5L11 4.4V11.5H3V5.5zm9-1.2L21 3V11.5H12V4.3zM3 12.5H11V19.6L3 18.5V12.5zm9 0H21V21L12 19.7V12.5z"/></svg>
-            Windows
-          </span>
-        </div>
-        <span class="product-arrow">Explore →</span>
-      </a>
 
-      <!-- LAB / MORE FOOTER ROW -->
-      <div class="product-row-muted">
-        <div class="product-row-muted-left">
-          <span class="rd-badge">R&amp;D LAB</span>
-          <span>More offline-first utilities and on-device experiments in active research.</span>
+          <div class="pc3d-actions">
+            <a class="btn btn-primary btn-sm" href="trans-title/">Open Trans-Title Studio →</a>
+            <a class="btn btn-ghost btn-sm" href="trans-title/#studios">3D Screenshots &amp; Studios</a>
+          </div>
         </div>
-        <div class="product-row-muted-links">
-          <a href="mailto:native.espresso@gmail.com?subject=Native%20Espresso%20Product%20Idea">Suggest an idea →</a>
+
+        <div class="pc3d-right">
+          <a href="#preview" class="pc3d-shot back" data-lightbox-src="assets/media/trans-title/05-cross-play.png" data-lightbox-label="Trans-Title — Cross-Play Multi-Track Composer">
+            <img src="assets/media/trans-title/05-cross-play.png" alt="Trans-Title Cross-Play Studio screenshot" loading="lazy">
+          </a>
+          <a href="#preview" class="pc3d-shot front" data-lightbox-src="assets/media/trans-title/01-home-hub.png" data-lightbox-label="Trans-Title — Studio Home Hub">
+            <img src="assets/media/trans-title/01-home-hub.png" alt="Trans-Title Home Hub screenshot" loading="lazy">
+          </a>
+        </div>
+      </article>
+
+      <!-- ECHO CLEANER 3D SHOWCASE CARD -->
+      <article class="product-card-3d reveal" data-product-row="echo-cleaner" style="--row-accent:#22d3ee" data-lightbox-group>
+        <div class="pc3d-left">
+          <div class="pc3d-head">
+            <div class="pc3d-icon">
+              <img src="assets/media/echo-cleaner/icon.png" alt="Echo Cleaner app icon" loading="lazy">
+            </div>
+            <div class="pc3d-title-wrap">
+              <div class="pc3d-title-row">
+                <h3 class="pc3d-title is-echocleaner">Echo Cleaner</h3>
+                <span data-row-access="echo-cleaner"></span>
+              </div>
+              <span class="pc3d-sub">On-Device Neural Audio Studio</span>
+            </div>
+          </div>
+
+          <p class="pc3d-desc">Switchable Clean Room and Studio Pro acoustic engines for echo removal, noise suppression, room de-reverberation, live A/B waveform auditioning, and voice recording.</p>
+
+          <div class="pc3d-matrix" data-app-platforms="echo-cleaner" aria-label="Echo Cleaner platform status">
+            <span class="pc3d-plat-pill is-queue" data-platform-android>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.46 11.46 0 0 0-8.94 0L5.65 5.67c-.19-.28-.54-.37-.83-.22-.3.16-.42.54-.26.85L6.4 9.48C3.3 11.25 1.28 14.44 1 18h22c-.28-3.56-2.3-6.75-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg>
+              <b>Android</b> <span data-plat-state>Closed Testing Queue</span>
+            </span>
+            <span class="pc3d-plat-pill" data-platform-windows>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M3 5.5L11 4.4V11.5H3V5.5zm9-1.2L21 3V11.5H12V4.3zM3 12.5H11V19.6L3 18.5V12.5zm9 0H21V21L12 19.7V12.5z"/></svg>
+              <b>Windows</b> <span data-plat-state>In Planning</span>
+            </span>
+            <span class="pc3d-plat-pill" data-platform-ios>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M16.5 3c-1.2.1-2.5.8-3.2 1.7-.7.8-1.3 2.1-1.1 3.3 1.3.1 2.6-.7 3.3-1.6.7-.9 1.1-2.1 1-3.4zM20.3 17.2c-.5 1.1-1.1 2.1-1.9 3-.8.9-1.7 1.8-2.9 1.8-1.2 0-1.6-.7-3-.7-1.4 0-1.8.7-3 .7-1.2 0-2.1-1-2.9-1.9-1.6-2-2.8-5.6-1.2-8.1.8-1.2 2.2-2 3.7-2 1.2 0 2.2.8 3 .8.7 0 2-.9 3.4-.8.6 0 2.2.2 3.3 1.8-.1.1-2 1.1-2 3.4 0 2.7 2.4 3.6 2.5 3.6-.1.2-.4 1.3-1 2.4z"/></svg>
+              <b>iOS</b> <span data-plat-state>In Planning</span>
+            </span>
+            <span class="pc3d-plat-pill" data-platform-macos hidden>
+              <b>macOS</b> <span data-plat-state>Hidden</span>
+            </span>
+            <span class="pc3d-plat-pill" data-platform-linux hidden>
+              <b>Linux</b> <span data-plat-state>Hidden</span>
+            </span>
+          </div>
+
+          <div class="pc3d-actions">
+            <a class="btn btn-primary btn-sm" href="echo-cleaner/">Open Echo Cleaner Studio →</a>
+            <a class="btn btn-ghost btn-sm" href="echo-cleaner/#demo">Interactive Audio Lab</a>
+          </div>
+        </div>
+
+        <div class="pc3d-right">
+          <a href="#preview" class="pc3d-shot back" data-lightbox-src="assets/media/echo-cleaner/02-enhancement-mixer.png" data-lightbox-label="Echo Cleaner — Enhancement Mixer &amp; Dual Engines">
+            <img src="assets/media/echo-cleaner/02-enhancement-mixer.png" alt="Echo Cleaner Studio Mixer screenshot" loading="lazy">
+          </a>
+          <a href="#preview" class="pc3d-shot front" data-lightbox-src="assets/media/echo-cleaner/01-home-studio.png" data-lightbox-label="Echo Cleaner — Home Studio">
+            <img src="assets/media/echo-cleaner/01-home-studio.png" alt="Echo Cleaner Home Studio screenshot" loading="lazy">
+          </a>
+        </div>
+      </article>
+
+      <!-- R&D LAB STRIP -->
+      <div class="product-list reveal">
+        <div class="product-row-muted">
+          <div class="product-row-muted-left">
+            <span class="rd-badge">R&amp;D LAB</span>
+            <span>More offline-first utilities and on-device experiments in active research.</span>
+          </div>
+          <div class="product-row-muted-links">
+            <a href="mailto:native.espresso@gmail.com?subject=Native%20Espresso%20Product%20Idea">Suggest an idea →</a>
+          </div>
         </div>
       </div>
     </div>
@@ -189,6 +240,24 @@
   </div>
 </section>
 
+<!-- COMMUNITY REVIEWS & OFFICIAL STUDIO REPLIES -->
+<section id="reviews" class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="kicker">Community &amp; Feedback</span>
+        <div class="section-head-title">
+          <span class="channel-notch" aria-hidden="true"></span>
+          <h2>Tester Reviews &amp; Studio Replies</h2>
+        </div>
+      </div>
+      <p class="muted" style="font-size:0.9rem;">Verified reviews approved by Native Espresso alongside official developer responses.</p>
+    </div>
+
+    <div class="reveal" data-reviews-widget data-app-id="company" data-app-name="Native Espresso Studio"></div>
+  </div>
+</section>
+
 <!-- COMPACT EXPANDABLE GENERAL SUPPORT -->
 <section id="support" class="section">
   <div class="wrap">
@@ -197,7 +266,7 @@
         <div class="support-compact-copy">
           <span class="kicker" style="margin-bottom:4px;">General Support</span>
           <h3>Need help or have a studio inquiry?</h3>
-          <p>Quick troubleshooting, general studio tickets, or ticket tracking. For product-specific issues, use the support section on that product's page.</p>
+          <p>Quick troubleshooting, general studio tickets, or ticket tracking. For product-specific issues, use the support drawer on that product's page.</p>
         </div>
         <div class="support-quick-actions">
           <button type="button" class="support-trigger" data-support-open="troubleshoot">Quick Help</button>
@@ -346,6 +415,15 @@
 </section>
 </main>
 
+<!-- FLOATING FROSTED GLASS BOTTOM COMMAND DOCK -->
+<nav class="floating-dock" aria-label="Studio quick navigation">
+  <a class="dock-item active" href="#top">Overview</a>
+  <a class="dock-item" href="#products">Products</a>
+  <a class="dock-item" href="#closed-testing">Testing</a>
+  <a class="dock-item" href="#reviews">Reviews</a>
+  <a class="dock-item" href="#support">Support</a>
+</nav>
+
 <!-- FOOTER -->
 <footer class="footer">
   <div class="wrap foot-in">
@@ -369,6 +447,7 @@
       <b>Contact</b>
       <a href="mailto:native.espresso@gmail.com">native.espresso@gmail.com</a>
       <a href="#closed-testing">Closed Testing</a>
+      <a href="#reviews">Reviews</a>
       <a href="#support">General Support</a>
     </nav>
   </div>
@@ -378,7 +457,7 @@
   </div>
 </footer>
 
-<script src="assets/main.js?v=20261118e"></script>
-<script src="assets/cloud-client.js?v=20261118e"></script>
+<script src="assets/main.js?v=20261119"></script>
+<script src="assets/cloud-client.js?v=20261119"></script>
 </body>
 </html>

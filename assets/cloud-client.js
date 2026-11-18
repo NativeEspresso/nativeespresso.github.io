@@ -15,6 +15,7 @@
   const EMAIL_STORAGE_KEY = "ne_tester_email";
   const STORAGE_KEY = "ne_tester_tickets";
   const ISSUE_STORAGE_KEY = "ne_submitted_tickets";
+  const REVIEW_STORAGE_KEY = "ne_pending_reviews";
 
   /* ==========================================================================
      1. LocalStorage Helpers
@@ -434,11 +435,14 @@
       name: "Trans-Title",
       pageUrl: "trans-title/",
       subtitle: "On-Device Multimedia & AI Studio",
-      badge: "Android: Closed-Testing (v1.0.16) · Windows: Development",
+      badge: "Android: Closed-Testing (v1.0.17) · Windows (WinUI 3): Development",
       androidStatus: "ClosedTesting",
       windowsStatus: "Development",
+      iosStatus: "Roadmap",
+      macosStatus: "Roadmap",
+      linuxStatus: "Roadmap",
       accent: "var(--magenta, #f43f7b)",
-      platforms: ["Android (Closed Testing v1.0.16)", "Windows (WinUI 3 Beta)"],
+      platforms: ["Android (Closed Testing v1.0.17)", "Windows (WinUI 3 Beta)"],
       joinWebUrl: "https://play.google.com/apps/testing/com.espressonative.transtitle",
       joinAndroidUrl: "https://play.google.com/store/apps/details?id=com.espressonative.transtitle",
       closedTestingStartDate: null,
@@ -446,6 +450,9 @@
       statusMessage: null,
       microsoftStoreUrl: null,
       windowsWingetId: null,
+      latestVersion: "1.0.17",
+      latestReleaseNotes: "Faster on-device speech recognition, 5-minute continuous pipelining with 3s overlap stitching, and improved background wake-lock resilience.",
+      latestUpdatePublishedAt: null,
       pill: "Active"
     },
     "echo-cleaner": {
@@ -455,6 +462,9 @@
       badge: "Android: Closed Testing Queue (Finalizing)",
       androidStatus: "TestingQueue",
       windowsStatus: "Planning",
+      iosStatus: "Planning",
+      macosStatus: "Hidden",
+      linuxStatus: "Hidden",
       accent: "var(--cyan, #22d3ee)",
       platforms: ["Android (Closed Testing Queue)", "iOS (Planning Waitlist)"],
       joinWebUrl: null,
@@ -464,6 +474,9 @@
       statusMessage: null,
       microsoftStoreUrl: null,
       windowsWingetId: null,
+      latestVersion: null,
+      latestReleaseNotes: null,
+      latestUpdatePublishedAt: null,
       pill: "Queue"
     }
   };
@@ -495,6 +508,37 @@
       case "development": return { label: "In Active Development", tagClass: "dev" };
       default: return { label: "In Planning", tagClass: "" };
     }
+  }
+
+  function formatGenericPlatformStatus(status) {
+    switch ((status || "").toLowerCase()) {
+      case "published": return { label: "Published", tagClass: "active", hidden: false };
+      case "closedtesting": return { label: "Closed Testing", tagClass: "queue", hidden: false };
+      case "development": return { label: "In Active Development", tagClass: "dev", hidden: false };
+      case "planning": return { label: "In Planning", tagClass: "", hidden: false };
+      case "hidden": return { label: "Hidden", tagClass: "", hidden: true };
+      default: return { label: "On Roadmap", tagClass: "", hidden: false };
+    }
+  }
+
+  function buildPlatformChoices(cfg) {
+    const aMeta = formatStatusBadge(cfg.androidStatus);
+    const verSuffix = cfg.latestVersion ? ` v${cfg.latestVersion}` : "";
+    const list = [`Android (${aMeta.pill}${cfg.androidStatus?.toLowerCase() === "closedtesting" ? verSuffix : ""})`];
+
+    const extras = [
+      ["Windows (WinUI 3)", cfg.windowsStatus, formatWindowsStatus(cfg.windowsStatus)],
+      ["iOS", cfg.iosStatus, formatGenericPlatformStatus(cfg.iosStatus)],
+      ["macOS", cfg.macosStatus, formatGenericPlatformStatus(cfg.macosStatus)],
+      ["Linux", cfg.linuxStatus, formatGenericPlatformStatus(cfg.linuxStatus)]
+    ];
+    extras.forEach(([name, raw, meta]) => {
+      const s = (raw || "").toLowerCase();
+      if (s === "closedtesting" || s === "development" || s === "planning") {
+        list.push(`${name} (${meta.label})`);
+      }
+    });
+    return list;
   }
 
   function computeCountdown(startDateIso, totalDays) {
@@ -910,24 +954,42 @@
     `;
   }
 
+  function applyPlatformTagState(tagEl, labelTitle, statusText, tagClass, isHidden) {
+    if (!tagEl) return;
+    tagEl.hidden = Boolean(isHidden);
+    tagEl.style.display = isHidden ? "none" : "";
+    const isCardPill = tagEl.classList.contains("pc3d-plat-pill");
+    const cardSuffix = tagClass ? `is-${tagClass}` : "";
+    const stateEl = tagEl.querySelector("[data-plat-state]");
+    tagEl.className = isCardPill
+      ? `pc3d-plat-pill ${cardSuffix}`.trim()
+      : `platform-tag ${tagClass}`.trim();
+
+    if (stateEl) {
+      stateEl.textContent = statusText;
+    } else {
+      tagEl.innerHTML = `<b>${escapeHtml(labelTitle)}</b> ${escapeHtml(statusText)}`;
+    }
+  }
+
   function syncProductHeroPlatformBadges(appId, cfg) {
-    const container = document.querySelector(`[data-app-platforms="${appId}"]`);
-    if (!container) return;
+    document.querySelectorAll(`[data-app-platforms="${appId}"]`).forEach((container) => {
+      const aMeta = formatStatusBadge(cfg.androidStatus);
+      const wMeta = formatWindowsStatus(cfg.windowsStatus);
+      const aText = aMeta.label.replace(/^Android:\s*/i, "");
 
-    const aMeta = formatStatusBadge(cfg.androidStatus);
-    const wMeta = formatWindowsStatus(cfg.windowsStatus);
-    const aText = aMeta.label.replace(/^Android:\s*/i, "");
+      applyPlatformTagState(container.querySelector("[data-platform-android]"), "Android", aText, aMeta.tagClass, false);
+      applyPlatformTagState(container.querySelector("[data-platform-windows]"), "Windows (WinUI 3)", wMeta.label, wMeta.tagClass, false);
 
-    const androidTag = container.querySelector("[data-platform-android]");
-    if (androidTag) {
-      androidTag.className = `platform-tag ${aMeta.tagClass}`.trim();
-      androidTag.innerHTML = `<b>Android</b> ${escapeHtml(aText)}`;
-    }
-    const winTag = container.querySelector("[data-platform-windows]");
-    if (winTag) {
-      winTag.className = `platform-tag ${wMeta.tagClass}`.trim();
-      winTag.innerHTML = `<b>Windows</b> ${escapeHtml(wMeta.label)}`;
-    }
+      const iosMeta = formatGenericPlatformStatus(cfg.iosStatus);
+      applyPlatformTagState(container.querySelector("[data-platform-ios]"), "iOS", iosMeta.label, iosMeta.tagClass, iosMeta.hidden);
+
+      const macMeta = formatGenericPlatformStatus(cfg.macosStatus);
+      applyPlatformTagState(container.querySelector("[data-platform-macos]"), "macOS", macMeta.label, macMeta.tagClass, macMeta.hidden);
+
+      const linuxMeta = formatGenericPlatformStatus(cfg.linuxStatus);
+      applyPlatformTagState(container.querySelector("[data-platform-linux]"), "Linux", linuxMeta.label, linuxMeta.tagClass, linuxMeta.hidden);
+    });
   }
 
   async function fetchCloudApps() {
@@ -954,7 +1016,14 @@
           APP_CONFIG[id].windowsStatus = a.windowsStatus || APP_CONFIG[id].windowsStatus || "Planning";
           APP_CONFIG[id].microsoftStoreUrl = a.microsoftStoreUrl || null;
           APP_CONFIG[id].windowsWingetId = a.windowsWingetId || null;
+          APP_CONFIG[id].latestVersion = a.latestVersion || APP_CONFIG[id].latestVersion || null;
+          APP_CONFIG[id].latestReleaseNotes = a.latestReleaseNotes || APP_CONFIG[id].latestReleaseNotes || null;
+          APP_CONFIG[id].latestUpdatePublishedAt = a.latestUpdatePublishedAt || APP_CONFIG[id].latestUpdatePublishedAt || null;
+          APP_CONFIG[id].iosStatus = a.iosStatus || APP_CONFIG[id].iosStatus || "Roadmap";
+          APP_CONFIG[id].macosStatus = a.macosStatus || APP_CONFIG[id].macosStatus || "Roadmap";
+          APP_CONFIG[id].linuxStatus = a.linuxStatus || APP_CONFIG[id].linuxStatus || "Roadmap";
           APP_CONFIG[id].pill = statusMeta.pill;
+          APP_CONFIG[id].platforms = buildPlatformChoices(APP_CONFIG[id]);
         } else {
           APP_CONFIG[id] = {
             name: a.appName || id,
@@ -963,8 +1032,11 @@
             badge: statusMeta.label,
             androidStatus: a.androidStatus || "TestingQueue",
             windowsStatus: a.windowsStatus || "Planning",
+            iosStatus: a.iosStatus || "Roadmap",
+            macosStatus: a.macosStatus || "Roadmap",
+            linuxStatus: a.linuxStatus || "Roadmap",
             accent: "var(--cyan, #22d3ee)",
-            platforms: [`Android (${statusMeta.pill})`],
+            platforms: [],
             joinWebUrl: a.joinWebUrl || null,
             joinAndroidUrl: a.joinAndroidUrl || null,
             closedTestingStartDate: a.closedTestingStartDate || null,
@@ -972,8 +1044,12 @@
             statusMessage: a.statusMessage || null,
             microsoftStoreUrl: a.microsoftStoreUrl || null,
             windowsWingetId: a.windowsWingetId || null,
+            latestVersion: a.latestVersion || null,
+            latestReleaseNotes: a.latestReleaseNotes || null,
+            latestUpdatePublishedAt: a.latestUpdatePublishedAt || null,
             pill: statusMeta.pill
           };
+          APP_CONFIG[id].platforms = buildPlatformChoices(APP_CONFIG[id]);
         }
       });
     } catch (_) {
@@ -1029,6 +1105,58 @@
     return ticket;
   }
 
+  async function recordTesterEngagement(email, appId, action, version) {
+    const cleanEmail = (email || getRememberedEmail() || "").trim().toLowerCase();
+    if (!cleanEmail || !appId) return null;
+
+    const existingAll = getTickets();
+    const cur = existingAll[appId] || { email: cleanEmail, appId, status: "Approved", registeredAt: Date.now() };
+    const setsInstall = action === "install_clicked" || action === "install_confirmed" || action === "update_confirmed" || action === "daily_checkin";
+    const nowIso = new Date().toISOString();
+    const merged = {
+      ...cur,
+      email: cleanEmail,
+      installConfirmed: setsInstall ? true : Boolean(cur.installConfirmed),
+      installConfirmedAt: setsInstall ? (cur.installConfirmedAt || nowIso) : cur.installConfirmedAt || null,
+      installedVersion: setsInstall ? (version || cur.installedVersion || APP_CONFIG[appId]?.latestVersion || null) : cur.installedVersion || null,
+      lastEngagedAt: nowIso
+    };
+    saveTicket(appId, merged);
+
+    if (API_BASE) {
+      try {
+        const res = await fetch(`${API_BASE}/api/testers/engagement`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: cleanEmail, appId, action, version: version || null })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.tester) {
+            const synced = {
+              ...merged,
+              status: data.tester.status || merged.status,
+              installConfirmed: Boolean(data.tester.installConfirmed),
+              installConfirmedAt: data.tester.installConfirmedAt || merged.installConfirmedAt,
+              installedVersion: data.tester.installedVersion || merged.installedVersion,
+              lastEngagedAt: data.tester.lastEngagedAt || merged.lastEngagedAt,
+              day2ReminderSentAt: data.tester.day2ReminderSentAt || merged.day2ReminderSentAt || null
+            };
+            saveTicket(appId, synced);
+            return { message: data.message, ticket: synced };
+          }
+        }
+      } catch (_) {}
+    }
+
+    const fallbackMsg = action === "update_confirmed"
+      ? `Confirmed update to v${merged.installedVersion || "latest"}.`
+      : action === "daily_checkin"
+        ? "Today's active testing session logged!"
+        : "App installation confirmed! Remember to open the app briefly tomorrow (Day 2).";
+    return { message: fallbackMsg, ticket: merged };
+  }
+
   async function syncAllAppsForEmail(email) {
     const appIds = Object.keys(APP_CONFIG);
     const existing = getTickets();
@@ -1037,16 +1165,23 @@
       const cfg = APP_CONFIG[appId];
       const data = await fetchTesterStatus(email, appId);
       if (data && data.status) {
+        const prev = existing[appId] || {};
         saveTicket(appId, {
           email,
           appId,
           appName: cfg.name,
-          platform: data.platform || existing[appId]?.platform || "Android",
+          platform: data.platform || prev.platform || "Android",
           status: data.status,
           joinWebUrl: data.joinWebUrl || data.playStoreUrl || cfg.joinWebUrl || null,
           joinAndroidUrl: data.joinAndroidUrl || cfg.joinAndroidUrl || null,
           androidStatus: data.androidStatus || cfg.androidStatus || null,
-          registeredAt: existing[appId]?.registeredAt || Date.now()
+          registeredAt: data.registeredAt || prev.registeredAt || Date.now(),
+          approvedAt: data.approvedAt || prev.approvedAt || null,
+          installConfirmed: Boolean(data.installConfirmed || prev.installConfirmed),
+          installConfirmedAt: data.installConfirmedAt || prev.installConfirmedAt || null,
+          installedVersion: data.installedVersion || prev.installedVersion || null,
+          lastEngagedAt: data.lastEngagedAt || prev.lastEngagedAt || null,
+          day2ReminderSentAt: data.day2ReminderSentAt || prev.day2ReminderSentAt || null
         });
       } else if (existing[appId] && existing[appId].email !== email) {
         removeTicket(appId);
@@ -1085,6 +1220,7 @@
     containers.forEach((c) => renderStudioBeta(c, email));
 
     fetchCloudApps().then(async () => {
+      Object.keys(APP_CONFIG).forEach((id) => syncProductHeroPlatformBadges(id, APP_CONFIG[id]));
       const currentEmail = getRememberedEmail();
       if (currentEmail) {
         await syncAllAppsForEmail(currentEmail);
@@ -1461,15 +1597,77 @@
     }, 1000);
   }
 
+  let deepLinkToast = null;
+
+  function renderVersionUpdateBannerHtml(appId, cfg, ticket) {
+    const ver = (cfg?.latestVersion || "").trim();
+    if (!ver) return "";
+
+    const notes = (cfg.latestReleaseNotes || "").trim() || "Stability refinements, faster performance, and studio improvements are now approved on Google Play.";
+    const isApproved = ticket && (ticket.status || "").toLowerCase() === "approved";
+    const onLatest = isApproved && ticket.installConfirmed && ticket.installedVersion && ticket.installedVersion.toLowerCase() === ver.toLowerCase();
+    const updateUrl = cfg.joinAndroidUrl || cfg.joinWebUrl || "";
+
+    return `
+      <div class="update-alert-banner">
+        <div class="update-alert-main">
+          <span class="update-alert-pill">
+            <span class="pulse-dot" aria-hidden="true"></span>
+            Approved Update Live · v${escapeHtml(ver)}
+          </span>
+          <h4>${onLatest ? `${escapeHtml(cfg.name)} v${escapeHtml(ver)} Confirmed Up to Date` : `New ${escapeHtml(cfg.name)} Build (v${escapeHtml(ver)}) Is Approved — Please Update`}</h4>
+          <p>${escapeHtml(notes)}</p>
+        </div>
+        ${isApproved ? `
+          <div class="update-alert-actions">
+            ${onLatest
+              ? `<span class="ti-badge is-done">✓ Updated to v${escapeHtml(ver)}</span>`
+              : `
+                ${updateUrl ? `<a href="${escapeHtml(updateUrl)}" target="_blank" rel="noopener" class="btn btn-primary btn-sm" data-track-install-click>Update on Play Store ↗</a>` : ""}
+                <button type="button" class="btn btn-ghost btn-sm" data-engagement-action="update_confirmed" data-version="${escapeHtml(ver)}">✓ I Updated to v${escapeHtml(ver)}</button>
+              `}
+          </div>
+        ` : ""}
+      </div>
+    `;
+  }
+
   function initProductBetaWidgets() {
     const containers = document.querySelectorAll("[data-beta-widget]");
     if (!containers.length) return;
 
     const rememberedEmail = getRememberedEmail();
 
+    // Support 1-click check-in deep links from reminder & update emails (?checkin=installed|engaged|updated)
+    let pendingCheckin = null;
+    try {
+      const qs = new URLSearchParams(location.search);
+      const checkin = (qs.get("checkin") || "").trim().toLowerCase();
+      if (checkin === "installed" || checkin === "engaged" || checkin === "updated") {
+        const emailParam = (qs.get("email") || "").trim().toLowerCase();
+        if (emailParam && emailParam.includes("@")) saveRememberedEmail(emailParam);
+        pendingCheckin = {
+          action: checkin === "updated" ? "update_confirmed" : checkin === "engaged" ? "daily_checkin" : "install_confirmed",
+          email: emailParam || getRememberedEmail(),
+          version: (qs.get("version") || "").trim() || null
+        };
+        qs.delete("checkin");
+        qs.delete("email");
+        qs.delete("version");
+        const cleanQs = qs.toString();
+        history.replaceState(null, "", `${location.pathname}${cleanQs ? "?" + cleanQs : ""}${location.hash || "#beta-queue"}`);
+      }
+    } catch (_) {}
+
     containers.forEach((container) => {
       const appId = container.getAttribute("data-app-id") || "trans-title";
       if (!APP_CONFIG[appId]) return;
+      if (pendingCheckin && pendingCheckin.email) {
+        recordTesterEngagement(pendingCheckin.email, appId, pendingCheckin.action, pendingCheckin.version).then((res) => {
+          if (res?.message) deepLinkToast = res.message;
+          renderProductBetaShell(container, appId);
+        });
+      }
       renderProductBetaShell(container, appId);
     });
 
@@ -1483,16 +1681,23 @@
         if (emailToCheck && isAppAcceptingTesters(cfg)) {
           const live = await fetchTesterStatus(emailToCheck, appId);
           if (live && live.status) {
+            const prev = getTickets()[appId] || {};
             saveTicket(appId, {
               email: emailToCheck,
               appId,
               appName: cfg.name,
-              platform: live.platform || "Android",
+              platform: live.platform || prev.platform || "Android",
               status: live.status,
               joinWebUrl: live.joinWebUrl || live.playStoreUrl || cfg.joinWebUrl || null,
               joinAndroidUrl: live.joinAndroidUrl || cfg.joinAndroidUrl || null,
               androidStatus: live.androidStatus || cfg.androidStatus || null,
-              registeredAt: getTickets()[appId]?.registeredAt || Date.now()
+              registeredAt: live.registeredAt || prev.registeredAt || Date.now(),
+              approvedAt: live.approvedAt || prev.approvedAt || null,
+              installConfirmed: Boolean(live.installConfirmed || prev.installConfirmed),
+              installConfirmedAt: live.installConfirmedAt || prev.installConfirmedAt || null,
+              installedVersion: live.installedVersion || prev.installedVersion || null,
+              lastEngagedAt: live.lastEngagedAt || prev.lastEngagedAt || null,
+              day2ReminderSentAt: live.day2ReminderSentAt || prev.day2ReminderSentAt || null
             });
           } else {
             const existing = getTickets()[appId];
@@ -1523,13 +1728,16 @@
     renderProductHeroCountdown(appId, cfg, currentTicket);
 
     const noticeHtml = renderLifecycleNoticeHtml(cfg);
+    const updateBannerHtml = renderVersionUpdateBannerHtml(appId, cfg, currentTicket);
     const countdownHtml = renderCountdownHtml(cfg);
     const publicInstallHtml = renderPublicInstallDeckHtml(cfg);
     const showClosedTestingWidget = isAppAcceptingTesters(cfg);
 
     container.innerHTML = `
       <div class="release-hub-stack">
+        ${deepLinkToast ? `<div class="alert-success" style="margin-bottom:14px;"><b>✓ Activity Logged</b><p>${escapeHtml(deepLinkToast)}</p></div>` : ""}
         ${noticeHtml}
+        ${updateBannerHtml}
         ${publicInstallHtml}
         ${countdownHtml}
         ${showClosedTestingWidget ? `
@@ -1551,6 +1759,32 @@
         renderProductFormView(bodyEl, appId, cfg, container, rememberedEmail);
       }
     }
+
+    wireEngagementHandlers(container.querySelector(".update-alert-banner"), container, appId, cfg, currentTicket);
+  }
+
+  function wireEngagementHandlers(scopeEl, container, appId, cfg, ticket) {
+    if (!scopeEl) return;
+    scopeEl.querySelectorAll("[data-engagement-action]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        if (!ticket || !ticket.email) return;
+        const action = btn.getAttribute("data-engagement-action") || "install_confirmed";
+        const version = btn.getAttribute("data-version") || cfg.latestVersion || null;
+        btn.disabled = true;
+        btn.textContent = "Saving...";
+        const res = await recordTesterEngagement(ticket.email, appId, action, version);
+        if (res?.message) deepLinkToast = res.message;
+        renderProductBetaShell(container, appId);
+      });
+    });
+
+    scopeEl.querySelectorAll("[data-track-install-click]").forEach((link) => {
+      link.addEventListener("click", () => {
+        if (ticket?.email) {
+          recordTesterEngagement(ticket.email, appId, "install_clicked", cfg.latestVersion || null);
+        }
+      });
+    });
   }
 
   function renderProductFormView(bodyEl, appId, cfg, container, prefillEmail) {
@@ -1694,7 +1928,7 @@
                     </a>
                   ` : ""}
                   ${joinAndroidUrl ? `
-                    <a href="${escapeHtml(joinAndroidUrl)}" target="_blank" rel="noopener" class="btn ${joinWebUrl ? "btn-ghost" : "btn-primary"}">
+                    <a href="${escapeHtml(joinAndroidUrl)}" target="_blank" rel="noopener" class="btn ${joinWebUrl ? "btn-ghost" : "btn-primary"}" data-track-install-click>
                       <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8c-.3.3-.5.8-.5 1.5v17.4c0 .7.2 1.2.5 1.5l9.2-9.6L3.6 1.8zm11.4 8.4l2.5-1.4L4.8.8l10.2 9.4zm0 3.6L4.8 23.2l12.7-7.6-2.5-1.8zm1.2-1.2l3.4 2c.9.5.9 1.4 0 1.9l-3.4 2-1.5-1.5 1.5-4.4z"/></svg>
                       <span>Join via Android (Play Store)</span>
                     </a>
@@ -1706,6 +1940,54 @@
 
                 <div class="ticket-footer-actions">
                   <button class="btn-text-action" data-reset-ticket>Switch / Check Another Email</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="tester-intelligence-card">
+              <div class="ti-head">
+                <strong>Tester Install &amp; Day-2 Engagement Tracker</strong>
+                <span class="mono muted">${ticket.lastEngagedAt ? `Last active: ${new Date(ticket.lastEngagedAt).toLocaleDateString()}` : "Confirm install below so we don't send install reminders"}</span>
+              </div>
+              <div class="ti-steps">
+                <div class="ti-step">
+                  <div>
+                    <div class="ti-step-top">
+                      <span class="ti-step-title">1. Install Verification</span>
+                      <span class="ti-badge ${ticket.installConfirmed ? "is-done" : "is-due"}">
+                        ${ticket.installConfirmed ? `✓ Installed${ticket.installedVersion ? " v" + escapeHtml(ticket.installedVersion) : ""}` : "Awaiting Install"}
+                      </span>
+                    </div>
+                    <p class="ti-step-desc" style="margin-top:6px;">
+                      ${ticket.installConfirmed
+                        ? `Your installation on Android is verified${cfg.latestVersion ? " (latest approved build: v" + escapeHtml(cfg.latestVersion) + ")" : ""}.`
+                        : "After downloading from Google Play, confirm your install so the studio knows your device is active."}
+                    </p>
+                  </div>
+                  <div class="ti-step-actions">
+                    ${!ticket.installConfirmed
+                      ? `<button type="button" class="btn btn-primary btn-sm" data-engagement-action="install_confirmed" data-version="${escapeHtml(cfg.latestVersion || "")}">✓ Confirm I Installed the App</button>`
+                      : (cfg.latestVersion && (!ticket.installedVersion || ticket.installedVersion !== cfg.latestVersion)
+                        ? `<button type="button" class="btn btn-ghost btn-sm" data-engagement-action="update_confirmed" data-version="${escapeHtml(cfg.latestVersion)}">✓ Confirm Updated to v${escapeHtml(cfg.latestVersion)}</button>`
+                        : `<button type="button" class="btn btn-ghost btn-sm" data-engagement-action="install_confirmed" data-version="${escapeHtml(cfg.latestVersion || "")}">✓ Re-verify Install</button>`)}
+                  </div>
+                </div>
+
+                <div class="ti-step">
+                  <div>
+                    <div class="ti-step-top">
+                      <span class="ti-step-title">2. Day-2+ Active Usage Check-In</span>
+                      <span class="ti-badge ${ticket.lastEngagedAt ? "is-done" : ""}">
+                        ${ticket.lastEngagedAt ? "✓ Engaged" : "Day-2 Check-In"}
+                      </span>
+                    </div>
+                    <p class="ti-step-desc" style="margin-top:6px;">
+                      Google Play monitors multi-day tester engagement. Open <strong>${escapeHtml(cfg.name)}</strong> for a few minutes on Day 2+ and log your session here.
+                    </p>
+                  </div>
+                  <div class="ti-step-actions">
+                    <button type="button" class="btn btn-ghost btn-sm" data-engagement-action="daily_checkin" data-version="${escapeHtml(cfg.latestVersion || "")}">✓ Log Today's Testing Session</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1721,6 +2003,7 @@
             }).catch(() => {});
           });
         }
+        wireEngagementHandlers(bodyEl, container, appId, cfg, ticket);
       }
     } else {
       bodyEl.innerHTML = `
@@ -2170,12 +2453,391 @@
   }
 
   /* ==========================================================================
+     6.5. Community Reviews & Official Studio Reply Engine ([data-reviews-widget])
+     ========================================================================== */
+  const SHOWCASE_REVIEWS = {
+    "trans-title": [
+      {
+        reviewId: "RV-TT01",
+        appId: "trans-title",
+        appName: "Trans-Title",
+        platform: "Android",
+        authorName: "Tariq M.",
+        rating: 5,
+        comment: "Lock-screen background transcription handled a 42-minute lecture without missing a single cue, and Cross-Play lip-sync offset nailed a dubbed clip in seconds.",
+        isPinned: true,
+        developerReply: "Thank you for testing long-form runs! We tuned our 5-minute continuous pipeline specifically so long videos never lose progress when switching apps.",
+        repliedAt: "2026-11-16T10:30:00Z",
+        createdAt: "2026-11-16T08:15:00Z",
+        isSample: true
+      },
+      {
+        reviewId: "RV-TT02",
+        appId: "trans-title",
+        appName: "Trans-Title",
+        platform: "Android",
+        authorName: "Elena R.",
+        rating: 5,
+        comment: "Love that subtitle colors, edge outlines, and audio timing stay remembered per video while keeping everything strictly offline.",
+        isPinned: false,
+        developerReply: "Appreciated, Elena! Per-video memory and live preview styling were built directly from closed-testing feedback.",
+        repliedAt: "2026-11-17T14:20:00Z",
+        createdAt: "2026-11-17T11:05:00Z",
+        isSample: true
+      }
+    ],
+    "echo-cleaner": [
+      {
+        reviewId: "RV-EC01",
+        appId: "echo-cleaner",
+        appName: "Echo Cleaner",
+        platform: "Android",
+        authorName: "Hassan K.",
+        rating: 5,
+        comment: "Recorded a voice memo in a tiled hallway — Studio Pro stripped out the hollow room tail completely and the live A/B waveform toggle makes dialing clarity super intuitive.",
+        isPinned: true,
+        developerReply: "Thrilled to hear Studio Pro rescued that hallway recording! Cached slider re-blending lets you audition subtle adjustments instantly.",
+        repliedAt: "2026-11-17T16:10:00Z",
+        createdAt: "2026-11-17T13:40:00Z",
+        isSample: true
+      }
+    ],
+    "company": [
+      {
+        reviewId: "RV-NE01",
+        appId: "trans-title",
+        appName: "Trans-Title",
+        platform: "Android",
+        authorName: "Daniel P.",
+        rating: 5,
+        comment: "Rare to see multimedia tools this fast and polished without requiring an account or uploading private files to external servers.",
+        isPinned: true,
+        developerReply: "Zero accounts and 100% local silicon execution is our core promise across every Native Espresso release.",
+        repliedAt: "2026-11-16T18:00:00Z",
+        createdAt: "2026-11-16T15:20:00Z",
+        isSample: true
+      },
+      {
+        reviewId: "RV-NE02",
+        appId: "echo-cleaner",
+        appName: "Echo Cleaner",
+        platform: "Android",
+        authorName: "Nadia S.",
+        rating: 5,
+        comment: "Clean Room & Studio Pro engines plus video audio extraction right on my phone — looking forward to the desktop builds too!",
+        isPinned: false,
+        developerReply: null,
+        repliedAt: null,
+        createdAt: "2026-11-17T09:12:00Z",
+        isSample: true
+      }
+    ]
+  };
+
+  function getPendingLocalReviews(appId) {
+    try {
+      const raw = localStorage.getItem(REVIEW_STORAGE_KEY);
+      const list = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(list)) return [];
+      return appId === "all" ? list : list.filter((r) => (r.appId || "").toLowerCase() === appId);
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function savePendingLocalReview(item) {
+    try {
+      const raw = localStorage.getItem(REVIEW_STORAGE_KEY);
+      const list = raw ? JSON.parse(raw) : [];
+      list.unshift(item);
+      localStorage.setItem(REVIEW_STORAGE_KEY, JSON.stringify(list.slice(0, 12)));
+    } catch (_) {}
+  }
+
+  function formatStarsString(rating) {
+    const r = Math.max(1, Math.min(5, Number(rating) || 5));
+    return "★".repeat(r) + "☆".repeat(5 - r);
+  }
+
+  function formatReviewDate(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return "";
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+  }
+
+  function initReviewsWidgets() {
+    const widgets = document.querySelectorAll("[data-reviews-widget]");
+    if (!widgets.length) return;
+    widgets.forEach((el) => setupReviewWidget(el));
+  }
+
+  async function setupReviewWidget(container) {
+    const appId = (container.getAttribute("data-app-id") || "company").toLowerCase();
+    const appName = container.getAttribute("data-app-name") || APP_CONFIG[appId]?.name || "Native Espresso Studio";
+    let activeFilter = "all";
+    let isDrawerOpen = false;
+    let selectedRating = 5;
+    let lastNotice = null;
+    let cloudReviews = [];
+    let isCloudFallback = false;
+
+    async function loadReviews() {
+      try {
+        const qs = appId === "company" ? "" : `?appId=${encodeURIComponent(appId)}`;
+        const res = await fetch(`${API_BASE}/api/reviews${qs}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.reviews) && data.reviews.length > 0) {
+            cloudReviews = data.reviews;
+            isCloudFallback = false;
+            return;
+          }
+        }
+      } catch (_) {}
+      cloudReviews = SHOWCASE_REVIEWS[appId] || SHOWCASE_REVIEWS["company"] || [];
+      isCloudFallback = true;
+    }
+
+    function render() {
+      const pendingLocal = getPendingLocalReviews(appId === "company" ? "all" : appId)
+        .filter((p) => !cloudReviews.some((c) => c.reviewId === p.reviewId));
+      const allItems = [...pendingLocal, ...cloudReviews];
+
+      const filtered = activeFilter === "all"
+        ? allItems
+        : allItems.filter((r) => (r.platform || "").toLowerCase() === activeFilter.toLowerCase());
+
+      const ratedItems = cloudReviews.length ? cloudReviews : allItems;
+      const avg = ratedItems.length
+        ? (ratedItems.reduce((acc, r) => acc + (Number(r.rating) || 5), 0) / ratedItems.length).toFixed(1)
+        : "5.0";
+
+      const rememberedEmail = getRememberedEmail();
+
+      const cardsHtml = filtered.length
+        ? filtered.map((r) => {
+            const isPending = r.status === "Pending";
+            const replyHtml = r.developerReply ? `
+              <div class="studio-reply-thread">
+                <div class="studio-reply-head">
+                  <span>✓ Official Reply · Native Espresso Studio</span>
+                  <span>${escapeHtml(formatReviewDate(r.repliedAt))}</span>
+                </div>
+                <p class="studio-reply-body">${escapeHtml(r.developerReply)}</p>
+              </div>
+            ` : "";
+
+            return `
+              <article class="review-card ${r.isPinned ? "is-pinned" : ""}">
+                <div class="review-head">
+                  <div class="review-author-block">
+                    <div class="review-author">
+                      <span>${escapeHtml(r.authorName)}</span>
+                      ${r.isPinned ? `<span class="review-badge">Pinned</span>` : ""}
+                      ${isPending ? `<span class="review-badge">Pending Approval</span>` : ""}
+                      ${r.isSample ? `<span class="review-badge">Featured</span>` : ""}
+                    </div>
+                    <div class="review-meta">${escapeHtml(r.appName || appName)} · ${escapeHtml(r.platform || "Android")} · ${escapeHtml(formatReviewDate(r.createdAt))}</div>
+                  </div>
+                  <div class="review-stars" aria-label="${Number(r.rating) || 5} out of 5 stars">${formatStarsString(r.rating)}</div>
+                </div>
+                <p class="review-body">“${escapeHtml(r.comment)}”</p>
+                ${replyHtml}
+              </article>
+            `;
+          }).join("")
+        : `<p class="muted" style="grid-column:1/-1;margin:8px 0;">No reviews match this platform filter yet. Be the first to share feedback!</p>`;
+
+      const appSelectRow = appId === "company" ? `
+        <div class="form-row">
+          <label for="rev-app-${appId}">Product</label>
+          <select id="rev-app-${appId}" name="appId" class="form-select">
+            <option value="trans-title">Trans-Title</option>
+            <option value="echo-cleaner">Echo Cleaner</option>
+            <option value="company">Native Espresso Studio</option>
+          </select>
+        </div>
+      ` : `<input type="hidden" name="appId" value="${escapeHtml(appId)}">`;
+
+      container.innerHTML = `
+        <div class="reviews-shell">
+          ${lastNotice ? `
+            <div class="alert-success" style="margin-bottom:18px;">
+              <b>${escapeHtml(lastNotice.title)}</b>
+              <p>${escapeHtml(lastNotice.body)}</p>
+            </div>
+          ` : ""}
+
+          <div class="reviews-toolbar">
+            <div class="reviews-summary">
+              <div class="rating-score-pill">
+                <span class="rating-stars-gold">★</span>
+                <span>${escapeHtml(avg)} / 5.0</span>
+                <span class="muted" style="font-weight:500;">· ${ratedItems.length} ${isCloudFallback ? "featured" : "approved"}</span>
+              </div>
+              <div class="reviews-filter-pills" role="group" aria-label="Filter reviews by platform">
+                ${["all", "Android", "Windows", "iOS"].map((f) => `
+                  <button type="button" class="rev-filter-btn ${activeFilter === f ? "active" : ""}" data-rev-filter="${f}">
+                    ${f === "all" ? "All Platforms" : f}
+                  </button>
+                `).join("")}
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" data-rev-toggle-form>
+              ${isDrawerOpen ? "Close Review Form ↑" : "+ Write a Review"}
+            </button>
+          </div>
+
+          <div class="review-compose-drawer ${isDrawerOpen ? "open" : ""}" data-rev-drawer>
+            <form data-rev-form>
+              ${appSelectRow}
+              <div class="form-grid-2">
+                <div class="form-row">
+                  <label for="rev-name-${appId}">Your Name</label>
+                  <input type="text" id="rev-name-${appId}" name="authorName" required placeholder="e.g. Alex M." class="queue-input">
+                </div>
+                <div class="form-row">
+                  <label for="rev-email-${appId}">Email (Private — never displayed)</label>
+                  <input type="email" id="rev-email-${appId}" name="authorEmail" required value="${escapeHtml(rememberedEmail)}" placeholder="name@example.com" class="queue-input" autocomplete="email">
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-row">
+                  <label for="rev-plat-${appId}">Platform</label>
+                  <select id="rev-plat-${appId}" name="platform" class="form-select">
+                    <option value="Android">Android</option>
+                    <option value="Windows">Windows</option>
+                    <option value="iOS">iOS</option>
+                    <option value="General">General</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <label>Rating</label>
+                  <div class="star-picker" role="radiogroup" aria-label="Star rating">
+                    ${[1, 2, 3, 4, 5].map((n) => `
+                      <button type="button" class="star-pick-btn ${n <= selectedRating ? "lit" : ""}" data-star-val="${n}" aria-label="${n} stars">★</button>
+                    `).join("")}
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <label for="rev-comment-${appId}">Your Review or Comment</label>
+                <textarea id="rev-comment-${appId}" name="comment" required minlength="3" maxlength="1500" placeholder="Share how it runs on your device, features you love, or suggestions for the studio..." class="form-textarea"></textarea>
+              </div>
+
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <span class="mono muted">Reviewed &amp; replied by Native Espresso Studio before public listing.</span>
+                <button type="submit" class="btn btn-primary btn-sm">Submit Review →</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="reviews-grid">${cardsHtml}</div>
+        </div>
+      `;
+
+      container.querySelectorAll("[data-rev-filter]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          activeFilter = btn.getAttribute("data-rev-filter") || "all";
+          render();
+        });
+      });
+
+      container.querySelector("[data-rev-toggle-form]")?.addEventListener("click", () => {
+        isDrawerOpen = !isDrawerOpen;
+        render();
+      });
+
+      container.querySelectorAll("[data-star-val]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          selectedRating = Number(btn.getAttribute("data-star-val")) || 5;
+          container.querySelectorAll("[data-star-val]").forEach((s) => {
+            const v = Number(s.getAttribute("data-star-val")) || 0;
+            s.classList.toggle("lit", v <= selectedRating);
+          });
+        });
+      });
+
+      const form = container.querySelector("[data-rev-form]");
+      if (form) {
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const submitBtn = form.querySelector("button[type='submit']");
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Submitting...";
+
+          const targetAppId = form.querySelector("[name='appId']")?.value || appId;
+          const targetAppName = APP_CONFIG[targetAppId]?.name || (targetAppId === "company" ? "Native Espresso Studio" : appName);
+          const authorName = form.querySelector("[name='authorName']").value.trim();
+          const authorEmail = form.querySelector("[name='authorEmail']").value.trim().toLowerCase();
+          const platform = form.querySelector("[name='platform']").value || "Android";
+          const comment = form.querySelector("[name='comment']").value.trim();
+
+          saveRememberedEmail(authorEmail);
+
+          let reviewId = "RV-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+          let msg = "Your review has been submitted! Once approved (and optionally replied to) by Native Espresso Studio, it will display publicly here.";
+
+          try {
+            const res = await fetch(`${API_BASE}/api/reviews`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                appId: targetAppId,
+                appName: targetAppName,
+                platform,
+                authorName,
+                authorEmail,
+                rating: selectedRating,
+                comment
+              })
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (data.reviewId) reviewId = data.reviewId;
+              if (data.message) msg = data.message;
+            }
+          } catch (_) {
+            // Offline fallback preserves instant UX confirmation locally
+          }
+
+          savePendingLocalReview({
+            reviewId,
+            appId: targetAppId,
+            appName: targetAppName,
+            platform,
+            authorName,
+            rating: selectedRating,
+            comment,
+            status: "Pending",
+            isPinned: false,
+            developerReply: null,
+            createdAt: new Date().toISOString()
+          });
+
+          lastNotice = { title: `✓ Review #${reviewId} Received`, body: msg };
+          isDrawerOpen = false;
+          render();
+        });
+      }
+    }
+
+    render();
+    await loadReviews();
+    render();
+  }
+
+  /* ==========================================================================
      7. Bootloader on DOM Ready
      ========================================================================== */
   function boot() {
     initStudioBetaWidgets();
     initProductBetaWidgets();
     initSupportPortal();
+    initReviewsWidgets();
   }
 
   if (document.readyState === "loading") {

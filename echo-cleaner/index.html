@@ -8,10 +8,11 @@
 <meta name="theme-color" content="#090d13">
 <meta property="og:title" content="Echo Cleaner — Studio-clear voice, 100% offline">
 <meta property="og:description" content="On-device neural voice enhancement that never leaves your device.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23090d13'/%3E%3Cpath d='M6 16h3l2-6 3 12 3-16 3 14 2-4h4' stroke='%2322d3ee' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="../assets/media/echo-cleaner/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="../assets/style.css?v=20261118e">
+<link rel="stylesheet" href="../assets/style.css?v=20261119">
+<link rel="stylesheet" href="../assets/spatial-ui.css?v=20261119">
 <script>(()=>{const t=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t)})();</script>
 </head>
 <body>
@@ -25,17 +26,16 @@
       </a>
       <span class="crumb-sep">/</span>
       <a class="brand" href="#top" aria-label="Echo Cleaner home">
-        <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="7" fill="none" stroke="currentColor" stroke-opacity=".28"/><path d="M6 16h3l2-6 3 12 3-16 3 14 2-4h4" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <img src="../assets/media/echo-cleaner/icon.png" width="24" height="24" style="border-radius:6px;object-fit:cover;" alt="">
         <span>Echo&nbsp;Cleaner</span>
       </a>
     </div>
     <nav class="links" id="menu" aria-label="Primary">
-      <a href="#demo">Live demo</a>
-      <a href="#features">Features</a>
-      <a href="#how">How it works</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#support">Support</a>
-      <a href="#faq">FAQ</a>
+      <a href="#top">Platforms</a>
+      <a href="#demo">Signal Lab</a>
+      <a href="#features">App Studio</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#support">Support &amp; FAQ</a>
       <a class="btn btn-sm btn-primary" href="#beta-queue">Join Beta</a>
     </nav>
     <div style="display:flex;align-items:center;gap:10px;">
@@ -46,157 +46,239 @@
 </header>
 
 <main>
-<!-- HERO -->
-<section class="hero">
+<!-- PRODUCT-FIRST 3D SPATIAL HERO -->
+<section class="hero" id="overview">
   <div class="hero-grid-bg" aria-hidden="true"></div>
   <div class="orb orb-a" aria-hidden="true"></div>
   <div class="orb orb-b" aria-hidden="true"></div>
-  <div class="wrap live-testing-top" data-hero-countdown="echo-cleaner" hidden></div>
-  <div class="wrap hero-in">
-    <div class="hero-kicker-pill rise" style="--d:0">
-      <i class="dot dot-cyan" aria-hidden="true"></i>
-      <span>On-Device Neural Audio Studio · Dual Acoustic Engines</span>
-    </div>
-    <h1 class="rise" style="--d:1">Studio-clear voice.<br><span class="grad">Zero uploads.</span></h1>
-    <p class="lede rise" style="--d:2">Echo Cleaner strips room echo, background noise, and hollow reverb — then shapes and clarifies your voice with switchable Clean Room and Studio Pro engines. Every sample runs on your phone. Nothing ever leaves it.</p>
-    <div class="platforms rise" style="--d:2.5;margin-bottom:18px;" data-app-platforms="echo-cleaner">
-      <span class="platform-tag queue" data-platform-android><b>Android</b> Closed Testing Queue (Finalizing)</span>
-      <span class="platform-tag"><b>iOS</b> In Planning</span>
-      <span class="platform-tag" data-platform-windows><b>Windows</b> In Planning</span>
-    </div>
-    <div data-app-access-banner="echo-cleaner" hidden style="margin-bottom:18px;"></div>
-    <div class="hero-cta rise" style="--d:3">
-      <a class="btn btn-primary" href="#demo">
-        <span>Try the live demo</span>
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
-      <a class="btn btn-ghost" href="privacy.html">Read the privacy policy</a>
-    </div>
-    <ul class="chips rise" style="--d:4">
-      <li><i class="dot dot-green"></i>100% offline</li>
-      <li><i class="dot dot-cyan"></i>Clean Room &amp; Studio Pro Engines</li>
-      <li><i class="dot dot-magenta"></i>Live A/B Waveform Compare</li>
-    </ul>
-  </div>
-  <svg class="hero-wave" id="heroWave" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
-    <defs><linearGradient id="hw" x1="0" x2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#38bdf8"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs>
-    <path class="w1" d="M0 110 C 100 40 200 180 300 110 S 500 40 600 110 S 800 180 900 110 S 1100 40 1200 110" fill="none" stroke="url(#hw)" stroke-width="2.5"/>
-    <path class="w2" d="M0 110 C 100 170 200 50 300 110 S 500 170 600 110 S 800 50 900 110 S 1100 170 1200 110" fill="none" stroke="url(#hw)" stroke-width="1.4" opacity=".45"/>
-  </svg>
-</section>
 
-<!-- DEMO -->
-<section id="demo" class="section" data-accent="cyan">
-  <div class="wrap">
-    <p class="kicker reveal">Interactive signal lab</p>
-    <div class="section-title-row reveal">
-      <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Hear what “clean” looks like</h2>
-    </div>
-    <p class="lede reveal">Drag the enhancement chain live. Rose is the unwanted room energy — echo, hiss, and reverb tail. Watch it collapse as the on-device neural pipeline isolates speech. Play a synthesized before/after preview tone anytime.</p>
-    <div class="lab reveal">
-      <div class="scope">
-        <canvas id="wave" aria-label="Live waveform visualization of noisy versus enhanced signal"></canvas>
-        <div class="scope-hud">
-          <span class="mono" id="roNoise">NOISE −6 dB</span>
-          <span class="mono" id="roEcho">ECHO −4 dB</span>
-          <span class="mono" id="roGain">GAIN +0.0 dB</span>
+  <!-- Live Closed Testing Top Strip (Visible to Everyone) -->
+  <div class="wrap live-testing-top" data-hero-countdown="echo-cleaner" hidden></div>
+
+  <div class="wrap hero-split">
+    <!-- Left Column: Official Icon, Wordmark, Platform Matrix & CTAs -->
+    <div class="hero-identity-col">
+      <div class="app-identity-lockup rise" style="--d:0">
+        <div class="app-icon-medallion">
+          <img src="../assets/media/echo-cleaner/icon.png" alt="Echo Cleaner official 3D microphone icon">
+        </div>
+        <div class="app-identity-text">
+          <h1 class="app-wordmark is-echocleaner">Echo Cleaner</h1>
+          <span class="app-tagline-pill">
+            <i class="dot dot-cyan" aria-hidden="true"></i>
+            On-Device Neural Audio Studio
+          </span>
         </div>
       </div>
-      <aside class="console" aria-label="Demo controls">
-        <h3 class="console-title">Enhancement chain</h3>
-        <label class="ctl"><span>Enhancement <output id="vEnh">70%</output></span>
-          <input type="range" id="enh" min="0" max="100" value="70"></label>
-        <label class="ctl"><span>Voice boost <output id="vBoost">35%</output></span>
-          <input type="range" id="boost" min="0" max="100" value="35"></label>
-        <label class="ctl"><span>Motion speed <output id="vSpeed">40%</output></span>
-          <input type="range" id="speed" min="0" max="100" value="40"></label>
-        <div class="toggles">
-          <label class="tgl"><input type="checkbox" id="tEcho" checked><i></i>Echo removal</label>
-          <label class="tgl"><input type="checkbox" id="tNoise" checked><i></i>Noise reduction</label>
-          <label class="tgl"><input type="checkbox" id="tReverb" checked><i></i>De-reverb</label>
+
+      <!-- Platform & Development Matrix Placed Prominently First -->
+      <div class="platform-matrix-card rise" style="--d:1">
+        <div class="pmc-head">
+          <span class="pmc-label">Platforms &amp; Development Status</span>
+          <a class="pmc-action" href="#beta-queue">Join Testing Queue ↓</a>
         </div>
-        <label class="ctl"><span>Display</span>
-          <select id="style"><option value="wave">Mirrored wave</option><option value="bars">Spectrum bars</option></select></label>
-        <div class="console-actions">
-          <button class="btn btn-primary btn-sm" id="btnAudio" aria-pressed="false">▶ Play demo tone</button>
-          <button class="btn btn-ghost btn-sm" id="btnRand">Randomize</button>
-          <button class="btn btn-ghost btn-sm" id="btnReset">Reset</button>
-          <button class="btn btn-ghost btn-sm" id="btnExport">Export PNG</button>
+        <div class="platforms" data-app-platforms="echo-cleaner">
+          <span class="platform-tag queue" data-platform-android><b>Android</b> Closed Testing Queue (Finalizing)</span>
+          <span class="platform-tag" data-platform-windows><b>Windows</b> In Planning</span>
+          <span class="platform-tag" data-platform-ios><b>iOS</b> In Planning</span>
+          <span class="platform-tag" data-platform-macos hidden><b>macOS</b> Hidden</span>
+          <span class="platform-tag" data-platform-linux hidden><b>Linux</b> Hidden</span>
         </div>
-        <p class="console-note mono">Synthesized preview — the app runs real on-device acoustic engines on your recordings, offline.</p>
-      </aside>
+      </div>
+
+      <div data-app-access-banner="echo-cleaner" hidden style="margin-bottom:16px;"></div>
+
+      <h2 class="hero-sub-headline rise" style="--d:2">Studio-clear voice. <span class="grad">Zero uploads.</span></h2>
+      <p class="lede rise" style="--d:2.5;margin:0 0 22px;">Strip room echo, background noise, and hollow reverb — then clarify speech with switchable Clean Room and Studio Pro engines right on your phone.</p>
+
+      <div class="hero-cta rise" style="--d:3;margin-top:20px;">
+        <a class="btn btn-primary" href="#demo">
+          <span>Try Interactive Audio Lab</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#beta-queue">Join Beta Queue</a>
+        <a class="btn btn-ghost" href="#reviews">Reviews</a>
+      </div>
+
+      <ul class="chips rise" style="--d:4">
+        <li><i class="dot dot-green"></i>100% offline</li>
+        <li><i class="dot dot-cyan"></i>Clean Room &amp; Studio Pro</li>
+        <li><i class="dot dot-magenta"></i>Live A/B Waveform</li>
+      </ul>
+    </div>
+
+    <!-- Right Column: Interactive 3D Tilt Phone Stage -->
+    <div class="hero-stage-col rise" style="--d:1.5" data-3d-stage>
+      <div class="stage-3d-wrap">
+        <div class="stage-3d-aura" aria-hidden="true"></div>
+        <div class="phone-3d-frame" title="Click to inspect fullscreen">
+          <div class="phone-3d-screen">
+            <img src="../assets/media/echo-cleaner/01-home-studio.png" alt="Echo Cleaner Home Studio">
+            <div class="phone-3d-glare" aria-hidden="true"></div>
+          </div>
+          <div class="phone-3d-badge">
+            <i class="dot dot-cyan" aria-hidden="true"></i>
+            <span>Home Studio · Tap to Zoom</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-shot-pills" aria-label="Quick app screenshot switcher">
+        <button type="button" class="shot-pill active" data-shot-src="../assets/media/echo-cleaner/01-home-studio.png" data-shot-label="Echo Cleaner — Home Studio">Home Studio</button>
+        <button type="button" class="shot-pill" data-shot-src="../assets/media/echo-cleaner/02-enhancement-mixer.png" data-shot-label="Studio Mixer &amp; Dual Engines">Echo Mixer</button>
+        <button type="button" class="shot-pill" data-shot-src="../assets/media/echo-cleaner/03-dual-engines.png" data-shot-label="Clean Room vs Studio Pro">Dual Engines</button>
+        <button type="button" class="shot-pill" data-shot-src="../assets/media/echo-cleaner/04-before-after.png" data-shot-label="Before / After Comparison">A/B Wave</button>
+        <button type="button" class="shot-pill" data-shot-src="../assets/media/echo-cleaner/05-voice-recorder.png" data-shot-label="Built-In Voice Recorder">Recorder</button>
+      </div>
+      <span class="stage-hint">Move pointer to tilt in 3D · Click device to open lightbox</span>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section id="features" class="section" data-accent="green">
+<!-- INTERACTIVE ACOUSTIC WORKBENCH (TABBED 3D WORKSPACE) -->
+<section id="workbench" class="section" data-accent="cyan">
   <div class="wrap">
-    <p class="kicker reveal">The studio mixer</p>
+    <p class="kicker reveal">Interactive Acoustic Workbench</p>
     <div class="section-title-row reveal">
       <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Precision acoustics. Instant auditioning.</h2>
+      <h2>Signal Lab, App Studio &amp; Pipeline</h2>
     </div>
-    <div class="grid cards">
-      <article class="card reveal"><div class="ico" style="--c:var(--cyan)">◉</div><h3>Dual Acoustic Engines</h3><p>Switch between <strong>Clean Room</strong> and <strong>Studio Pro</strong> on-device neural audio engines with sub-second cached slider re-blending.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--green)">≋</div><h3>Noise &amp; Echo Removal</h3><p>Proprietary on-device neural denoising strips hiss, background hum, room echo, wind, and crowd bleed without thinning natural speech.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--blue)">⌁</div><h3>Room De-Reverberation</h3><p>Acoustic room modeling dries out hollow reflections so recordings sound intimate and close-mic’d rather than distant.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--magenta)">↯</div><h3>Live Waveform &amp; A/B Compare</h3><p>Inspect real-time audio envelopes and toggle instantly between original and enhanced audio to dial in exact voice clarity and bass warmth.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--amber)">🎙</div><h3>Record or Extract from Video</h3><p>Capture voice directly inside the app with pause/resume, import audio clips, or extract clean soundtracks straight from video files.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--cyan)">⛨</div><h3>100% Offline &amp; Pauseable Export</h3><p>Pause, resume, or cancel exports cleanly with zero leftover clutter — available across 12 languages with Light &amp; Dark studio themes.</p></article>
-    </div>
-  </div>
-</section>
+    <p class="lede reveal">Audition the acoustic chain live, inspect Echo Cleaner's real studio screens in 3D, or review pricing and workflow.</p>
 
-<!-- HOW -->
-<section id="how" class="section" data-accent="blue">
-  <div class="wrap">
-    <p class="kicker reveal">Pipeline</p>
-    <div class="section-title-row reveal">
-      <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Record or import → enhance → export</h2>
-    </div>
-    <ol class="steps">
-      <li class="reveal"><b class="mono">01</b><h3>Capture or pick media</h3><p>Record voice live, import any voice memo or podcast take, or extract audio directly from a local video file.</p></li>
-      <li class="reveal"><b class="mono">02</b><h3>On-device acoustic polish</h3><p>Proprietary neural de-reverberation, denoising, and hardware-accelerated loudness shaping run locally with instant A/B auditioning.</p></li>
-      <li class="reveal"><b class="mono">03</b><h3>Export the studio take</h3><p>Save or share your cleaned master with pause/resume export control — your original recording always stays untouched.</p></li>
-    </ol>
-  </div>
-</section>
+    <div class="workbench-shell reveal" data-workbench>
+      <div class="studio-tabs-rail" role="tablist" aria-label="Echo Cleaner Workbench">
+        <button type="button" class="studio-tab-btn active" role="tab" aria-selected="true" data-wb-tab="demo">🎛 Live Signal Lab</button>
+        <button type="button" class="studio-tab-btn" role="tab" aria-selected="false" data-wb-tab="studios">📱 App Studio &amp; Engines</button>
+        <button type="button" class="studio-tab-btn" role="tab" aria-selected="false" data-wb-tab="pipeline">⚡ Workflow &amp; Pricing</button>
+      </div>
 
-<!-- PRICING -->
-<section id="pricing" class="section" data-accent="magenta">
-  <div class="wrap">
-    <p class="kicker reveal">Simple, honest pricing</p>
-    <div class="section-title-row reveal">
-      <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Free to start. Pro when you need it.</h2>
+      <!-- TAB 1: LIVE ACOUSTIC SIGNAL LAB -->
+      <div class="workbench-pane active" data-wb-pane="demo" id="demo">
+        <div class="lab" style="margin-top:0;">
+          <div class="scope">
+            <canvas id="wave" aria-label="Live waveform visualization of noisy versus enhanced signal"></canvas>
+            <div class="scope-hud">
+              <span class="mono" id="roNoise">NOISE −6 dB</span>
+              <span class="mono" id="roEcho">ECHO −4 dB</span>
+              <span class="mono" id="roGain">GAIN +0.0 dB</span>
+            </div>
+          </div>
+          <aside class="console" style="position:static;" aria-label="Demo controls">
+            <h3 class="console-title">Enhancement chain</h3>
+            <label class="ctl"><span>Enhancement <output id="vEnh">70%</output></span>
+              <input type="range" id="enh" min="0" max="100" value="70"></label>
+            <label class="ctl"><span>Voice boost <output id="vBoost">35%</output></span>
+              <input type="range" id="boost" min="0" max="100" value="35"></label>
+            <label class="ctl"><span>Motion speed <output id="vSpeed">40%</output></span>
+              <input type="range" id="speed" min="0" max="100" value="40"></label>
+            <div class="toggles">
+              <label class="tgl"><input type="checkbox" id="tEcho" checked><i></i>Echo removal</label>
+              <label class="tgl"><input type="checkbox" id="tNoise" checked><i></i>Noise reduction</label>
+              <label class="tgl"><input type="checkbox" id="tReverb" checked><i></i>De-reverb</label>
+            </div>
+            <label class="ctl"><span>Display</span>
+              <select id="style"><option value="wave">Mirrored wave</option><option value="bars">Spectrum bars</option></select></label>
+            <div class="console-actions">
+              <button class="btn btn-primary btn-sm" id="btnAudio" aria-pressed="false">▶ Play demo tone</button>
+              <button class="btn btn-ghost btn-sm" id="btnRand">Randomize</button>
+              <button class="btn btn-ghost btn-sm" id="btnReset">Reset</button>
+              <button class="btn btn-ghost btn-sm" id="btnExport">Export PNG</button>
+            </div>
+            <p class="console-note mono">Synthesized preview — the app runs real on-device acoustic engines on your recordings, offline.</p>
+          </aside>
+        </div>
+      </div>
+
+      <!-- TAB 2: APP STUDIO & DUAL ENGINES (WITH 3D PHONE STAGE) -->
+      <div class="workbench-pane" data-wb-pane="studios" id="features">
+        <div class="studio-deck-grid">
+          <div class="studio-feature-grid">
+            <div class="mini-feature-tile">
+              <h4>◉ Dual Acoustic Engines</h4>
+              <p>Switch between <strong>Clean Room</strong> and <strong>Studio Pro</strong> on-device neural engines with sub-second cached slider re-blending.</p>
+            </div>
+            <div class="mini-feature-tile">
+              <h4>≋ Echo &amp; Noise Suppression</h4>
+              <p>Strips speaker-to-mic echo, hiss, hum, wind, and crowd bleed while preserving natural vocal warmth.</p>
+            </div>
+            <div class="mini-feature-tile">
+              <h4>⌁ Room De-Reverberation</h4>
+              <p>Acoustic room modeling dries out hollow reflections so recordings sound intimate and close-mic’d.</p>
+            </div>
+            <div class="mini-feature-tile">
+              <h4>↯ Live A/B Waveform Compare</h4>
+              <p>Inspect RMS envelopes and flip instantly between Original and Enhanced takes while dialing clarity &amp; bass.</p>
+            </div>
+            <div class="mini-feature-tile">
+              <h4>🎙 Record or Extract from Video</h4>
+              <p>Record voice live with pause/resume, import clips, or pull clean audio straight out of local videos.</p>
+            </div>
+            <div class="mini-feature-tile">
+              <h4>⛨ Pauseable Export &amp; Themes</h4>
+              <p>Pause, resume, or cancel exports cleanly — localized across 12 languages with Light &amp; Dark studio themes.</p>
+            </div>
+          </div>
+
+          <div class="hero-stage-col" data-3d-stage>
+            <div class="stage-3d-wrap">
+              <div class="stage-3d-aura" aria-hidden="true"></div>
+              <div class="phone-3d-frame" title="Click to inspect fullscreen">
+                <div class="phone-3d-screen">
+                  <img src="../assets/media/echo-cleaner/02-enhancement-mixer.png" alt="Echo Cleaner Studio Mixer">
+                  <div class="phone-3d-glare" aria-hidden="true"></div>
+                </div>
+                <div class="phone-3d-badge">
+                  <i class="dot dot-cyan" aria-hidden="true"></i>
+                  <span>Studio Mixer · Tap to Zoom</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="stage-shot-pills">
+              <button type="button" class="shot-pill active" data-shot-src="../assets/media/echo-cleaner/02-enhancement-mixer.png" data-shot-label="Studio Mixer &amp; Rotary Knobs">Mixer</button>
+              <button type="button" class="shot-pill" data-shot-src="../assets/media/echo-cleaner/03-dual-engines.png" data-shot-label="Clean Room &amp; Studio Pro Engines">Engines</button>
+              <button type="button" class="shot-pill" data-shot-src="../assets/media/echo-cleaner/04-before-after.png" data-shot-label="Before / After A/B Compare">Compare</button>
+              <button type="button" class="shot-pill" data-shot-src="../assets/media/echo-cleaner/05-voice-recorder.png" data-shot-label="Voice Recorder">Recorder</button>
+              <button type="button" class="shot-pill" data-shot-src="../assets/media/echo-cleaner/06-settings.png" data-shot-label="Settings &amp; 12 Languages">Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: WORKFLOW & PRICING -->
+      <div class="workbench-pane" data-wb-pane="pipeline" id="how">
+        <ol class="steps" style="margin-top:0;">
+          <li><b class="mono">01</b><h3>Capture or pick media</h3><p>Record voice live, import any voice memo or podcast take, or extract audio directly from a local video file.</p></li>
+          <li><b class="mono">02</b><h3>On-device acoustic polish</h3><p>Proprietary neural de-reverberation, denoising, and hardware-accelerated loudness shaping run locally with instant A/B auditioning.</p></li>
+          <li><b class="mono">03</b><h3>Export the studio take</h3><p>Save or share your cleaned master with pause/resume export control — your original recording always stays untouched.</p></li>
+        </ol>
+
+        <div class="grid plans" id="pricing" style="margin-top:24px;max-width:100%;">
+          <article class="plan">
+            <h3>Free</h3><p class="price">$0</p>
+            <ul>
+              <li class="yes">1 enhancement per day</li>
+              <li class="yes">+2 more via rewarded ads</li>
+              <li class="yes">Full enhancement chain</li>
+              <li class="no">Contains ads</li>
+            </ul>
+            <a class="btn btn-ghost" href="#beta-queue">Join closed testing</a>
+          </article>
+          <article class="plan plan-pro">
+            <span class="tag">Recommended</span>
+            <h3>Pro</h3><p class="price">Pro Access<span> · via Google Play</span></p>
+            <ul>
+              <li class="yes">Unlimited enhancements</li>
+              <li class="yes">Zero ads, zero rewarded waits</li>
+              <li class="yes">Same 100% offline neural pipeline</li>
+              <li class="yes">Supports independent engineering</li>
+            </ul>
+            <a class="btn btn-primary" href="#beta-queue">Join Closed Testing</a>
+          </article>
+        </div>
+        <p class="privacy-strip" style="margin-top:18px;">⛨ Your audio never leaves your device — in either plan. <a href="privacy.html">Privacy policy</a> · <a href="terms.html">Terms</a></p>
+      </div>
     </div>
-    <div class="grid plans">
-      <article class="plan reveal">
-        <h3>Free</h3><p class="price">$0</p>
-        <ul>
-          <li class="yes">1 enhancement per day</li>
-          <li class="yes">+2 more via rewarded ads</li>
-          <li class="yes">Full enhancement chain</li>
-          <li class="no">Contains ads</li>
-        </ul>
-        <a class="btn btn-ghost" href="#beta-queue">Join closed testing</a>
-      </article>
-      <article class="plan plan-pro reveal">
-        <span class="tag">Recommended</span>
-        <h3>Pro</h3><p class="price">Pro Access<span> · via Google Play</span></p>
-        <ul>
-          <li class="yes">Unlimited enhancements</li>
-          <li class="yes">Zero ads, zero rewarded waits</li>
-          <li class="yes">Same 100% offline neural pipeline</li>
-          <li class="yes">Supports independent engineering</li>
-        </ul>
-        <a class="btn btn-primary" href="#beta-queue">Join Closed Testing</a>
-      </article>
-    </div>
-    <p class="privacy-strip reveal">⛨ Your audio never leaves your device — in either plan. <a href="privacy.html">Privacy policy</a> · <a href="terms.html">Terms</a></p>
   </div>
 </section>
 
@@ -206,37 +288,65 @@
     <p class="kicker reveal">Closed Beta Program</p>
     <div class="section-title-row reveal">
       <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Join the Echo Cleaner Closed Testing Queue</h2>
+      <h2>Closed Testing &amp; Store Queue</h2>
     </div>
-    <p class="lede reveal">Echo Cleaner is in final preparation for the Google Play Closed Testing track. Register below to test the acoustic neural pipeline on your recordings and receive contributor perks.</p>
+    <p class="lede reveal">Echo Cleaner is finalizing for the Google Play Closed Testing track. Register below to reserve early access and receive contributor perks.</p>
 
-    <div style="margin-top:32px;">
+    <div style="margin-top:26px;">
       <div data-beta-widget data-app-id="echo-cleaner" data-app-name="Echo Cleaner" data-single-app="true"></div>
     </div>
   </div>
 </section>
 
-<!-- SUPPORT & ISSUE DIAGNOSTIC PORTAL -->
-<section id="support" class="section" data-accent="blue">
+<!-- COMMUNITY REVIEWS & OFFICIAL STUDIO REPLIES -->
+<section id="reviews" class="section" data-accent="green">
   <div class="wrap">
-    <p class="kicker reveal">Troubleshooting &amp; Support</p>
+    <p class="kicker reveal">Community Feedback</p>
     <div class="section-title-row reveal">
       <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Encountered an Issue with Echo Cleaner?</h2>
+      <h2>Echo Cleaner Reviews &amp; Studio Replies</h2>
     </div>
-    <p class="lede reveal">If audio processing failed, a permission was blocked, or the closed testing invite did not appear — troubleshoot immediately or submit a diagnostic ticket directly to our engineers.</p>
+    <p class="lede reveal">Share acoustic results from your recordings or read approved tester feedback with direct developer replies.</p>
 
-    <div class="support-portal reveal" data-support-portal data-support-scope="echo-cleaner">
-      <div id="issue-alert" data-issue-alert></div>
-      <div class="support-grid">
-        <!-- Left: Diagnostic Helper -->
-        <div>
-          <h3 style="font-size:1.15rem;margin-bottom:8px;">Instant Diagnostic Solutions</h3>
-          <p style="color:var(--muted);font-size:.92rem;margin-bottom:14px;">Select an Echo Cleaner scenario below for immediate resolution steps:</p>
+    <div style="margin-top:26px;" class="reveal" data-reviews-widget data-app-id="echo-cleaner" data-app-name="Echo Cleaner"></div>
+  </div>
+</section>
 
-          <!-- Interactive Clickable Symptom Pills -->
+<!-- COMPACT EXPANDABLE SUPPORT & FAQ DRAWER -->
+<section id="support" class="section" data-accent="blue">
+  <div class="wrap">
+    <div class="support-compact-shell reveal" data-support-portal data-support-scope="echo-cleaner" data-expandable="true">
+      <div class="support-compact-bar">
+        <div class="support-compact-copy">
+          <span class="kicker" style="margin-bottom:4px;">Support &amp; FAQ</span>
+          <h3>Need help, quick answers, or diagnostics?</h3>
+          <p>Troubleshoot permissions or audio issues, submit a diagnostic report with screenshots/logs, track a ticket, or read Echo Cleaner FAQs.</p>
+        </div>
+        <div class="support-quick-actions">
+          <button type="button" class="support-trigger" data-support-open="troubleshoot">Quick Help</button>
+          <button type="button" class="support-trigger" data-support-open="ticket">Submit Ticket</button>
+          <button type="button" class="support-trigger" data-support-open="lookup">Track Ticket</button>
+          <button type="button" class="support-trigger" data-support-open="faq">FAQ</button>
+        </div>
+      </div>
+
+      <div class="support-drawer" data-support-drawer aria-hidden="true">
+        <div id="issue-alert" data-issue-alert></div>
+
+        <div class="support-drawer-bar">
+          <div class="support-drawer-tabs" role="tablist">
+            <button type="button" class="support-tab" data-support-tab="troubleshoot">Quick Help</button>
+            <button type="button" class="support-tab" data-support-tab="ticket">Submit Ticket</button>
+            <button type="button" class="support-tab" data-support-tab="lookup">Track Ticket</button>
+            <button type="button" class="support-tab" data-support-tab="faq">FAQ</button>
+          </div>
+          <button type="button" class="support-collapse-btn" data-support-close>Collapse ↑</button>
+        </div>
+
+        <!-- PANE 1: QUICK HELP -->
+        <div class="support-pane" data-support-pane="troubleshoot">
+          <p class="muted" style="font-size:0.88rem;margin-bottom:12px;">Select an Echo Cleaner scenario below for immediate resolution steps:</p>
           <div class="symptom-pills" data-symptom-pills></div>
-
           <div class="form-row">
             <label for="issue-category-sel-ec">Common Scenarios:</label>
             <select id="issue-category-sel-ec" class="form-select" data-issue-category>
@@ -250,23 +360,23 @@
           <div data-dynamic-troubleshooting></div>
         </div>
 
-        <!-- Right: Direct Cloud Issue Ticket Submission -->
-        <div>
-          <h3 style="font-size:1.15rem;margin-bottom:8px;">Submit an Echo Cleaner Support Ticket</h3>
-          <p style="color:var(--muted);font-size:.92rem;margin-bottom:14px;">Direct fail-safe issue submission if store downloads or audio processing fails:</p>
+        <!-- PANE 2: SUBMIT TICKET -->
+        <div class="support-pane" data-support-pane="ticket">
           <form data-issue-form>
             <input type="hidden" name="appId" value="echo-cleaner">
-            <div class="form-row">
-              <label for="sup-email-ec">Your Contact Email:</label>
-              <input type="email" id="sup-email-ec" name="email" required placeholder="name@example.com" class="queue-input" autocomplete="email">
-            </div>
-            <div class="form-row">
-              <label for="sup-platform-ec">Platform / OS:</label>
-              <select id="sup-platform-ec" name="platform" class="form-select">
-                <option value="Android">Android</option>
-                <option value="iOS">iOS (Planning)</option>
-                <option value="Windows">Windows (Planning)</option>
-              </select>
+            <div class="form-grid-2">
+              <div class="form-row">
+                <label for="sup-email-ec">Your Contact Email:</label>
+                <input type="email" id="sup-email-ec" name="email" required placeholder="name@example.com" class="queue-input" autocomplete="email">
+              </div>
+              <div class="form-row">
+                <label for="sup-platform-ec">Platform / OS:</label>
+                <select id="sup-platform-ec" name="platform" class="form-select">
+                  <option value="Android">Android</option>
+                  <option value="iOS">iOS (Planning)</option>
+                  <option value="Windows">Windows (Planning)</option>
+                </select>
+              </div>
             </div>
             <div class="form-row">
               <label for="sup-desc-ec">
@@ -275,8 +385,6 @@
               </label>
               <textarea id="sup-desc-ec" name="description" required placeholder="Device model, Android version, audio sample issue..." class="form-textarea"></textarea>
             </div>
-
-            <!-- Screenshot / Video / Crash Log Dropzone -->
             <div class="form-row">
               <label>Attach Screenshot, Video Clip, or Log (Optional):</label>
               <div class="file-dropzone" data-file-dropzone>
@@ -289,49 +397,47 @@
               </div>
               <div class="file-preview" data-file-preview></div>
             </div>
-
-            <button type="submit" class="btn btn-primary" style="width:100%;margin-top:6px;">
+            <button type="submit" class="btn btn-primary" style="margin-top:6px;">
               <span>Submit Issue Report</span>
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </form>
         </div>
-      </div>
 
-      <!-- Ticket Status Lookup Tab -->
-      <div class="portal-lookup-tab">
-        <div class="portal-lookup-header">
-          <h4 style="font-size:0.95rem;margin:0;color:var(--ink);">Already submitted a ticket?</h4>
-          <span style="font-size:0.78rem;color:var(--muted);font-family:var(--font-m);">Local &amp; Cloud Tracking</span>
+        <!-- PANE 3: TICKET LOOKUP -->
+        <div class="support-pane" data-support-pane="lookup">
+          <p class="muted" style="font-size:0.88rem;margin-bottom:12px;">Enter your ticket reference or email to view recent submissions stored on this device:</p>
+          <form data-lookup-form class="lookup-form">
+            <input type="text" name="ticketQuery" placeholder="Enter Ticket # (e.g. NE-B891A4F2) or your registered email" class="queue-input" style="flex:1;min-width:260px;">
+            <button type="submit" class="btn btn-ghost">Check Status</button>
+          </form>
+          <div data-lookup-result></div>
         </div>
-        <form data-lookup-form class="lookup-form">
-          <input type="text" name="ticketQuery" placeholder="Enter Ticket # (e.g. NE-B891A4F2) or your registered email" class="queue-input" style="flex:1;min-width:260px;padding:10px 16px;font-size:0.88rem;">
-          <button type="submit" class="btn btn-ghost" style="padding:10px 20px;font-size:0.88rem;">Check Status</button>
-        </form>
-        <div data-lookup-result></div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- FAQ -->
-<section id="faq" class="section" data-accent="amber">
-  <div class="wrap narrow">
-    <p class="kicker reveal">Questions</p>
-    <div class="section-title-row reveal">
-      <span class="channel-notch" aria-hidden="true"></span>
-      <h2>Frequently Asked Questions</h2>
-    </div>
-    <div class="faq reveal">
-      <details><summary>Does Echo Cleaner upload my audio?</summary><p>No. All enhancement runs 100% on-device using our proprietary neural audio engines. Processing works cleanly in airplane mode.</p></details>
-      <details><summary>How does the free tier work?</summary><p>One free enhancement per day, plus two extra unlocks by watching a rewarded ad. Pro removes limits and ads.</p></details>
-      <details><summary>How does the enhancement engine work?</summary><p>Echo Cleaner processes audio through a multi-stage acoustic pipeline: acoustic echo cancellation, on-device neural denoising, room de-reverberation, and hardware-accelerated dynamic loudness shaping — with switchable Clean Room and Studio Pro engines.</p></details>
-      <details><summary>Is my purchase tied to an account?</summary><p>No account needed. Pro is handled by Google Play Billing and restores automatically with your Play account.</p></details>
-      <details><summary>How do I report a problem?</summary><p>Use the <a href="#support">Support portal</a> above or email <a href="mailto:native.espresso@gmail.com">native.espresso@gmail.com</a>. We only receive what you explicitly submit.</p></details>
+        <!-- PANE 4: COLLAPSIBLE FAQ -->
+        <div class="support-pane" data-support-pane="faq" id="faq">
+          <div class="faq" style="margin-top:0;">
+            <details open><summary>Does Echo Cleaner upload my audio?</summary><p>No. All enhancement runs 100% on-device using our proprietary neural audio engines. Processing works cleanly in airplane mode.</p></details>
+            <details><summary>How does the free tier work?</summary><p>One free enhancement per day, plus two extra unlocks by watching a rewarded ad. Pro removes limits and ads.</p></details>
+            <details><summary>How does the enhancement engine work?</summary><p>Echo Cleaner processes audio through a multi-stage acoustic pipeline: acoustic echo cancellation, on-device neural denoising, room de-reverberation, and hardware-accelerated dynamic loudness shaping — with switchable Clean Room and Studio Pro engines.</p></details>
+            <details><summary>Is my purchase tied to an account?</summary><p>No account needed. Pro is handled by Google Play Billing and restores automatically with your Play account.</p></details>
+            <details><summary>How do I report a problem?</summary><p>Use the Submit Ticket tab here or email <a href="mailto:native.espresso@gmail.com">native.espresso@gmail.com</a>. We only receive what you explicitly submit.</p></details>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 </main>
+
+<!-- FLOATING FROSTED GLASS BOTTOM COMMAND DOCK -->
+<nav class="floating-dock" aria-label="Echo Cleaner quick navigation">
+  <a class="dock-item active" href="#overview">Overview</a>
+  <a class="dock-item" href="#workbench">Workbench</a>
+  <a class="dock-item" href="#beta-queue">Beta Queue</a>
+  <a class="dock-item" href="#reviews">Reviews</a>
+  <a class="dock-item" href="#support">Support &amp; FAQ</a>
+</nav>
 
 <footer class="footer">
   <div class="wrap foot-in">
@@ -339,13 +445,13 @@
       <a class="brand" href="../index.html"><span>Native Espresso</span></a>
       <p class="muted">Echo Cleaner — Studio-clear voice on-device.<br>Crafted by Native Espresso.</p>
     </div>
-    <nav aria-label="Footer"><b>Echo Cleaner</b><a href="#demo">Live demo</a><a href="#features">Features</a><a href="#pricing">Pricing</a></nav>
+    <nav aria-label="Footer"><b>Echo Cleaner</b><a href="#demo">Signal Lab</a><a href="#features">App Studio</a><a href="#pricing">Pricing</a></nav>
     <nav aria-label="Legal"><b>Legal</b><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of service</a></nav>
-    <nav aria-label="Contact"><b>Contact</b><a href="mailto:native.espresso@gmail.com">native.espresso@gmail.com</a></nav>
+    <nav aria-label="Contact"><b>Contact</b><a href="mailto:native.espresso@gmail.com">native.espresso@gmail.com</a><a href="#reviews">Reviews</a></nav>
   </div>
   <div class="wrap foot-base mono">© <span id="yr"></span> Native Espresso · Echo Cleaner · All audio stays on your device.</div>
 </footer>
-<script src="../assets/main.js?v=20261118e"></script>
-<script src="../assets/cloud-client.js?v=20261118e"></script>
+<script src="../assets/main.js?v=20261119"></script>
+<script src="../assets/cloud-client.js?v=20261119"></script>
 </body>
 </html>

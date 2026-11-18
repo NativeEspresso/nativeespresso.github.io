@@ -32,6 +32,7 @@
   --violet: #9b72e8;
   --green: #10b981;
   --green-soft: rgba(16, 185, 129, 0.13);
+  --primary: var(--espresso);
   --accent: var(--espresso);
 
   --shadow-card: 0 20px 50px -20px rgba(0, 0, 0, 0.7), 0 1px 0 inset var(--specular);
@@ -76,6 +77,7 @@ html[data-theme="light"] {
   --violet: #7a45c4;
   --green: #059669;
   --green-soft: rgba(5, 150, 105, 0.1);
+  --primary: var(--espresso);
   --accent: var(--espresso);
 
   --shadow-card: 0 14px 36px -18px rgba(15, 23, 42, 0.12), 0 1px 0 inset var(--specular);

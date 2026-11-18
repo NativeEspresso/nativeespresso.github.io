@@ -144,17 +144,38 @@
   }
 
   /* ================= 4. Active Section in Nav & Legal TOC ================= */
+  $$("a[href='#top']").forEach((a) => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
+      $$(".links a[href^='#'], .floating-dock a[href^='#']").forEach((link) => {
+        const href = link.getAttribute("href");
+        link.classList.toggle("active", href === "#top" || href === "#overview");
+      });
+    });
+  });
+
   if ("IntersectionObserver" in window) {
     const navSections = $$("main section[id]");
     if (navSections.length) {
       const secIO = new IntersectionObserver((es) => {
         es.forEach((e) => {
           if (!e.isIntersecting) return;
-          $$(".links a[href^='#']").forEach((a) =>
-            a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id));
+          const id = "#" + e.target.id;
+          $$(".links a[href^='#'], .floating-dock a[href^='#']").forEach((a) =>
+            a.classList.toggle("active", a.getAttribute("href") === id));
         });
       }, { rootMargin: "-38% 0px -54% 0px" });
       navSections.forEach((s) => secIO.observe(s));
+    }
+    const dockTop = $(".floating-dock a[href='#top']");
+    if (dockTop) {
+      addEventListener("scroll", () => {
+        if ((window.scrollY || 0) < 180) {
+          $$(".floating-dock a[href^='#']").forEach((a) =>
+            a.classList.toggle("active", a.getAttribute("href") === "#top"));
+        }
+      }, { passive: true });
     }
 
     const tocLinks = $$(".toc a[href^='#']");
@@ -176,6 +197,9 @@
     const spotlightSelectors = [
       ".card",
       ".product-row",
+      ".product-card-3d",
+      ".workbench-shell",
+      ".reviews-shell",
       ".studio-beta-card",
       ".support-compact-shell",
       ".support-portal",
@@ -253,6 +277,295 @@
       });
     }, { passive: true });
   }
+
+  /* ================= 6.5. 3D Tilt Stage, Studio Deck, Workbench & Lightbox ================= */
+  // Fullscreen 3D Lightbox Modal (created once lazily)
+  let lbEl = null;
+  let lbItems = [];
+  let lbIndex = 0;
+
+  const ensureLightbox = () => {
+    if (lbEl) return lbEl;
+    lbEl = document.createElement("div");
+    lbEl.className = "lightbox-backdrop";
+    lbEl.setAttribute("role", "dialog");
+    lbEl.setAttribute("aria-modal", "true");
+    lbEl.setAttribute("aria-label", "App screenshot viewer");
+    lbEl.innerHTML = `
+      <div class="lightbox-dialog">
+        <img class="lightbox-img" alt="App screenshot preview">
+        <div class="lightbox-bar">
+          <button type="button" class="lightbox-btn" data-lb-prev>← Prev</button>
+          <span data-lb-caption></span>
+          <button type="button" class="lightbox-btn" data-lb-next>Next →</button>
+          <button type="button" class="lightbox-btn" data-lb-close>Close ✕</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(lbEl);
+    const renderLb = () => {
+      const item = lbItems[lbIndex] || lbItems[0];
+      if (!item) return;
+      const img = lbEl.querySelector(".lightbox-img");
+      const cap = lbEl.querySelector("[data-lb-caption]");
+      img.src = item.src;
+      img.alt = item.label || "App screenshot";
+      cap.textContent = lbItems.length > 1
+        ? `${item.label || "Preview"} (${lbIndex + 1}/${lbItems.length})`
+        : (item.label || "Preview");
+      lbEl.querySelector("[data-lb-prev]").hidden = lbItems.length <= 1;
+      lbEl.querySelector("[data-lb-next]").hidden = lbItems.length <= 1;
+    };
+    const closeLb = () => lbEl.classList.remove("open");
+    lbEl.querySelector("[data-lb-close]").addEventListener("click", closeLb);
+    lbEl.querySelector("[data-lb-prev]").addEventListener("click", () => {
+      lbIndex = (lbIndex - 1 + lbItems.length) % lbItems.length;
+      renderLb();
+    });
+    lbEl.querySelector("[data-lb-next]").addEventListener("click", () => {
+      lbIndex = (lbIndex + 1) % lbItems.length;
+      renderLb();
+    });
+    lbEl.addEventListener("click", (e) => { if (e.target === lbEl) closeLb(); });
+    addEventListener("keydown", (e) => {
+      if (!lbEl.classList.contains("open")) return;
+      if (e.key === "Escape") closeLb();
+      if (e.key === "ArrowLeft" && lbItems.length > 1) { lbIndex = (lbIndex - 1 + lbItems.length) % lbItems.length; renderLb(); }
+      if (e.key === "ArrowRight" && lbItems.length > 1) { lbIndex = (lbIndex + 1) % lbItems.length; renderLb(); }
+    });
+    lbEl._renderLb = renderLb;
+    return lbEl;
+  };
+
+  const openLightbox = (items, startIndex = 0) => {
+    if (!items.length) return;
+    const modal = ensureLightbox();
+    lbItems = items;
+    lbIndex = clamp(startIndex, 0, items.length - 1);
+    modal._renderLb();
+    modal.classList.add("open");
+  };
+
+  // Helper to swap screenshot cleanly inside a [data-3d-stage]
+  const setStageShot = (stage, src, label) => {
+    if (!stage || !src) return;
+    const frame = stage.querySelector(".phone-3d-frame");
+    const img = stage.querySelector(".phone-3d-screen img");
+    const badge = stage.querySelector(".phone-3d-badge span");
+    if (!img) return;
+    if (img.getAttribute("src") === src) {
+      if (badge && label) badge.textContent = label;
+      return;
+    }
+    if (frame) frame.classList.add("is-swapping");
+    setTimeout(() => {
+      img.src = src;
+      if (label) img.alt = label;
+      if (badge && label) badge.textContent = label;
+      if (frame) frame.classList.remove("is-swapping");
+    }, reducedMotion ? 0 : 150);
+  };
+
+  $$("[data-3d-stage]").forEach((stage) => {
+    const frame = stage.querySelector(".phone-3d-frame");
+    const pills = $$(".shot-pill[data-shot-src]", stage);
+
+    if (frame && finePointer && !reducedMotion) {
+      frame.addEventListener("pointermove", (e) => {
+        const r = frame.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+        const rx = (0.5 - py) * 18;
+        const ry = (px - 0.5) * 20;
+        frame.classList.add("is-tilting");
+        frame.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
+        frame.style.setProperty("--ry", `${ry.toFixed(2)}deg`);
+        frame.style.setProperty("--gx", `${(px * 100).toFixed(1)}%`);
+        frame.style.setProperty("--gy", `${(py * 100).toFixed(1)}%`);
+      }, { passive: true });
+      frame.addEventListener("pointerleave", () => {
+        frame.classList.remove("is-tilting");
+        frame.style.setProperty("--rx", "3deg");
+        frame.style.setProperty("--ry", "-8deg");
+        frame.style.setProperty("--gx", "35%");
+        frame.style.setProperty("--gy", "22%");
+      });
+    }
+
+    pills.forEach((pill) => {
+      pill.addEventListener("click", () => {
+        pills.forEach((p) => p.classList.remove("active"));
+        pill.classList.add("active");
+        setStageShot(stage, pill.getAttribute("data-shot-src"), pill.getAttribute("data-shot-label") || pill.textContent.trim());
+      });
+    });
+
+    if (frame) {
+      frame.addEventListener("click", () => {
+        const activeImg = stage.querySelector(".phone-3d-screen img");
+        const activeLabel = stage.querySelector(".phone-3d-badge span")?.textContent || activeImg?.alt || "";
+        const visiblePills = $$(".shot-pill[data-shot-src]", stage).filter((p) => !p.hidden);
+        const list = visiblePills.length
+          ? visiblePills.map((p) => ({ src: p.getAttribute("data-shot-src"), label: p.getAttribute("data-shot-label") || p.textContent.trim() }))
+          : [{ src: activeImg?.getAttribute("src"), label: activeLabel }];
+        const idx = Math.max(0, list.findIndex((i) => i.src === activeImg?.getAttribute("src")));
+        openLightbox(list, idx);
+      });
+    }
+  });
+
+  // Allow any standalone [data-lightbox-src] card thumbnail to open Lightbox
+  document.addEventListener("click", (e) => {
+    const trigger = e.target.closest("[data-lightbox-src]");
+    if (!trigger) return;
+    e.preventDefault();
+    const group = trigger.closest("[data-lightbox-group]") || document;
+    const all = $$("[data-lightbox-src]", group).map((el) => ({
+      src: el.getAttribute("data-lightbox-src"),
+      label: el.getAttribute("data-lightbox-label") || "Preview"
+    }));
+    const idx = Math.max(0, all.findIndex((i) => i.src === trigger.getAttribute("data-lightbox-src")));
+    openLightbox(all, idx);
+  });
+
+  // Interactive 3D Tabbed Studio Deck (Trans-Title)
+  $$("[data-studio-deck]").forEach((deck) => {
+    const tabs = $$("[data-studio-tab]", deck);
+    const panes = $$("[data-studio-pane]", deck);
+    const stage = deck.querySelector("[data-3d-stage]");
+    const shotPills = stage ? $$(".shot-pill[data-shot-group]", stage) : [];
+
+    const activateStudio = (name) => {
+      tabs.forEach((t) => {
+        const on = t.getAttribute("data-studio-tab") === name;
+        t.classList.toggle("active", on);
+        t.setAttribute("aria-selected", String(on));
+      });
+      panes.forEach((p) => p.classList.toggle("active", p.getAttribute("data-studio-pane") === name));
+
+      if (stage) {
+        let firstVisible = null;
+        shotPills.forEach((p) => {
+          const match = p.getAttribute("data-shot-group") === name;
+          p.hidden = !match;
+          p.classList.remove("active");
+          if (match && !firstVisible) firstVisible = p;
+        });
+        if (firstVisible) {
+          firstVisible.classList.add("active");
+          setStageShot(stage, firstVisible.getAttribute("data-shot-src"), firstVisible.getAttribute("data-shot-label"));
+        }
+      }
+    };
+
+    tabs.forEach((t) => {
+      t.addEventListener("click", () => activateStudio(t.getAttribute("data-studio-tab")));
+    });
+
+    const studioHashes = new Set(["#transcribe", "#translate", "#crossplay", "#players"]);
+    const syncStudioHash = () => {
+      if (studioHashes.has(location.hash)) {
+        activateStudio(location.hash.slice(1));
+      }
+    };
+    syncStudioHash();
+    addEventListener("hashchange", syncStudioHash);
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest("a[href^='#']");
+      if (!a) return;
+      const h = a.getAttribute("href");
+      if (studioHashes.has(h)) {
+        activateStudio(h.slice(1));
+        const sec = document.getElementById("studios");
+        if (sec) {
+          e.preventDefault();
+          sec.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    });
+  });
+
+  // Interactive Acoustic Workbench Switcher (Echo Cleaner)
+  $$("[data-workbench]").forEach((wb) => {
+    const tabs = $$("[data-wb-tab]", wb);
+    const panes = $$("[data-wb-pane]", wb);
+    const stage = wb.querySelector("[data-3d-stage]");
+
+    const activateWb = (name) => {
+      tabs.forEach((t) => {
+        const on = t.getAttribute("data-wb-tab") === name;
+        t.classList.toggle("active", on);
+        t.setAttribute("aria-selected", String(on));
+      });
+      panes.forEach((p) => p.classList.toggle("active", p.getAttribute("data-wb-pane") === name));
+      if (name === "demo") {
+        requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+      }
+      if (name === "studios" && stage) {
+        const activeShot = stage.querySelector(".shot-pill.active") || stage.querySelector(".shot-pill");
+        if (activeShot) {
+          activeShot.classList.add("active");
+          setStageShot(stage, activeShot.getAttribute("data-shot-src"), activeShot.getAttribute("data-shot-label"));
+        }
+      }
+    };
+
+    tabs.forEach((t) => {
+      t.addEventListener("click", () => activateWb(t.getAttribute("data-wb-tab")));
+    });
+
+    const hashMap = { "#demo": "demo", "#features": "studios", "#how": "pipeline", "#pricing": "pipeline" };
+    const syncWbHash = () => {
+      const target = hashMap[location.hash];
+      if (target) activateWb(target);
+    };
+    syncWbHash();
+    addEventListener("hashchange", syncWbHash);
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest("a[href^='#']");
+      if (!a) return;
+      const target = hashMap[a.getAttribute("href")];
+      if (target) {
+        activateWb(target);
+        const sec = document.getElementById("workbench");
+        if (sec) {
+          e.preventDefault();
+          sec.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    });
+  });
+
+  // Support / FAQ deep-links auto-open the expandable Support & FAQ drawer when clicked
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a[href='#faq'], a[href='#support']");
+    if (!a) return;
+    const h = a.getAttribute("href");
+    const portal = $("[data-support-portal][data-expandable='true']");
+    if (!portal) return;
+    const targetPane = h === "#faq" ? "faq" : "troubleshoot";
+    const trigger = portal.querySelector(`[data-support-open='${targetPane}']`);
+    const drawer = portal.querySelector("[data-support-drawer]");
+    if (trigger && drawer && (!drawer.classList.contains("open") || drawer.getAttribute("data-active-pane") !== targetPane)) {
+      trigger.click();
+    }
+    const sec = document.getElementById("support");
+    if (h === "#faq" && sec) {
+      e.preventDefault();
+      sec.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+
+  // Exclusive FAQ accordion behavior (opening one collapses open siblings in the same list)
+  document.addEventListener("toggle", (e) => {
+    const det = e.target;
+    if (!det || det.tagName !== "DETAILS" || !det.open) return;
+    const list = det.closest(".faq");
+    if (!list) return;
+    list.querySelectorAll("details[open]").forEach((other) => {
+      if (other !== det) other.open = false;
+    });
+  }, true);
 
   /* ================= 7. Echo Cleaner Live Signal Lab ================= */
   const canvas = $("#wave");

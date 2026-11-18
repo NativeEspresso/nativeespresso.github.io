@@ -558,13 +558,25 @@ html[data-theme="light"] .orb { opacity: 0.2; }
 }
 .faq summary::-webkit-details-marker { display: none; }
 .faq summary::after {
-  content: "+"; width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0;
-  display: grid; place-items: center; color: var(--accent); font-size: 1.2rem;
+  content: "+"; width: 28px; height: 28px; border-radius: 9px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--accent); font-family: var(--font-m); font-size: 1.15rem; font-weight: 600; line-height: 1;
   background: color-mix(in srgb, var(--accent) 12%, transparent);
-  transition: transform 0.28s var(--ease-spring), background 0.22s ease;
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  transition: transform 0.28s var(--ease-spring), background 0.22s ease, border-color 0.22s ease;
 }
-.faq details[open] summary::after { transform: rotate(45deg); background: color-mix(in srgb, var(--accent) 22%, transparent); }
-.faq details p { padding: 0 24px 20px; color: var(--muted); font-size: 0.95rem; line-height: 1.66; animation: rise 0.28s var(--ease-luxury) forwards; }
+.faq details[open] summary::after {
+  content: "−";
+  transform: rotate(180deg);
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 48%, transparent);
+}
+.faq details p {
+  padding: 14px 24px 20px; margin: 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.95rem; line-height: 1.66;
+  animation: rise 0.28s var(--ease-luxury) forwards;
+}
 
 /* Legal Doc View */
 .legal { padding-top: calc(var(--nav-h) + 56px); }
