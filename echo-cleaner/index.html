@@ -11,7 +11,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2307090f'/%3E%3Cpath d='M6 16h3l2-6 3 12 3-16 3 14 2-4h4' stroke='%2322d3ee' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/style.css?v=20261118c">
 <script>(()=>{const t=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t)})();</script>
 </head>
 <body>
@@ -34,10 +34,9 @@
       <a href="#features">Features</a>
       <a href="#how">How it works</a>
       <a href="#pricing">Pricing</a>
-      <a href="#beta-queue">Join Beta</a>
       <a href="#support">Support</a>
       <a href="#faq">FAQ</a>
-      <a class="btn btn-sm btn-primary" href="#beta-queue">Join the beta</a>
+      <a class="btn btn-sm btn-primary" href="#beta-queue">Join Beta</a>
     </nav>
     <div style="display:flex;align-items:center;gap:10px;">
       <button class="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark mode"></button>
@@ -55,11 +54,12 @@
     <p class="kicker rise" style="--d:0">On-Device Neural Audio Studio</p>
     <h1 class="rise" style="--d:1">Studio-clear voice.<br><span class="grad">Zero uploads.</span></h1>
     <p class="lede rise" style="--d:2">Echo Cleaner strips echo, background noise and room reverb — then boosts and clarifies your voice. Every sample is processed on your phone. Nothing ever leaves it.</p>
-    <div class="platforms rise" style="--d:2.5;margin-bottom:18px;">
-      <span class="platform-tag queue"><b>Android</b> Closed Testing Queue (Finalizing)</span>
+    <div class="platforms rise" style="--d:2.5;margin-bottom:18px;" data-app-platforms="echo-cleaner">
+      <span class="platform-tag queue" data-platform-android><b>Android</b> Closed Testing Queue (Finalizing)</span>
       <span class="platform-tag"><b>iOS</b> In Planning</span>
-      <span class="platform-tag"><b>Windows</b> In Planning</span>
+      <span class="platform-tag" data-platform-windows><b>Windows</b> In Planning</span>
     </div>
+    <div data-app-access-banner="echo-cleaner" hidden style="margin-bottom:18px;"></div>
     <div class="hero-cta rise" style="--d:3">
       <a class="btn btn-primary" href="#demo">Try the live demo</a>
       <a class="btn btn-ghost" href="privacy.html">Read the privacy policy</a>
@@ -200,13 +200,13 @@
     <h2 class="reveal">Encountered an Issue with Echo Cleaner?</h2>
     <p class="lede reveal">If audio processing failed, a permission was blocked, or the closed testing invite did not appear — troubleshoot immediately or submit a diagnostic ticket directly to our engineers.</p>
 
-    <div class="support-portal reveal" data-support-portal>
+    <div class="support-portal reveal" data-support-portal data-support-scope="echo-cleaner">
       <div id="issue-alert" data-issue-alert></div>
       <div class="support-grid">
         <!-- Left: Diagnostic Helper -->
         <div>
           <h3 style="font-size:1.15rem;margin-bottom:8px;">Instant Diagnostic Solutions</h3>
-          <p style="color:var(--muted);font-size:.92rem;margin-bottom:14px;">Select an issue scenario below for immediate resolution steps:</p>
+          <p style="color:var(--muted);font-size:.92rem;margin-bottom:14px;">Select an Echo Cleaner scenario below for immediate resolution steps:</p>
           
           <!-- Interactive Clickable Symptom Pills -->
           <div class="symptom-pills" data-symptom-pills></div>
@@ -217,9 +217,8 @@
               <option value="">-- Choose an issue for instant tips --</option>
               <option value="android-install">Android: Google Play Closed Testing invite not opening</option>
               <option value="audio-permission">Permissions: Audio recording or storage access denied</option>
-              <option value="app-crash">App Crash: Startup crash or unexpected termination</option>
-              <option value="windows-store">Windows: Planning inquiries &amp; desktop testing</option>
-              <option value="general">General: Feedback or questions for our lead engineer</option>
+              <option value="app-crash">App Crash: Startup crash or audio processing failure</option>
+              <option value="general">General: Echo Cleaner feedback or questions</option>
             </select>
           </div>
           <div data-dynamic-troubleshooting></div>
@@ -309,7 +308,7 @@
   <div class="wrap foot-in">
     <div>
       <a class="brand" href="../index.html"><span>Native Espresso</span></a>
-      <p class="muted">Echo Cleaner — Studio-clear voice on-device.<br>Crafted by Native Espresso in Sargodha, Pakistan.</p>
+      <p class="muted">Echo Cleaner — Studio-clear voice on-device.<br>Crafted by Native Espresso.</p>
     </div>
     <nav aria-label="Footer"><b>Echo Cleaner</b><a href="#demo">Live demo</a><a href="#features">Features</a><a href="#pricing">Pricing</a></nav>
     <nav aria-label="Legal"><b>Legal</b><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of service</a></nav>
@@ -318,6 +317,6 @@
   <div class="wrap foot-base mono">© <span id="yr"></span> Native Espresso · Echo Cleaner · All audio stays on your device.</div>
 </footer>
 <script src="../assets/main.js"></script>
-<script src="../assets/cloud-client.js?v=20261118"></script>
+<script src="../assets/cloud-client.js?v=20261118d"></script>
 </body>
 </html>

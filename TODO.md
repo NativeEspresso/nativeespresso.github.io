@@ -40,7 +40,7 @@ This file serves as the single source of truth for ongoing development, complete
   * Ticket status lookup form (`NE-XXXXXXXX`) for returning users.
 * [x] **C# .NET 10 Isolated Worker Azure Functions Backend (Isolated Private Repo)**:
   * Repository: `https://github.com/NativeEspresso/Native-Espresso-Backend` (Private)
-  * Local Project: `C:\Projects\Web\Native-Espresso-Backend`
+  * Local Project: `C:\Projects\Azure\Native-Espresso-Backend` (Deployed via Azure Functions)
   * Upgraded to **.NET 10 (LTS)** with `Microsoft.Azure.Functions.Worker.Sdk` v2.1.0 to match Azure Flex Consumption deployment.
   * Dual-Email Cascade Service (`Resend` primary + `Brevo` fallback) for 100% cost-free operation.
   * Azure SQL database service with `schema.sql` (compatible with Azure SQL Free Tier, serverless auto-pause retry loop).
@@ -78,7 +78,7 @@ This file serves as the single source of truth for ongoing development, complete
   * Live delivery confirmed **`delivered`** by Brevo SMTP relay to `native.espresso@gmail.com`.
 * [x] **Dynamic Multi-App Registry (`dbo.Apps`) & WinUI 3 Studio Control Center**:
   * Authenticated endpoints (`X-Admin-Key` constant-time check): `summary`, `apps`, `apps/upsert`, `testers`, `approve-testers-bulk`, `issues`, `issues/update` (verified HTTP `401` when unauthenticated, `200` when authorized).
-  * WinUI 3 Packaged Desktop App (`C:\Projects\WinUI\Native-Espresso`, private repo `ChTalhaArain/Native-Espresso` on `master`): Overview, Closed Testing Queue (dynamic app filters, 1-click Play Console copy, dual-link bulk VIP approve), Support Issues inspector with attachment launcher, **Apps & Links** manager (add future apps, transition `TestingQueue` -> `ClosedTesting`, update Web & Android links anytime), and Windows Credential Locker (`PasswordVault`) settings.
+  * WinUI 3 Packaged Admin / Studio Control Center (`C:\Projects\WinUI\Native-Espresso`, private repo `ChTalhaArain/Native-Espresso` on `master` — linear secondary project updated as needed when backend changes): Overview, Closed Testing Queue (dynamic app filters, 1-click Play Console copy, dual-link bulk VIP approve), Support Issues inspector with attachment launcher, **Apps & Links** manager (add future apps, transition `TestingQueue` -> `ClosedTesting`, update Web & Android links anytime), and Windows Credential Locker (`PasswordVault`) settings.
 * [x] **Live End-to-End Validation**:
   * Tester Registration: **PASS** (Tested with `test.verification@nativeespresso.com` -> saved in `dbo.Testers` -> verified via `/api/testers/status`).
   * Diagnostic Issue Report & Storage: **PASS** (Tested with Base64 payload -> uploaded to `sharedstoragepool/support-attachments` -> ticket `NE-DB566AF4` saved in `dbo.IssueReports` -> verified public attachment download).

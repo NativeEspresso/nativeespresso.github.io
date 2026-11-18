@@ -11,7 +11,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2307090f'/%3E%3Crect x='6' y='8' width='20' height='16' rx='3' stroke='%23f43f7b' stroke-width='2' fill='none'/%3E%3Cpath d='M10 16h6M10 19h10' stroke='%2322d3ee' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="../assets/trans-title.css">
+<link rel="stylesheet" href="../assets/trans-title.css?v=20261118c">
 <script>(()=>{const t=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t)})();</script>
 </head>
 <body>
@@ -32,11 +32,10 @@
     </div>
     <nav class="links" id="menu" aria-label="Primary">
       <a href="#studios">Studios</a>
-      <a href="#transcribe">AI Transcribe</a>
-      <a href="#translate">Translation</a>
+      <a href="#transcribe">Transcribe</a>
+      <a href="#translate">Translate</a>
       <a href="#crossplay">Cross-Play</a>
       <a href="#players">Players</a>
-      <a href="#beta-queue">Join Beta</a>
       <a href="#support">Support</a>
       <a href="privacy.html">Privacy</a>
       <a class="btn btn-sm btn-primary" href="#beta-queue">Closed Testing</a>
@@ -58,12 +57,14 @@
     <h1 class="rise" style="--d:1">Your Media Studio.<br><span class="grad">100% On-Device.</span></h1>
     <p class="lede rise" style="--d:2">Trans-Title combines next-generation on-device speech transcription, neural subtitle translation, and multi-track video orchestration with high-fidelity video and music players. Everything runs locally on your silicon with zero cloud latency and zero surveillance.</p>
     
-    <div class="platforms rise" style="--d:2.5;margin-bottom:20px;">
-      <span class="platform-tag active"><b>Android</b> Closed Testing (v1.0.16)</span>
-      <span class="platform-tag dev"><b>Windows (WinUI 3)</b> In Active Development</span>
+    <div class="platforms rise" style="--d:2.5;margin-bottom:20px;" data-app-platforms="trans-title">
+      <span class="platform-tag active" data-platform-android><b>Android</b> Closed Testing (v1.0.16)</span>
+      <span class="platform-tag dev" data-platform-windows><b>Windows (WinUI 3)</b> In Active Development</span>
       <span class="platform-tag"><b>iOS</b> In Planning</span>
       <span class="platform-tag"><b>macOS / Linux</b> Roadmap</span>
     </div>
+
+    <div data-app-access-banner="trans-title" hidden style="margin-bottom:18px;"></div>
 
     <div class="hero-cta rise" style="--d:3">
       <a class="btn btn-primary" href="#beta-queue">Join Closed Testing (v1.0.16)</a>
@@ -300,7 +301,7 @@
     <h2 class="reveal">Encountered an Issue with Trans-Title?</h2>
     <p class="lede reveal">Whether Microsoft Store has trouble downloading the desktop build, an Android closed testing invite is delayed, or a media file failed to parse — troubleshoot immediately or submit a diagnostic ticket.</p>
 
-    <div class="support-portal reveal" data-support-portal>
+    <div class="support-portal reveal" data-support-portal data-support-scope="trans-title">
       <div id="issue-alert" data-issue-alert></div>
       <div class="support-grid">
         <!-- Left: Diagnostic Helper -->
@@ -429,7 +430,7 @@
   <div class="wrap foot-in">
     <div>
       <a class="brand" href="../index.html"><span>Native Espresso</span></a>
-      <p class="muted">Trans-Title — Flagship multimedia suite &amp; on-device AI.<br>Crafted with precision by Native Espresso in Sargodha, Pakistan.</p>
+      <p class="muted">Trans-Title — Flagship multimedia suite &amp; on-device AI.<br>Crafted with precision by Native Espresso.</p>
     </div>
     <nav aria-label="Trans-Title">
       <b>Trans-Title</b>
@@ -449,7 +450,6 @@
       <b>Native Espresso</b>
       <a href="../index.html">Company Home</a>
       <a href="../echo-cleaner/">Echo Cleaner</a>
-      <a href="https://github.com/NativeEspresso" target="_blank" rel="noopener">GitHub</a>
     </nav>
   </div>
   <div class="wrap foot-base mono">
@@ -458,6 +458,6 @@
 </footer>
 
 <script src="../assets/main.js"></script>
-<script src="../assets/cloud-client.js?v=20261118"></script>
+<script src="../assets/cloud-client.js?v=20261118d"></script>
 </body>
 </html>

@@ -1,13 +1,10 @@
 /**
- * Native Espresso — Cloud Client & Diagnostic Engine (v2.0)
+ * Native Espresso — Cloud Client & Diagnostic Engine (v3.0)
  * Features:
- * 1. Testing Queue Multi-App Tabs & Platform Selectors
- * 2. Instant localStorage State Hydration & Live VIP Preview Mode
- * 3. Minimalist Zero-Dependency Vector SVG QR Code Engine
- * 4. Interactive Symptom Pills & Self-Service Troubleshooting
- * 5. Screenshot / Crash Log Dropzone with Base64 File Encoding
- * 6. Quick Device & OS Spec Auto-Detection
- * 7. Ticket Status Lookup for Returning Users
+ * 1. Unified Remembered Tester Email across Company Hub & Product Pages
+ * 2. Company-Level General Closed Testing Signup (Pick All, One, or Few Apps)
+ * 3. Per-Product Automatic Approval Check + Play Store Links & ISO/IEC 18004 QR Code
+ * 4. Compact Expandable General Support (Company) & Product-Scoped Support Portals
  */
 
 (function () {
@@ -15,12 +12,43 @@
 
   const DEFAULT_API_BASE = "https://native-espresso-web-function-epbhdxbxbybte6bz.centralus-01.azurewebsites.net";
   const API_BASE = window.NE_API_BASE || DEFAULT_API_BASE;
+  const EMAIL_STORAGE_KEY = "ne_tester_email";
   const STORAGE_KEY = "ne_tester_tickets";
   const ISSUE_STORAGE_KEY = "ne_submitted_tickets";
 
   /* ==========================================================================
      1. LocalStorage Helpers
      ========================================================================== */
+  function getRememberedEmail() {
+    try {
+      const saved = (localStorage.getItem(EMAIL_STORAGE_KEY) || "").trim().toLowerCase();
+      if (saved && saved.includes("@")) return saved;
+      // Backwards compatibility: infer from existing per-app tickets if present
+      const tickets = getTickets();
+      for (const k of Object.keys(tickets)) {
+        if (tickets[k]?.email) return String(tickets[k].email).trim().toLowerCase();
+      }
+      return "";
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function saveRememberedEmail(email) {
+    try {
+      const clean = (email || "").trim().toLowerCase();
+      if (clean) localStorage.setItem(EMAIL_STORAGE_KEY, clean);
+      else localStorage.removeItem(EMAIL_STORAGE_KEY);
+    } catch (_) {}
+  }
+
+  function clearAllTesterState() {
+    try {
+      localStorage.removeItem(EMAIL_STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (_) {}
+  }
+
   function getTickets() {
     try {
       const data = localStorage.getItem(STORAGE_KEY);
@@ -61,6 +89,15 @@
       all.unshift(issue);
       localStorage.setItem(ISSUE_STORAGE_KEY, JSON.stringify(all.slice(0, 10)));
     } catch (_) {}
+  }
+
+  function escapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   /* ==========================================================================
@@ -390,31 +427,43 @@
   })();
 
   /* ==========================================================================
-     3. Closed Testing Queue Controller (Multi-App & Dynamic Cloud Registry)
+     3. App Registry, Lifecycle Countdown & Cloud Status Helpers
      ========================================================================== */
   const APP_CONFIG = {
     "trans-title": {
       name: "Trans-Title",
-      subtitle: "Flagship Multimedia Suite & On-Device AI Studio",
+      pageUrl: "trans-title/",
+      subtitle: "On-Device Multimedia & AI Studio",
       badge: "Android: Closed-Testing (v1.0.16) · Windows: Development",
       androidStatus: "ClosedTesting",
+      windowsStatus: "Development",
       accent: "var(--magenta, #f43f7b)",
       platforms: ["Android (Closed Testing v1.0.16)", "Windows (WinUI 3 Beta)"],
       joinWebUrl: "https://play.google.com/apps/testing/com.espressonative.transtitle",
       joinAndroidUrl: "https://play.google.com/store/apps/details?id=com.espressonative.transtitle",
-      icon: "🎬",
+      closedTestingStartDate: null,
+      closedTestingDays: 14,
+      statusMessage: null,
+      microsoftStoreUrl: null,
+      windowsWingetId: null,
       pill: "Active"
     },
     "echo-cleaner": {
       name: "Echo Cleaner",
+      pageUrl: "echo-cleaner/",
       subtitle: "On-Device Neural Audio Enhancement Engine",
       badge: "Android: Closed Testing Queue (Finalizing)",
       androidStatus: "TestingQueue",
+      windowsStatus: "Planning",
       accent: "var(--cyan, #22d3ee)",
       platforms: ["Android (Closed Testing Queue)", "iOS (Planning Waitlist)"],
       joinWebUrl: null,
       joinAndroidUrl: null,
-      icon: "🎙️",
+      closedTestingStartDate: null,
+      closedTestingDays: 14,
+      statusMessage: null,
+      microsoftStoreUrl: null,
+      windowsWingetId: null,
       pill: "Queue"
     }
   };
@@ -423,16 +472,253 @@
     return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
   }
 
+  function isAppAcceptingTesters(cfg) {
+    const s = (cfg?.androidStatus || "").toLowerCase();
+    return s !== "published" && s !== "productionapproved";
+  }
+
   function formatStatusBadge(androidStatus) {
     switch ((androidStatus || "").toLowerCase()) {
-      case "closedtesting": return { label: "Android: Closed Testing Active", pill: "Active" };
-      case "published": return { label: "Android: Published on Google Play", pill: "Live" };
-      case "planning": return { label: "Android: Planning Waitlist", pill: "Plan" };
-      default: return { label: "Android: Closed Testing Queue", pill: "Queue" };
+      case "closedtesting": return { label: "Android: Closed Testing Active", pill: "Active", tagClass: "active" };
+      case "testingextended": return { label: "Android: Closed Testing Extended", pill: "Extended", tagClass: "queue" };
+      case "productionapproved": return { label: "Android: Production Approved", pill: "Approved", tagClass: "active" };
+      case "published": return { label: "Android: Published on Google Play", pill: "Live", tagClass: "active" };
+      case "planning": return { label: "Android: Planning Waitlist", pill: "Plan", tagClass: "" };
+      default: return { label: "Android: Closed Testing Queue", pill: "Queue", tagClass: "queue" };
     }
   }
 
-  async function hydrateAppsFromCloud(containers) {
+  function formatWindowsStatus(windowsStatus) {
+    switch ((windowsStatus || "").toLowerCase()) {
+      case "published": return { label: "Published on Microsoft Store", tagClass: "active" };
+      case "closedtesting": return { label: "Closed Testing (Beta)", tagClass: "queue" };
+      case "development": return { label: "In Active Development", tagClass: "dev" };
+      default: return { label: "In Planning", tagClass: "" };
+    }
+  }
+
+  function computeCountdown(startDateIso, totalDays) {
+    if (!startDateIso) return null;
+    const startMs = Date.parse(startDateIso);
+    if (Number.isNaN(startMs)) return null;
+    const days = Math.max(1, Number(totalDays) || 14);
+    const totalMs = days * 86400000;
+    const endMs = startMs + totalMs;
+    const nowMs = Date.now();
+    const remainingMs = endMs - nowMs;
+    const elapsedMs = Math.max(0, nowMs - startMs);
+    const pct = Math.min(100, Math.max(0, Math.round((elapsedMs / totalMs) * 100)));
+    const currentDay = Math.min(days, Math.max(1, Math.floor(elapsedMs / 86400000) + 1));
+
+    const remDays = Math.max(0, Math.floor(remainingMs / 86400000));
+    const remHours = Math.max(0, Math.floor((remainingMs % 86400000) / 3600000));
+    const remMins = Math.max(0, Math.floor((remainingMs % 3600000) / 60000));
+
+    return {
+      startDate: new Date(startMs),
+      endDate: new Date(endMs),
+      totalDays: days,
+      currentDay,
+      percent: pct,
+      isComplete: remainingMs <= 0,
+      isNotStarted: nowMs < startMs,
+      remDays,
+      remHours,
+      remMins
+    };
+  }
+
+  function renderCountdownHtml(cfg) {
+    const status = (cfg.androidStatus || "").toLowerCase();
+    if ((status !== "closedtesting" && status !== "testingextended") || !cfg.closedTestingStartDate) {
+      return "";
+    }
+    const cd = computeCountdown(cfg.closedTestingStartDate, cfg.closedTestingDays);
+    if (!cd) return "";
+
+    const fmtDate = (d) => d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+    let headline = "";
+    if (cd.isComplete) {
+      headline = `${cd.totalDays}-day closed testing window complete — awaiting Google Play production review`;
+    } else if (cd.isNotStarted) {
+      headline = `Closed testing window starts ${fmtDate(cd.startDate)} (${cd.totalDays} days)`;
+    } else {
+      const parts = [];
+      if (cd.remDays > 0) parts.push(`${cd.remDays}d`);
+      parts.push(`${cd.remHours}h`);
+      if (cd.remDays === 0) parts.push(`${cd.remMins}m`);
+      headline = `Day ${cd.currentDay} of ${cd.totalDays} · ${parts.join(" ")} remaining`;
+    }
+
+    return `
+      <div class="lifecycle-countdown ${status === "testingextended" ? "is-extended" : ""}" data-countdown-start="${escapeHtml(cfg.closedTestingStartDate)}" data-countdown-days="${cd.totalDays}">
+        <div class="lc-head">
+          <span class="lc-label">${status === "testingextended" ? "Extended Testing Window" : "Google Play Closed Testing Window"}</span>
+          <span class="lc-time" data-countdown-text>${escapeHtml(headline)}</span>
+        </div>
+        <div class="lc-track" role="progressbar" aria-valuenow="${cd.percent}" aria-valuemin="0" aria-valuemax="100">
+          <div class="lc-fill" style="width:${cd.percent}%"></div>
+        </div>
+        <div class="lc-dates">
+          <span>Started ${escapeHtml(fmtDate(cd.startDate))}</span>
+          <span>Target completion ${escapeHtml(fmtDate(cd.endDate))}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderLifecycleNoticeHtml(cfg) {
+    const status = (cfg.androidStatus || "").toLowerCase();
+    const msg = (cfg.statusMessage || "").trim();
+
+    if (status === "productionapproved") {
+      const body = msg || `Thank you to every tester who installed, tested, and shared feedback! ${cfg.name} has been granted Google Play Production access and is now preparing for public release.`;
+      return `
+        <div class="lifecycle-banner is-thanks">
+          <div class="lb-badge"><span class="dot-green"></span> Production Access Granted</div>
+          <h3>Thank You to Our Closed Testing Community!</h3>
+          <p>${escapeHtml(body).replace(/\n/g, "<br>")}</p>
+        </div>
+      `;
+    }
+
+    if (status === "testingextended") {
+      const body = msg || `Google Play requested additional closed testing activity before granting production access. Please keep ${cfg.name} installed and open it occasionally — your participation directly helps us reach public release!`;
+      return `
+        <div class="lifecycle-banner is-notice">
+          <div class="lb-badge"><span class="pulse-dot-amber"></span> Closed Testing Update</div>
+          <h3>Additional Closed Testing Requested</h3>
+          <p>${escapeHtml(body).replace(/\n/g, "<br>")}</p>
+        </div>
+      `;
+    }
+
+    if (status === "published" && msg) {
+      return `
+        <div class="lifecycle-banner is-thanks">
+          <div class="lb-badge"><span class="dot-green"></span> Release Note &amp; Thanks</div>
+          <p style="margin:0;">${escapeHtml(msg).replace(/\n/g, "<br>")}</p>
+        </div>
+      `;
+    }
+
+    if (msg) {
+      return `
+        <div class="lifecycle-banner is-info">
+          <div class="lb-badge">Studio Notice</div>
+          <p style="margin:0;">${escapeHtml(msg).replace(/\n/g, "<br>")}</p>
+        </div>
+      `;
+    }
+
+    return "";
+  }
+
+  function renderPublicInstallDeckHtml(cfg) {
+    const androidLive = (cfg.androidStatus || "").toLowerCase() === "published" && Boolean(cfg.joinAndroidUrl || cfg.joinWebUrl);
+    const windowsLive = (cfg.windowsStatus || "").toLowerCase() === "published" && Boolean(cfg.microsoftStoreUrl);
+    if (!androidLive && !windowsLive) return "";
+
+    const mobile = isMobileDevice();
+    const playUrl = cfg.joinAndroidUrl || cfg.joinWebUrl;
+    const qrSvg = androidLive && !mobile ? QR.generateSVG(playUrl, 152) : "";
+    const wingetCmd = cfg.windowsWingetId ? `winget install "${cfg.windowsWingetId}"` : "";
+
+    const androidCard = androidLive ? `
+      <div class="store-install-card">
+        <div class="store-card-head">
+          <span class="store-pill is-live">● Live on Google Play</span>
+          <h4>Android — Google Play Store</h4>
+        </div>
+        <div class="store-card-body ${!mobile ? "with-qr" : ""}">
+          ${!mobile ? `
+            <div class="qr-box store-qr">
+              <div class="qr-target-frame">
+                <span class="reticle r-tl"></span><span class="reticle r-tr"></span>
+                <span class="reticle r-bl"></span><span class="reticle r-br"></span>
+                <div class="qr-canvas">${qrSvg}</div>
+              </div>
+              <span class="qr-caption">Scan on Android</span>
+            </div>
+          ` : ""}
+          <div class="store-card-steps">
+            <ol class="install-steps">
+              <li>${mobile ? "Tap <b>Get it on Google Play</b> below to open the official store listing." : "Click <b>Get it on Google Play</b> or scan the <b>QR code</b> with your Android phone."}</li>
+              <li>Tap <b>Install</b> — runs 100% on-device with no account required.</li>
+            </ol>
+            <div class="approved-btn-row">
+              <a href="${escapeHtml(playUrl)}" target="_blank" rel="noopener" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8c-.3.3-.5.8-.5 1.5v17.4c0 .7.2 1.2.5 1.5l9.2-9.6L3.6 1.8zm11.4 8.4l2.5-1.4L4.8.8l10.2 9.4zm0 3.6L4.8 23.2l12.7-7.6-2.5-1.8zm1.2-1.2l3.4 2c.9.5.9 1.4 0 1.9l-3.4 2-1.5-1.5 1.5-4.4z"/></svg>
+                <span>Get it on Google Play</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    ` : "";
+
+    const windowsCard = windowsLive ? `
+      <div class="store-install-card">
+        <div class="store-card-head">
+          <span class="store-pill is-live">● Live on Microsoft Store</span>
+          <h4>Windows — Microsoft Store</h4>
+        </div>
+        <div class="store-card-body">
+          <div class="store-card-steps">
+            <ol class="install-steps">
+              <li>Click <b>Get it on Microsoft Store</b> to open the official Windows listing.</li>
+              <li>Click <b>Get / Install</b> in Microsoft Store for automatic updates.</li>
+              ${wingetCmd ? `<li>Or install via Windows Terminal:</li>` : ""}
+            </ol>
+            ${wingetCmd ? `
+              <div class="winget-row">
+                <code>${escapeHtml(wingetCmd)}</code>
+                <button type="button" class="btn btn-ghost btn-sm" data-copy-text="${escapeHtml(wingetCmd)}">Copy</button>
+              </div>
+            ` : ""}
+            <div class="approved-btn-row">
+              <a href="${escapeHtml(cfg.microsoftStoreUrl)}" target="_blank" rel="noopener" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M3 5.5L11 4.4V11.5H3V5.5zm9-1.2L21 3V11.5H12V4.3zM3 12.5H11V19.6L3 18.5V12.5zm9 0H21V21L12 19.7V12.5z"/></svg>
+                <span>Get it on Microsoft Store</span>
+              </a>
+              <a href="#support" class="btn btn-ghost btn-sm">Store Troubleshooting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    ` : "";
+
+    return `
+      <div class="public-install-deck">
+        <div class="public-install-grid ${androidLive && windowsLive ? "two-col" : ""}">
+          ${androidCard}
+          ${windowsCard}
+        </div>
+      </div>
+    `;
+  }
+
+  function syncProductHeroPlatformBadges(appId, cfg) {
+    const container = document.querySelector(`[data-app-platforms="${appId}"]`);
+    if (!container) return;
+
+    const aMeta = formatStatusBadge(cfg.androidStatus);
+    const wMeta = formatWindowsStatus(cfg.windowsStatus);
+    const aText = aMeta.label.replace(/^Android:\s*/i, "");
+
+    const androidTag = container.querySelector("[data-platform-android]");
+    if (androidTag) {
+      androidTag.className = `platform-tag ${aMeta.tagClass}`.trim();
+      androidTag.innerHTML = `<b>Android</b> ${escapeHtml(aText)}`;
+    }
+    const winTag = container.querySelector("[data-platform-windows]");
+    if (winTag) {
+      winTag.className = `platform-tag ${wMeta.tagClass}`.trim();
+      winTag.innerHTML = `<b>Windows</b> ${escapeHtml(wMeta.label)}`;
+    }
+  }
+
+  async function fetchCloudApps() {
     if (!API_BASE) return;
     try {
       const res = await fetch(`${API_BASE}/api/apps`);
@@ -447,123 +733,632 @@
         if (APP_CONFIG[id]) {
           APP_CONFIG[id].name = a.appName || APP_CONFIG[id].name;
           APP_CONFIG[id].androidStatus = a.androidStatus || APP_CONFIG[id].androidStatus;
-          APP_CONFIG[id].joinWebUrl = a.joinWebUrl || APP_CONFIG[id].joinWebUrl;
-          APP_CONFIG[id].joinAndroidUrl = a.joinAndroidUrl || APP_CONFIG[id].joinAndroidUrl;
+          APP_CONFIG[id].badge = statusMeta.label;
+          APP_CONFIG[id].joinWebUrl = a.joinWebUrl ?? APP_CONFIG[id].joinWebUrl;
+          APP_CONFIG[id].joinAndroidUrl = a.joinAndroidUrl ?? APP_CONFIG[id].joinAndroidUrl;
+          APP_CONFIG[id].closedTestingStartDate = a.closedTestingStartDate || null;
+          APP_CONFIG[id].closedTestingDays = a.closedTestingDays || 14;
+          APP_CONFIG[id].statusMessage = a.statusMessage || null;
+          APP_CONFIG[id].windowsStatus = a.windowsStatus || APP_CONFIG[id].windowsStatus || "Planning";
+          APP_CONFIG[id].microsoftStoreUrl = a.microsoftStoreUrl || null;
+          APP_CONFIG[id].windowsWingetId = a.windowsWingetId || null;
           APP_CONFIG[id].pill = statusMeta.pill;
         } else {
           APP_CONFIG[id] = {
             name: a.appName || id,
+            pageUrl: `${id}/`,
             subtitle: "Native Espresso Studio Application",
             badge: statusMeta.label,
             androidStatus: a.androidStatus || "TestingQueue",
+            windowsStatus: a.windowsStatus || "Planning",
             accent: "var(--cyan, #22d3ee)",
             platforms: [`Android (${statusMeta.pill})`],
             joinWebUrl: a.joinWebUrl || null,
             joinAndroidUrl: a.joinAndroidUrl || null,
-            icon: "📱",
+            closedTestingStartDate: a.closedTestingStartDate || null,
+            closedTestingDays: a.closedTestingDays || 14,
+            statusMessage: a.statusMessage || null,
+            microsoftStoreUrl: a.microsoftStoreUrl || null,
+            windowsWingetId: a.windowsWingetId || null,
             pill: statusMeta.pill
           };
         }
       });
-
-      // Re-render widgets with fresh cloud links & any new apps
-      containers.forEach((container) => {
-        const currentApp = container.getAttribute("data-current-app") || container.getAttribute("data-app-id") || "trans-title";
-        renderQueueShell(container, APP_CONFIG[currentApp] ? currentApp : "trans-title");
-      });
-
-      // Also sync any new apps into the homepage support dropdown
-      const supportSelect = document.getElementById("sup-app");
-      if (supportSelect) {
-        const existingValues = new Set(Array.from(supportSelect.options).map((o) => o.value.toLowerCase()));
-        apps.forEach((a) => {
-          const id = (a.appId || "").toLowerCase();
-          if (id && !existingValues.has(id)) {
-            const opt = document.createElement("option");
-            opt.value = id;
-            opt.textContent = a.appName || id;
-            const companyOpt = supportSelect.querySelector("option[value='company']");
-            supportSelect.insertBefore(opt, companyOpt || null);
-          }
-        });
-      }
     } catch (_) {
       // Graceful fallback to static defaults
     }
   }
 
-  function initTestingQueue() {
-    const containers = document.querySelectorAll("[data-beta-widget]");
-    if (!containers.length) return;
-
-    containers.forEach((container) => {
-      let activeAppId = container.getAttribute("data-app-id") || "trans-title";
-      if (!APP_CONFIG[activeAppId]) activeAppId = "trans-title";
-      renderQueueShell(container, activeAppId);
-    });
-
-    hydrateAppsFromCloud(containers);
+  async function fetchTesterStatus(email, appId) {
+    if (!API_BASE || !email || !appId) return null;
+    try {
+      const res = await fetch(`${API_BASE}/api/testers/status?email=${encodeURIComponent(email)}&appId=${encodeURIComponent(appId)}`);
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (_) {
+      return null;
+    }
   }
 
-  function renderQueueShell(container, currentAppId) {
-    container.setAttribute("data-current-app", currentAppId);
-    const isMultiApp = !container.getAttribute("data-single-app");
-    const cfg = APP_CONFIG[currentAppId] || APP_CONFIG["trans-title"];
-    const tickets = getTickets();
-    const currentTicket = tickets[currentAppId];
+  async function registerTesterForApp(email, appId, platform) {
+    const cfg = APP_CONFIG[appId] || { name: appId };
+    const ticket = {
+      email,
+      appId,
+      appName: cfg.name,
+      platform: platform || "Android",
+      status: "Pending",
+      joinWebUrl: cfg.joinWebUrl || null,
+      joinAndroidUrl: cfg.joinAndroidUrl || null,
+      androidStatus: cfg.androidStatus || "TestingQueue",
+      registeredAt: Date.now()
+    };
 
-    let tabsHtml = "";
-    if (isMultiApp) {
-      const buttons = Object.keys(APP_CONFIG).map((id) => {
-        const item = APP_CONFIG[id];
-        return `
-          <button class="queue-tab ${currentAppId === id ? 'active' : ''}" data-switch-app="${id}">
-            <span class="tab-icon">${item.icon || "📱"}</span>
-            <span>${item.name}</span>
-            <span class="tab-pill">${item.pill || "Beta"}</span>
-          </button>
-        `;
-      }).join("");
-      tabsHtml = `<div class="queue-tabs" role="tablist">${buttons}</div>`;
+    try {
+      if (API_BASE) {
+        const res = await fetch(`${API_BASE}/api/testers/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, appId, appName: cfg.name, platform: ticket.platform })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status) ticket.status = data.status;
+          if (data.joinWebUrl || data.playStoreUrl) ticket.joinWebUrl = data.joinWebUrl || data.playStoreUrl;
+          if (data.joinAndroidUrl) ticket.joinAndroidUrl = data.joinAndroidUrl;
+          if (data.androidStatus) ticket.androidStatus = data.androidStatus;
+        }
+      }
+    } catch (err) {
+      console.warn("Cloud connection deferred; local state ticket saved.", err);
     }
 
+    saveTicket(appId, ticket);
+    return ticket;
+  }
+
+  async function syncAllAppsForEmail(email) {
+    const appIds = Object.keys(APP_CONFIG);
+    const existing = getTickets();
+
+    await Promise.all(appIds.map(async (appId) => {
+      const cfg = APP_CONFIG[appId];
+      const data = await fetchTesterStatus(email, appId);
+      if (data && data.status) {
+        saveTicket(appId, {
+          email,
+          appId,
+          appName: cfg.name,
+          platform: data.platform || existing[appId]?.platform || "Android",
+          status: data.status,
+          joinWebUrl: data.joinWebUrl || data.playStoreUrl || cfg.joinWebUrl || null,
+          joinAndroidUrl: data.joinAndroidUrl || cfg.joinAndroidUrl || null,
+          androidStatus: data.androidStatus || cfg.androidStatus || null,
+          registeredAt: existing[appId]?.registeredAt || Date.now()
+        });
+      } else if (existing[appId] && existing[appId].email !== email) {
+        removeTicket(appId);
+      }
+    }));
+
+    updateProductDirectoryBadges(email);
+  }
+
+  function updateProductDirectoryBadges(email) {
+    const tickets = getTickets();
+    document.querySelectorAll("[data-row-access]").forEach((slot) => {
+      const appId = slot.getAttribute("data-row-access");
+      const t = tickets[appId];
+      if (!email || !t || t.email !== email) {
+        slot.innerHTML = "";
+        return;
+      }
+      const isApproved = (t.status || "").toLowerCase() === "approved";
+      slot.innerHTML = isApproved
+        ? `<span class="product-access-pill approved">✓ Testing Approved</span>`
+        : `<span class="product-access-pill pending">In Queue</span>`;
+    });
+  }
+
+  /* ==========================================================================
+     4. Company-Level General Closed Testing Controller ([data-studio-beta-widget])
+        Lets users pick All, One, or a Few apps. Shows approval overview ONLY —
+        Play Store links & QR codes unlock on each product's dedicated page.
+     ========================================================================== */
+  function initStudioBetaWidgets() {
+    const containers = document.querySelectorAll("[data-studio-beta-widget]");
+    if (!containers.length) return;
+
+    const email = getRememberedEmail();
+    containers.forEach((c) => renderStudioBeta(c, email));
+
+    fetchCloudApps().then(async () => {
+      const currentEmail = getRememberedEmail();
+      if (currentEmail) {
+        await syncAllAppsForEmail(currentEmail);
+      }
+      containers.forEach((c) => renderStudioBeta(c, getRememberedEmail()));
+    });
+  }
+
+  function renderStudioBeta(container, rememberedEmail) {
+    const email = (rememberedEmail || "").trim().toLowerCase();
+    updateProductDirectoryBadges(email);
+
+    if (email) {
+      renderStudioAccessSummary(container, email);
+    } else {
+      renderStudioSignupForm(container);
+    }
+  }
+
+  function renderStudioSignupForm(container) {
+    const testingIds = Object.keys(APP_CONFIG).filter((id) => isAppAcceptingTesters(APP_CONFIG[id]));
+
+    if (testingIds.length === 0) {
+      container.innerHTML = `
+        <div class="studio-beta-card">
+          <div class="studio-beta-top" style="margin-bottom:0;">
+            <div>
+              <h3>All Studio Apps Are Ready for Public Release</h3>
+              <p>There are currently no active closed testing queues. Visit any product above to view public store download links.</p>
+            </div>
+            <a class="btn btn-primary btn-sm" href="#products">Browse Products ↑</a>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    const appCheckboxes = testingIds.map((id) => {
+      const app = APP_CONFIG[id];
+      return `
+        <label class="app-pick-chip">
+          <input type="checkbox" name="studio_app" value="${escapeHtml(id)}" checked>
+          <span><i class="app-pick-check">✓</i>${escapeHtml(app.name)}</span>
+        </label>
+      `;
+    }).join("");
+
     container.innerHTML = `
-      <div class="queue-card">
-        ${tabsHtml}
-        <div class="queue-body" data-queue-body></div>
+      <div class="studio-beta-card">
+        <div class="studio-beta-top">
+          <div>
+            <h3>Join or Check Closed Testing Access</h3>
+            <p>Choose all studio apps or only the ones you want to test. Once approved, visit each product page to unlock your Google Play links and QR pass.</p>
+          </div>
+        </div>
+
+        <form data-studio-beta-form>
+          <div class="app-picker-row">
+            <span class="picker-label">Apps:</span>
+            ${testingIds.length > 1 ? `
+              <label class="app-pick-chip">
+                <input type="checkbox" data-pick-all checked>
+                <span><i class="app-pick-check">✓</i>All Apps</span>
+              </label>
+            ` : ""}
+            ${appCheckboxes}
+          </div>
+
+          <div class="input-wrap">
+            <input type="email" required placeholder="Enter your Google Play email" class="queue-input" data-studio-email autocomplete="email">
+            <button type="submit" class="btn btn-primary">Join / Check Access</button>
+          </div>
+
+          <div class="queue-meta">
+            <span>⛨ Free · Zero Spam · Unlocks per-app store access on each product page</span>
+            <span>Already approved? Enter your email to check which apps are unlocked.</span>
+          </div>
+        </form>
       </div>
     `;
 
-    if (isMultiApp) {
-      container.querySelectorAll("[data-switch-app]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const nextAppId = btn.getAttribute("data-switch-app");
-          renderQueueShell(container, nextAppId);
-        });
+    const form = container.querySelector("[data-studio-beta-form]");
+    const pickAll = container.querySelector("[data-pick-all]");
+    const appChecks = () => [...container.querySelectorAll("input[name='studio_app']")];
+
+    if (pickAll) {
+      pickAll.addEventListener("change", () => {
+        appChecks().forEach((cb) => { cb.checked = pickAll.checked; });
       });
     }
+    appChecks().forEach((cb) => {
+      cb.addEventListener("change", () => {
+        const list = appChecks();
+        if (pickAll) pickAll.checked = list.length > 0 && list.every((c) => c.checked);
+      });
+    });
 
-    const bodyEl = container.querySelector("[data-queue-body]");
-    if (currentTicket && currentTicket.email) {
-      renderStatusView(bodyEl, currentAppId, cfg, currentTicket, container);
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const emailInput = form.querySelector("[data-studio-email]");
+      const email = (emailInput.value || "").trim().toLowerCase();
+      if (!email || !email.includes("@")) return;
+
+      const selectedIds = appChecks().filter((c) => c.checked).map((c) => c.value);
+      const submitBtn = form.querySelector("button[type='submit']");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Checking Access...";
+
+      saveRememberedEmail(email);
+
+      // Register selected apps (preserves Approved status if already approved)
+      // and check status of any unselected apps so existing approvals are always detected
+      const allIds = Object.keys(APP_CONFIG);
+      await Promise.all(allIds.map(async (appId) => {
+        if (selectedIds.includes(appId)) {
+          await registerTesterForApp(email, appId, "Android");
+        } else {
+          const data = await fetchTesterStatus(email, appId);
+          if (data && data.status) {
+            const cfg = APP_CONFIG[appId];
+            saveTicket(appId, {
+              email,
+              appId,
+              appName: cfg.name,
+              platform: data.platform || "Android",
+              status: data.status,
+              joinWebUrl: data.joinWebUrl || data.playStoreUrl || cfg.joinWebUrl || null,
+              joinAndroidUrl: data.joinAndroidUrl || cfg.joinAndroidUrl || null,
+              androidStatus: data.androidStatus || cfg.androidStatus || null,
+              registeredAt: Date.now()
+            });
+          } else {
+            removeTicket(appId);
+          }
+        }
+      }));
+
+      renderStudioBeta(container, email);
+    });
+  }
+
+  function renderStudioAccessSummary(container, email) {
+    const tickets = getTickets();
+    const appIds = Object.keys(APP_CONFIG);
+
+    const rowsHtml = appIds.map((id) => {
+      const cfg = APP_CONFIG[id];
+      const androidLifecycle = (cfg.androidStatus || "").toLowerCase();
+      const t = tickets[id] && tickets[id].email === email ? tickets[id] : null;
+      const status = t ? (t.status || "Pending").toLowerCase() : "none";
+      const pageHref = `${cfg.pageUrl || `${id}/`}#beta-queue`;
+
+      if (androidLifecycle === "published") {
+        return `
+          <div class="access-row is-approved">
+            <div class="access-row-info">
+              <div class="access-row-title">
+                <span>${escapeHtml(cfg.name)}</span>
+                <span class="access-badge approved">Live on Store</span>
+              </div>
+              <div class="access-row-note">${escapeHtml(cfg.name)} is now publicly available! Open the product page for direct store installation.</div>
+            </div>
+            <div class="access-row-actions">
+              <a class="btn btn-primary btn-sm" href="${escapeHtml(pageHref)}">Download ${escapeHtml(cfg.name)} →</a>
+            </div>
+          </div>
+        `;
+      }
+
+      if (androidLifecycle === "productionapproved") {
+        return `
+          <div class="access-row is-approved">
+            <div class="access-row-info">
+              <div class="access-row-title">
+                <span>${escapeHtml(cfg.name)}</span>
+                <span class="access-badge approved">Production Approved</span>
+              </div>
+              <div class="access-row-note">Thank you for testing! ${escapeHtml(cfg.name)} passed closed testing and is preparing for public release.</div>
+            </div>
+            <div class="access-row-actions">
+              <a class="btn btn-ghost btn-sm" href="${escapeHtml(pageHref)}">View Update →</a>
+            </div>
+          </div>
+        `;
+      }
+
+      if (status === "approved") {
+        return `
+          <div class="access-row is-approved">
+            <div class="access-row-info">
+              <div class="access-row-title">
+                <span>${escapeHtml(cfg.name)}</span>
+                <span class="access-badge approved">Approved</span>
+              </div>
+              <div class="access-row-note">Closed testing access is active. Open the ${escapeHtml(cfg.name)} page to view your Play Store links &amp; QR pass.</div>
+            </div>
+            <div class="access-row-actions">
+              <a class="btn btn-primary btn-sm" href="${escapeHtml(pageHref)}">Open ${escapeHtml(cfg.name)} →</a>
+            </div>
+          </div>
+        `;
+      }
+
+      if (status === "pending") {
+        return `
+          <div class="access-row">
+            <div class="access-row-info">
+              <div class="access-row-title">
+                <span>${escapeHtml(cfg.name)}</span>
+                <span class="access-badge pending">In Queue</span>
+              </div>
+              <div class="access-row-note">Registered for closed testing. Play Store links will unlock on the ${escapeHtml(cfg.name)} page once approved.</div>
+            </div>
+            <div class="access-row-actions">
+              <a class="btn btn-ghost btn-sm" href="${escapeHtml(pageHref)}">View Product →</a>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="access-row">
+          <div class="access-row-info">
+            <div class="access-row-title">
+              <span>${escapeHtml(cfg.name)}</span>
+              <span class="access-badge none">Not Joined</span>
+            </div>
+            <div class="access-row-note">You haven't requested closed testing access for ${escapeHtml(cfg.name)} yet.</div>
+          </div>
+          <div class="access-row-actions">
+            <button type="button" class="btn btn-ghost btn-sm" data-quick-join="${escapeHtml(id)}">+ Request Access</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    container.innerHTML = `
+      <div class="studio-beta-card">
+        <div class="access-header">
+          <div>
+            <span class="access-email-pill"><i class="dot dot-green"></i>${escapeHtml(email)}</span>
+          </div>
+          <div class="access-header-actions">
+            <button type="button" class="btn btn-ghost btn-sm" data-studio-refresh>Refresh Status</button>
+            <button type="button" class="btn btn-ghost btn-sm" data-studio-switch>Switch Email</button>
+          </div>
+        </div>
+
+        <div class="access-summary-list">${rowsHtml}</div>
+
+        <div class="access-footnote">
+          <span>Your email is remembered across product pages so approved Play Store links unlock automatically when you visit them.</span>
+        </div>
+      </div>
+    `;
+
+    container.querySelector("[data-studio-refresh]")?.addEventListener("click", async (e) => {
+      const btn = e.currentTarget;
+      btn.disabled = true;
+      btn.textContent = "Checking...";
+      await fetchCloudApps();
+      await syncAllAppsForEmail(email);
+      renderStudioBeta(container, email);
+    });
+
+    container.querySelector("[data-studio-switch]")?.addEventListener("click", () => {
+      clearAllTesterState();
+      renderStudioBeta(container, "");
+    });
+
+    container.querySelectorAll("[data-quick-join]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const targetApp = btn.getAttribute("data-quick-join");
+        btn.disabled = true;
+        btn.textContent = "Requesting...";
+        await registerTesterForApp(email, targetApp, "Android");
+        renderStudioBeta(container, email);
+      });
+    });
+  }
+
+  /* ==========================================================================
+     5. Per-Product Release Lifecycle, Public Store Install & Closed Testing
+        - Renders live countdown bar when ClosedTestingStartDate is set
+        - Renders Thank-You / Rejection / Extension notices from Admin App
+        - Renders direct public Google Play & Microsoft Store install procedures
+          when published (no email gate)
+        - Auto-checks remembered email for email-gated closed testing
+     ========================================================================== */
+  function updateHeroAccessBanner(appId, cfg, ticket) {
+    const banner = document.querySelector(`[data-app-access-banner="${appId}"]`);
+    if (!banner) return;
+
+    const androidLive = (cfg.androidStatus || "").toLowerCase() === "published" && Boolean(cfg.joinAndroidUrl || cfg.joinWebUrl);
+    const windowsLive = (cfg.windowsStatus || "").toLowerCase() === "published" && Boolean(cfg.microsoftStoreUrl);
+    const prodApproved = (cfg.androidStatus || "").toLowerCase() === "productionapproved";
+
+    if (androidLive || windowsLive) {
+      const stores = [androidLive ? "Google Play" : null, windowsLive ? "Microsoft Store" : null].filter(Boolean).join(" & ");
+      banner.innerHTML = `
+        <a href="#beta-queue" class="app-access-banner">
+          <span class="dot dot-green"></span>
+          <span><strong>Now Published on ${escapeHtml(stores)}</strong> — Direct Install &amp; Download ↓</span>
+        </a>
+      `;
+      banner.hidden = false;
+      return;
+    }
+
+    if (prodApproved) {
+      banner.innerHTML = `
+        <a href="#beta-queue" class="app-access-banner">
+          <span class="dot dot-green"></span>
+          <span><strong>Production Access Granted</strong> — Thank You to Our Closed Testers! ↓</span>
+        </a>
+      `;
+      banner.hidden = false;
+      return;
+    }
+
+    const isApproved = ticket && (ticket.status || "").toLowerCase() === "approved";
+    const hasLinks = Boolean(cfg.joinWebUrl || cfg.joinAndroidUrl || ticket?.joinWebUrl || ticket?.joinAndroidUrl);
+
+    if (isApproved && hasLinks) {
+      banner.innerHTML = `
+        <a href="#beta-queue" class="app-access-banner">
+          <span class="dot dot-green"></span>
+          <span><strong>Closed Testing Approved</strong> for ${escapeHtml(ticket.email)} — View Google Play Links &amp; QR ↓</span>
+        </a>
+      `;
+      banner.hidden = false;
     } else {
-      renderFormView(bodyEl, currentAppId, cfg, container);
+      banner.innerHTML = "";
+      banner.hidden = true;
     }
   }
 
-  function renderFormView(bodyEl, appId, cfg, container) {
-    const platformOptions = cfg.platforms.map((p, idx) => `
+  function bindCopyButtons(root) {
+    root.querySelectorAll("[data-copy-text]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const val = btn.getAttribute("data-copy-text") || "";
+        navigator.clipboard.writeText(val).then(() => {
+          const orig = btn.textContent;
+          btn.textContent = "✓ Copied";
+          setTimeout(() => { btn.textContent = orig; }, 2200);
+        }).catch(() => {});
+      });
+    });
+  }
+
+  let countdownTickerStarted = false;
+  function startCountdownTicker() {
+    if (countdownTickerStarted) return;
+    countdownTickerStarted = true;
+    setInterval(() => {
+      document.querySelectorAll("[data-countdown-start]").forEach((el) => {
+        const start = el.getAttribute("data-countdown-start");
+        const days = Number(el.getAttribute("data-countdown-days")) || 14;
+        const cd = computeCountdown(start, days);
+        if (!cd) return;
+        const textEl = el.querySelector("[data-countdown-text]");
+        const fillEl = el.querySelector(".lc-fill");
+        if (fillEl) fillEl.style.width = `${cd.percent}%`;
+        if (textEl) {
+          if (cd.isComplete) {
+            textEl.textContent = `${cd.totalDays}-day closed testing window complete — awaiting Google Play production review`;
+          } else if (!cd.isNotStarted) {
+            const parts = [];
+            if (cd.remDays > 0) parts.push(`${cd.remDays}d`);
+            parts.push(`${cd.remHours}h`);
+            if (cd.remDays === 0) parts.push(`${cd.remMins}m`);
+            textEl.textContent = `Day ${cd.currentDay} of ${cd.totalDays} · ${parts.join(" ")} remaining`;
+          }
+        }
+      });
+    }, 60000);
+  }
+
+  function initProductBetaWidgets() {
+    const containers = document.querySelectorAll("[data-beta-widget]");
+    if (!containers.length) return;
+
+    const rememberedEmail = getRememberedEmail();
+
+    containers.forEach((container) => {
+      const appId = container.getAttribute("data-app-id") || "trans-title";
+      if (!APP_CONFIG[appId]) return;
+      renderProductBetaShell(container, appId);
+    });
+
+    fetchCloudApps().then(async () => {
+      for (const container of containers) {
+        const appId = container.getAttribute("data-app-id") || "trans-title";
+        const cfg = APP_CONFIG[appId];
+        if (!cfg) continue;
+
+        const emailToCheck = getRememberedEmail() || rememberedEmail;
+        if (emailToCheck && isAppAcceptingTesters(cfg)) {
+          const live = await fetchTesterStatus(emailToCheck, appId);
+          if (live && live.status) {
+            saveTicket(appId, {
+              email: emailToCheck,
+              appId,
+              appName: cfg.name,
+              platform: live.platform || "Android",
+              status: live.status,
+              joinWebUrl: live.joinWebUrl || live.playStoreUrl || cfg.joinWebUrl || null,
+              joinAndroidUrl: live.joinAndroidUrl || cfg.joinAndroidUrl || null,
+              androidStatus: live.androidStatus || cfg.androidStatus || null,
+              registeredAt: getTickets()[appId]?.registeredAt || Date.now()
+            });
+          } else {
+            const existing = getTickets()[appId];
+            if (existing && existing.email !== emailToCheck) {
+              removeTicket(appId);
+            }
+          }
+        }
+        renderProductBetaShell(container, appId);
+      }
+    });
+  }
+
+  function renderProductBetaShell(container, appId) {
+    container.setAttribute("data-current-app", appId);
+    const cfg = APP_CONFIG[appId] || APP_CONFIG["trans-title"];
+    const rememberedEmail = getRememberedEmail();
+    const tickets = getTickets();
+    let currentTicket = tickets[appId];
+
+    // Ignore stale ticket belonging to a different email
+    if (currentTicket && rememberedEmail && currentTicket.email !== rememberedEmail) {
+      currentTicket = null;
+    }
+
+    syncProductHeroPlatformBadges(appId, cfg);
+    updateHeroAccessBanner(appId, cfg, currentTicket);
+
+    const noticeHtml = renderLifecycleNoticeHtml(cfg);
+    const countdownHtml = renderCountdownHtml(cfg);
+    const publicInstallHtml = renderPublicInstallDeckHtml(cfg);
+    const showClosedTestingWidget = isAppAcceptingTesters(cfg);
+
+    container.innerHTML = `
+      <div class="release-hub-stack">
+        ${noticeHtml}
+        ${publicInstallHtml}
+        ${countdownHtml}
+        ${showClosedTestingWidget ? `
+          <div class="queue-card">
+            <div class="queue-body" data-queue-body></div>
+          </div>
+        ` : ""}
+      </div>
+    `;
+
+    bindCopyButtons(container);
+    if (countdownHtml) startCountdownTicker();
+
+    if (showClosedTestingWidget) {
+      const bodyEl = container.querySelector("[data-queue-body]");
+      if (currentTicket && currentTicket.email) {
+        renderProductStatusView(bodyEl, appId, cfg, currentTicket, container);
+      } else {
+        renderProductFormView(bodyEl, appId, cfg, container, rememberedEmail);
+      }
+    }
+  }
+
+  function renderProductFormView(bodyEl, appId, cfg, container, prefillEmail) {
+    const platformOptions = (cfg.platforms || ["Android"]).map((p, idx) => `
       <label class="platform-pill">
-        <input type="radio" name="queue_platform_${appId}" value="${p}" ${idx === 0 ? "checked" : ""}>
-        <span>${p}</span>
+        <input type="radio" name="queue_platform_${escapeHtml(appId)}" value="${escapeHtml(p)}" ${idx === 0 ? "checked" : ""}>
+        <span>${escapeHtml(p)}</span>
       </label>
     `).join("");
 
+    const prefillNote = prefillEmail
+      ? `Signed in with <strong>${escapeHtml(prefillEmail)}</strong> — you aren't registered for ${escapeHtml(cfg.name)} yet. Click below to request access or check status.`
+      : `${escapeHtml(cfg.subtitle)}. Enter your Google Play email to join the waitlist — or if you're already approved for ${escapeHtml(cfg.name)}, unlock your direct Google Play links and QR pass instantly.`;
+
     bodyEl.innerHTML = `
       <div class="queue-header">
-        <div class="queue-badge"><span class="pulse-dot"></span> ${cfg.badge}</div>
-        <h3>Join the ${cfg.name} Closed Testing Squad</h3>
-        <p class="queue-desc">${cfg.subtitle}. Enter your Google Play email to join the waitlist — or if you're already approved, unlock your direct Web &amp; Android install links instantly.</p>
+        <div class="queue-badge"><span class="pulse-dot"></span> ${escapeHtml(cfg.badge)}</div>
+        <h3>${escapeHtml(cfg.name)} Closed Testing Access</h3>
+        <p class="queue-desc">${prefillNote}</p>
       </div>
 
       <form class="queue-form" data-queue-form>
@@ -573,16 +1368,16 @@
         </div>
 
         <div class="input-wrap">
-          <input type="email" required placeholder="Enter your Google Play account email" class="queue-input" data-email-input autocomplete="email">
+          <input type="email" required placeholder="Enter your Google Play account email" value="${escapeHtml(prefillEmail || "")}" class="queue-input" data-email-input autocomplete="email">
           <button type="submit" class="btn btn-primary queue-btn">
-            <span>Join / Check Access</span>
+            <span>${prefillEmail ? `Join ${escapeHtml(cfg.name)} Queue` : "Join / Check Access"}</span>
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
         </div>
 
         <div class="queue-meta">
           <span>⛨ 100% Free · Zero Spam · Direct Play Store Invitation</span>
-          <span class="queue-note">Already approved? Typing your email unlocks your links &amp; QR pass immediately.</span>
+          <span class="queue-note">Google Play links &amp; QR pass appear here automatically once your email is approved for ${escapeHtml(cfg.name)}.</span>
         </div>
       </form>
     `;
@@ -600,48 +1395,21 @@
       submitBtn.disabled = true;
       submitBtn.innerHTML = `<span>Checking Cloud Access...</span>`;
 
-      const newTicket = {
-        email: email,
-        appId: appId,
-        appName: cfg.name,
-        platform: checkedPlatform,
-        status: "Pending",
-        joinWebUrl: cfg.joinWebUrl,
-        joinAndroidUrl: cfg.joinAndroidUrl,
-        androidStatus: cfg.androidStatus,
-        registeredAt: Date.now()
-      };
-
-      try {
-        if (API_BASE) {
-          const res = await fetch(`${API_BASE}/api/testers/register`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, appId, appName: cfg.name, platform: checkedPlatform })
-          });
-          if (res.ok) {
-            const data = await res.json();
-            if (data.status) newTicket.status = data.status;
-            if (data.joinWebUrl || data.playStoreUrl) newTicket.joinWebUrl = data.joinWebUrl || data.playStoreUrl;
-            if (data.joinAndroidUrl) newTicket.joinAndroidUrl = data.joinAndroidUrl;
-            if (data.androidStatus) newTicket.androidStatus = data.androidStatus;
-          }
-        }
-      } catch (err) {
-        console.warn("Cloud connection deferred; local state ticket saved.", err);
-      }
-
-      saveTicket(appId, newTicket);
-      renderStatusView(bodyEl, appId, cfg, newTicket, container);
+      saveRememberedEmail(email);
+      const newTicket = await registerTesterForApp(email, appId, checkedPlatform);
+      updateHeroAccessBanner(appId, cfg, newTicket);
+      renderProductStatusView(bodyEl, appId, cfg, newTicket, container);
     });
   }
 
-  function renderStatusView(bodyEl, appId, cfg, ticket, container) {
+  function renderProductStatusView(bodyEl, appId, cfg, ticket, container) {
     const isApproved = (ticket.status || "").toLowerCase() === "approved";
     const joinWebUrl = cfg.joinWebUrl || ticket.joinWebUrl || ticket.playStoreUrl || "";
     const joinAndroidUrl = cfg.joinAndroidUrl || ticket.joinAndroidUrl || joinWebUrl;
     const hasLinks = Boolean(joinWebUrl || joinAndroidUrl);
     const mobile = isMobileDevice();
+
+    updateHeroAccessBanner(appId, cfg, ticket);
 
     if (isApproved) {
       if (!hasLinks) {
@@ -649,17 +1417,17 @@
           <div class="queue-status-in approved-view">
             <div class="queue-header">
               <div class="queue-badge approved"><span class="dot-green"></span> Pre-Approved Tester</div>
-              <h3>You are Approved for ${cfg.name}!</h3>
-              <p class="queue-desc">Registered Account: <strong>${ticket.email}</strong></p>
+              <h3>You are Approved for ${escapeHtml(cfg.name)}!</h3>
+              <p class="queue-desc">Registered Account: <strong>${escapeHtml(ticket.email)}</strong></p>
             </div>
             <div class="pending-notice">
               <div class="notice-text">
-                <p>Your Google Play account is pre-approved! As soon as <strong>${cfg.name}</strong> transitions from Testing Queue to Active Closed Testing, your <strong>Join via Web</strong> and <strong>Android Play Store QR / Install</strong> links will unlock right here automatically.</p>
+                <p>Your Google Play account is pre-approved! As soon as <strong>${escapeHtml(cfg.name)}</strong> transitions from Testing Queue to Active Closed Testing, your <strong>Join via Web</strong> and <strong>Android Play Store QR / Install</strong> links will unlock right here automatically.</p>
               </div>
               <div class="ticket-footer-actions">
                 <button class="btn-text-action" data-check-status>Refresh Links</button>
                 <span class="sep">·</span>
-                <button class="btn-text-action" data-reset-ticket>Change / Reset Account</button>
+                <button class="btn-text-action" data-reset-ticket>Switch Email</button>
               </div>
             </div>
           </div>
@@ -671,9 +1439,9 @@
         bodyEl.innerHTML = `
           <div class="queue-status-in approved-view">
             <div class="queue-header">
-              <div class="queue-badge approved"><span class="dot-green"></span> VIP Tester Access Granted</div>
-              <h3>You are an Approved Tester for ${cfg.name}!</h3>
-              <p class="queue-desc">Approved Account: <strong>${ticket.email}</strong> · Platform: <strong>${ticket.platform || 'Android'}</strong></p>
+              <div class="queue-badge approved"><span class="dot-green"></span> Google Play Closed Testing Unlocked</div>
+              <h3>You are an Approved Tester for ${escapeHtml(cfg.name)}!</h3>
+              <p class="queue-desc">Approved Account: <strong>${escapeHtml(ticket.email)}</strong> · Platform: <strong>${escapeHtml(ticket.platform || "Android")}</strong></p>
             </div>
 
             <div class="approved-deck">
@@ -692,17 +1460,17 @@
                 <div class="steps-mini">
                   <div class="step-m"><b>1.</b> Click <b>Join via Web</b> to accept the closed testing invite in your browser</div>
                   <div class="step-m"><b>2.</b> ${mobile ? "Tap <b>Join via Android</b> below to open Google Play and install" : "Scan the <b>QR Code</b> with your Android phone (or click <b>Join via Android</b>) to install from Google Play"}</div>
-                  <div class="step-m"><b>3.</b> Make sure Google Play is signed in with <b>${ticket.email}</b></div>
+                  <div class="step-m"><b>3.</b> Make sure Google Play is signed in with <b>${escapeHtml(ticket.email)}</b></div>
                 </div>
 
                 <div class="approved-btn-row">
                   ${joinWebUrl ? `
-                    <a href="${joinWebUrl}" target="_blank" rel="noopener" class="btn btn-primary">
+                    <a href="${escapeHtml(joinWebUrl)}" target="_blank" rel="noopener" class="btn btn-primary">
                       <span>🌐 Join via Web</span>
                     </a>
                   ` : ""}
                   ${joinAndroidUrl ? `
-                    <a href="${joinAndroidUrl}" target="_blank" rel="noopener" class="btn ${joinWebUrl ? 'btn-ghost' : 'btn-primary'}">
+                    <a href="${escapeHtml(joinAndroidUrl)}" target="_blank" rel="noopener" class="btn ${joinWebUrl ? "btn-ghost" : "btn-primary"}">
                       <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8c-.3.3-.5.8-.5 1.5v17.4c0 .7.2 1.2.5 1.5l9.2-9.6L3.6 1.8zm11.4 8.4l2.5-1.4L4.8.8l10.2 9.4zm0 3.6L4.8 23.2l12.7-7.6-2.5-1.8zm1.2-1.2l3.4 2c.9.5.9 1.4 0 1.9l-3.4 2-1.5-1.5 1.5-4.4z"/></svg>
                       <span>Join via Android (Play Store)</span>
                     </a>
@@ -713,7 +1481,7 @@
                 </div>
 
                 <div class="ticket-footer-actions">
-                  <button class="btn-text-action" data-reset-ticket>Change / Check Another Email</button>
+                  <button class="btn-text-action" data-reset-ticket>Switch / Check Another Email</button>
                 </div>
               </div>
             </div>
@@ -735,43 +1503,25 @@
         <div class="queue-status-in pending-view">
           <div class="queue-header">
             <div class="queue-badge pending"><span class="pulse-dot-amber"></span> Queue Spot Confirmed</div>
-            <h3>Waiting for Closed Testing Approval</h3>
-            <p class="queue-desc">Registered Account: <strong>${ticket.email}</strong> · Platform: <strong>${ticket.platform || 'Android'}</strong></p>
+            <h3>Waiting for ${escapeHtml(cfg.name)} Closed Testing Approval</h3>
+            <p class="queue-desc">Registered Account: <strong>${escapeHtml(ticket.email)}</strong> · Platform: <strong>${escapeHtml(ticket.platform || "Android")}</strong></p>
           </div>
 
           <div class="pending-notice">
             <div class="notice-text">
-              <p>Your request is confirmed and logged in our priority queue. As soon as your account is whitelisted on Google Play Console, you will receive an email — and revisiting this page will automatically unlock your Web link and Android Play Store QR code.</p>
+              <p>Your request is confirmed in the ${escapeHtml(cfg.name)} priority queue. Once your email is authorized on Google Play Console, revisiting this page will automatically unlock your Google Play links and scannable QR code.</p>
             </div>
 
             <div class="ticket-status-pill">
               <span class="pill-label">Cloud Status: <b>In Queue (Waiting Approval)</b></span>
               <div class="pill-buttons">
                 <button class="btn btn-sm btn-primary" data-check-status title="Check live status from cloud">Refresh Status</button>
-                <button class="btn btn-sm btn-ghost" data-reset-ticket>Change Email</button>
+                <button class="btn btn-sm btn-ghost" data-reset-ticket>Switch Email</button>
               </div>
             </div>
           </div>
         </div>
       `;
-
-      // Quietly auto-check cloud once on load in case tester was recently approved
-      if (API_BASE && !ticket._autoCheckedThisLoad) {
-        ticket._autoCheckedThisLoad = true;
-        fetch(`${API_BASE}/api/testers/status?email=${encodeURIComponent(ticket.email)}&appId=${encodeURIComponent(appId)}`)
-          .then((r) => (r.ok ? r.json() : null))
-          .then((data) => {
-            if (data && (data.status || "").toLowerCase() === "approved") {
-              ticket.status = "Approved";
-              ticket.joinWebUrl = data.joinWebUrl || data.playStoreUrl || ticket.joinWebUrl;
-              ticket.joinAndroidUrl = data.joinAndroidUrl || ticket.joinAndroidUrl;
-              ticket.androidStatus = data.androidStatus || ticket.androidStatus;
-              saveTicket(appId, ticket);
-              renderStatusView(bodyEl, appId, cfg, ticket, container);
-            }
-          })
-          .catch(() => {});
-      }
     }
 
     const checkBtn = bodyEl.querySelector("[data-check-status]");
@@ -780,22 +1530,18 @@
         checkBtn.textContent = "Checking...";
         checkBtn.disabled = true;
 
-        if (API_BASE) {
-          try {
-            const res = await fetch(`${API_BASE}/api/testers/status?email=${encodeURIComponent(ticket.email)}&appId=${encodeURIComponent(appId)}`);
-            if (res.ok) {
-              const data = await res.json();
-              ticket.joinWebUrl = data.joinWebUrl || data.playStoreUrl || ticket.joinWebUrl;
-              ticket.joinAndroidUrl = data.joinAndroidUrl || ticket.joinAndroidUrl;
-              ticket.androidStatus = data.androidStatus || ticket.androidStatus;
-              if ((data.status || "").toLowerCase() === "approved") {
-                ticket.status = "Approved";
-                saveTicket(appId, ticket);
-                renderStatusView(bodyEl, appId, cfg, ticket, container);
-                return;
-              }
-            }
-          } catch (_) {}
+        await fetchCloudApps();
+        const data = await fetchTesterStatus(ticket.email, appId);
+        if (data) {
+          ticket.joinWebUrl = data.joinWebUrl || data.playStoreUrl || ticket.joinWebUrl;
+          ticket.joinAndroidUrl = data.joinAndroidUrl || ticket.joinAndroidUrl;
+          ticket.androidStatus = data.androidStatus || ticket.androidStatus;
+          if ((data.status || "").toLowerCase() === "approved") {
+            ticket.status = "Approved";
+            saveTicket(appId, ticket);
+            renderProductStatusView(bodyEl, appId, APP_CONFIG[appId] || cfg, ticket, container);
+            return;
+          }
         }
 
         setTimeout(() => {
@@ -803,22 +1549,23 @@
           setTimeout(() => {
             checkBtn.disabled = false;
             checkBtn.textContent = "Refresh Status";
-          }, 2500);
-        }, 600);
+          }, 2200);
+        }, 400);
       });
     }
 
     const resetBtn = bodyEl.querySelector("[data-reset-ticket]");
     if (resetBtn) {
       resetBtn.addEventListener("click", () => {
-        removeTicket(appId);
-        renderFormView(bodyEl, appId, cfg, container);
+        clearAllTesterState();
+        updateHeroAccessBanner(appId, cfg, null);
+        renderProductFormView(bodyEl, appId, cfg, container, "");
       });
     }
   }
 
   /* ==========================================================================
-     4. Interactive Support & Diagnostic Portal (v2.0)
+     6. Scoped & Expandable Support & Diagnostic Portal (v3.0)
      ========================================================================== */
   function initSupportPortal() {
     const portals = document.querySelectorAll("[data-support-portal]");
@@ -830,6 +1577,9 @@
   }
 
   function setupPortalInstance(portal) {
+    const scope = (portal.getAttribute("data-support-scope") || "company").toLowerCase();
+    const isExpandable = portal.getAttribute("data-expandable") === "true";
+
     const pillsContainer = portal.querySelector("[data-symptom-pills]");
     const dynamicHelp = portal.querySelector("[data-dynamic-troubleshooting]");
     const issueForm = portal.querySelector("[data-issue-form]");
@@ -841,58 +1591,125 @@
     const autoDetectBtn = portal.querySelector("[data-auto-detect-specs]");
     const descField = portal.querySelector("[name='description']");
 
+    // Pre-fill contact email if remembered
+    const remembered = getRememberedEmail();
+    const emailField = issueForm?.querySelector("[name='email']");
+    if (emailField && !emailField.value && remembered) {
+      emailField.value = remembered;
+    }
+
+    // Compact Expandable Drawer Logic (used on Company Hub)
+    if (isExpandable) {
+      const drawer = portal.querySelector("[data-support-drawer]");
+      const triggers = portal.querySelectorAll("[data-support-open]");
+      const tabs = portal.querySelectorAll("[data-support-tab]");
+      const panes = portal.querySelectorAll("[data-support-pane]");
+      const closeBtn = portal.querySelector("[data-support-close]");
+
+      function setPane(paneName) {
+        if (!drawer) return;
+        const alreadyOpenSame = drawer.classList.contains("open") && drawer.getAttribute("data-active-pane") === paneName;
+        if (alreadyOpenSame) {
+          closeDrawer();
+          return;
+        }
+        drawer.classList.add("open");
+        drawer.setAttribute("aria-hidden", "false");
+        drawer.setAttribute("data-active-pane", paneName);
+        portal.classList.add("is-expanded");
+
+        triggers.forEach((b) => b.classList.toggle("active", b.getAttribute("data-support-open") === paneName));
+        tabs.forEach((t) => t.classList.toggle("active", t.getAttribute("data-support-tab") === paneName));
+        panes.forEach((p) => p.classList.toggle("active", p.getAttribute("data-support-pane") === paneName));
+      }
+
+      function closeDrawer() {
+        if (!drawer) return;
+        drawer.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
+        drawer.removeAttribute("data-active-pane");
+        portal.classList.remove("is-expanded");
+        triggers.forEach((b) => b.classList.remove("active"));
+      }
+
+      triggers.forEach((btn) => {
+        btn.addEventListener("click", () => setPane(btn.getAttribute("data-support-open")));
+      });
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const name = tab.getAttribute("data-support-tab");
+          if (drawer) drawer.setAttribute("data-active-pane", "");
+          setPane(name);
+        });
+      });
+      closeBtn?.addEventListener("click", closeDrawer);
+    }
+
     let currentAttachment = { base64: null, fileName: null };
 
     // Self-Service Advice Repository
     const adviceMap = {
       "windows-store": {
-        title: "⚡ Instant Fix: Microsoft Store Download Stuck or Error 0x80070005",
+        title: "⚡ Fix: Microsoft Store Download Stuck or Error 0x80070005",
         steps: [
-          "<b>Reset Microsoft Store Cache:</b> Press <kbd>Win + R</kbd>, type <code>wsreset.exe</code> and press <kbd>Enter</kbd>. Wait 30 seconds for the store window to re-open automatically.",
+          "<b>Reset Microsoft Store Cache:</b> Press <kbd>Win + R</kbd>, type <code>wsreset.exe</code> and press <kbd>Enter</kbd>. Wait 30 seconds for the store window to re-open.",
           "<b>Install via Windows Terminal (PowerShell):</b><br><code>winget install \"Native Espresso.TransTitle\"</code>",
-          "<b>Need offline package?</b> If your organization restricts Microsoft Store, submit the form below to receive a direct signed <code>.msixbundle</code> offline installer."
+          "<b>Need offline package?</b> Submit a support ticket to request a signed offline installer."
         ]
       },
       "android-install": {
-        title: "⚡ Instant Fix: Google Play Closed Testing Track Not Showing App",
+        title: "⚡ Fix: Google Play Closed Testing Track Not Showing App",
         steps: [
-          "<b>Verify Account:</b> Ensure your phone is logged into Google Play using the <b>exact same email</b> registered in our testing queue.",
-          "<b>Wait for CDN Propagation:</b> After accepting the web invite, Google Play CDN permissions take 5–10 minutes to propagate to your Android device.",
-          "<b>Clear Play Store Cache:</b> On Android, go to <i>Settings → Apps → Google Play Store → Storage → Clear Cache</i>, then re-open the invite link."
+          "<b>Verify Account:</b> Ensure Google Play on your phone is signed into the <b>exact email</b> approved for that app.",
+          "<b>Accept Web Opt-In First:</b> Visit the product's page, click <b>Join via Web</b>, then wait 5–10 minutes for Play Store propagation.",
+          "<b>Clear Play Store Cache:</b> On Android, open <i>Settings → Apps → Google Play Store → Storage → Clear Cache</i>, then open <b>Join via Android</b>."
         ]
       },
       "audio-permission": {
-        title: "⚡ Audio Recording & Storage Access",
+        title: "⚡ Microphone & Local Storage Access",
         steps: [
-          "<b>Microphone Access:</b> Android and Windows require explicit microphone permission for real-time speech and acoustic analysis.",
-          "<b>100% Offline Guarantee:</b> We never upload audio to remote servers. Granting permission only connects your hardware microphone to the local silicon DSP engine."
+          "<b>Explicit Permission Required:</b> Android requires microphone or media storage permission to read local files and analyze voice audio.",
+          "<b>100% On-Device Guarantee:</b> Audio never leaves your hardware. Permissions connect strictly to the local processing engine."
         ]
       },
       "app-crash": {
-        title: "⚡ App Crashes on Startup or Launch Error",
+        title: "⚡ Startup Crash or Processing Error",
         steps: [
-          "<b>Verify Hardware Requirements:</b> Trans-Title and Echo Cleaner require Android 8.0+ (ARM64 / x86_64) or Windows 10/11 Build 19041+.",
-          "<b>Attach Crash Details:</b> Use the dropzone below to attach a screenshot or log file so our engineering team can isolate the fault."
+          "<b>Check System Requirements:</b> Android 8.0+ (64-bit) or Windows 10/11 (Build 19041+) for desktop builds.",
+          "<b>Share Diagnostics:</b> Attach a screenshot, short clip, or crash log using the support form so we can isolate the issue quickly."
         ]
       },
       "general": {
-        title: "💡 General Questions & Feature Suggestions",
+        title: "💡 General Studio Inquiries & Feedback",
         steps: [
-          "We read every suggestion from our testing community! Submit your thoughts below and we'll reply within 24 hours."
+          "For partnerships, privacy questions, closed testing account help, or general feedback, submit a general ticket or email <code>native.espresso@gmail.com</code>."
         ]
       }
     };
 
-    // Render interactive symptom pills if container exists
-    if (pillsContainer) {
-      const pills = [
-        { id: "windows-store", icon: "🪟", label: "Windows Store Stuck" },
+    const scopePills = {
+      "company": [
+        { id: "android-install", icon: "🤖", label: "Closed Testing Access" },
+        { id: "windows-store", icon: "🪟", label: "Store Downloads" },
+        { id: "general", icon: "💬", label: "Studio Inquiry" }
+      ],
+      "trans-title": [
         { id: "android-install", icon: "🤖", label: "Play Store Track" },
-        { id: "audio-permission", icon: "🎙️", label: "Audio Permission" },
+        { id: "windows-store", icon: "🪟", label: "Windows Store Stuck" },
+        { id: "audio-permission", icon: "🎙️", label: "Media Permissions" },
         { id: "app-crash", icon: "⚡", label: "App Crashes" },
-        { id: "general", icon: "💬", label: "General Feedback" }
-      ];
+        { id: "general", icon: "💬", label: "Trans-Title Feedback" }
+      ],
+      "echo-cleaner": [
+        { id: "android-install", icon: "🤖", label: "Play Store Track" },
+        { id: "audio-permission", icon: "🎙️", label: "Mic & Storage Access" },
+        { id: "app-crash", icon: "⚡", label: "Audio / App Crash" },
+        { id: "general", icon: "💬", label: "Echo Cleaner Feedback" }
+      ]
+    };
 
+    if (pillsContainer) {
+      const pills = scopePills[scope] || scopePills["company"];
       pillsContainer.innerHTML = pills.map((p) => `
         <button type="button" class="symptom-pill" data-pill-id="${p.id}">
           <span class="pill-ico">${p.icon}</span>
@@ -907,7 +1724,6 @@
 
           const id = btn.getAttribute("data-pill-id");
           if (categorySelect) categorySelect.value = id;
-
           showAdvice(id);
         });
       });
@@ -958,7 +1774,7 @@
           descField.value = descField.value.trim() + specs;
         }
         autoDetectBtn.textContent = "✓ Specs Appended";
-        setTimeout(() => { autoDetectBtn.textContent = "⚡ Auto-Detect OS & Device"; }, 2500);
+        setTimeout(() => { autoDetectBtn.textContent = "⚡ Auto-Detect Device Info"; }, 2500);
       });
     }
 
@@ -1010,11 +1826,11 @@
 
           filePreview.innerHTML = `
             <div class="file-chip">
-              <span>${isVideo ? "🎬 Video:" : "📎"} ${file.name} (${sizeStr})</span>
+              <span>${isVideo ? "🎬 Video:" : "📎"} ${escapeHtml(file.name)} (${sizeStr})</span>
               <button type="button" class="chip-remove" data-remove-file title="Remove file">✕</button>
             </div>
             ${isImg ? `<img src="${e.target.result}" class="preview-thumb" alt="Upload thumbnail" />` : ""}
-            ${isVideo ? `<div style="font-size:0.75rem;color:var(--muted);margin-top:2px;">🎬 Video clip ready for Azure Blob Storage upload</div>` : ""}
+            ${isVideo ? `<div style="font-size:0.75rem;color:var(--muted);margin-top:2px;">🎬 Video clip ready for upload</div>` : ""}
           `;
           filePreview.querySelector("[data-remove-file]")?.addEventListener("click", () => {
             currentAttachment = { base64: null, fileName: null };
@@ -1035,8 +1851,8 @@
         submitBtn.innerHTML = `<span>Submitting to Cloud...</span>`;
 
         const email = issueForm.querySelector("[name='email']").value.trim();
-        const appId = issueForm.querySelector("[name='appId']")?.value || "trans-title";
-        const platform = issueForm.querySelector("[name='platform']")?.value || "Android";
+        const appId = issueForm.querySelector("[name='appId']")?.value || scope || "company";
+        const platform = issueForm.querySelector("[name='platform']")?.value || "General";
         const category = categorySelect ? categorySelect.value : "general";
         const description = issueForm.querySelector("[name='description']").value.trim();
         const appName = APP_CONFIG[appId]?.name || (appId === "trans-title" ? "Trans-Title" : appId === "echo-cleaner" ? "Echo Cleaner" : "General / Studio");
@@ -1044,12 +1860,12 @@
         const ticketNum = "NE-" + Math.random().toString(36).substring(2, 10).toUpperCase();
 
         const payload = {
-          email: email,
-          appId: appId,
-          appName: appName,
-          platform: platform,
-          category: category,
-          description: description,
+          email,
+          appId,
+          appName,
+          platform,
+          category,
+          description,
           attachmentBase64: currentAttachment.base64,
           attachmentFileName: currentAttachment.fileName
         };
@@ -1068,10 +1884,11 @@
 
         saveLocalIssue({
           ticketNumber: ticketNum,
-          email: email,
-          appId: appId,
-          platform: platform,
-          category: category,
+          email,
+          appId,
+          appName,
+          platform,
+          category,
           status: "Open",
           submittedAt: new Date().toLocaleDateString()
         });
@@ -1079,8 +1896,8 @@
         if (issueAlert) {
           issueAlert.innerHTML = `
             <div class="alert-success">
-              <b>✓ Ticket #${ticketNum} Logged Successfully</b>
-              <p>Your issue has been recorded directly in our studio diagnostic backlog. A confirmation email has been queued for <strong>${email}</strong>, and an engineer will review your hardware environment.</p>
+              <b>✓ Ticket #${escapeHtml(ticketNum)} Logged Successfully</b>
+              <p>Your report for <strong>${escapeHtml(appName)}</strong> has been recorded. A confirmation email has been queued for <strong>${escapeHtml(email)}</strong>.</p>
             </div>
           `;
         }
@@ -1094,13 +1911,14 @@
       });
     }
 
-    // Ticket Lookup Tab
+    // Ticket Lookup
     const lookupForm = portal.querySelector("[data-lookup-form]");
     const lookupResult = portal.querySelector("[data-lookup-result]");
     if (lookupForm && lookupResult) {
       lookupForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const query = lookupForm.querySelector("[name='ticketQuery']").value.trim().toUpperCase();
+        if (!query) return;
         const localIssues = getLocalIssues();
         const match = localIssues.find((i) => i.ticketNumber.toUpperCase() === query || i.email.toUpperCase() === query);
 
@@ -1108,17 +1926,17 @@
           lookupResult.innerHTML = `
             <div class="ticket-status-card">
               <div class="tsc-head">
-                <span class="tsc-num">#${match.ticketNumber}</span>
-                <span class="tsc-badge">${match.status}</span>
+                <span class="tsc-num">#${escapeHtml(match.ticketNumber)}</span>
+                <span class="tsc-badge">${escapeHtml(match.status)}</span>
               </div>
-              <p class="tsc-detail">App: <b>${match.appId}</b> · Platform: <b>${match.platform}</b> · Submitted: <b>${match.submittedAt}</b></p>
-              <p class="tsc-note">Our development team in Sargodha is actively inspecting this ticket. You will receive progress notifications directly to <b>${match.email}</b>.</p>
+              <p class="tsc-detail">App: <b>${escapeHtml(match.appName || match.appId)}</b> · Platform: <b>${escapeHtml(match.platform)}</b> · Submitted: <b>${escapeHtml(match.submittedAt)}</b></p>
+              <p class="tsc-note">Our studio is reviewing this ticket. Progress updates will be sent to <b>${escapeHtml(match.email)}</b>.</p>
             </div>
           `;
         } else {
           lookupResult.innerHTML = `
             <div class="ticket-status-card not-found">
-              <p>No local record found for <strong>${query}</strong>. If you recently submitted on another device, check your email inbox for the confirmation ticket link.</p>
+              <p>No local record found for <strong>${escapeHtml(query)}</strong>. If submitted on another device, check your email inbox for your confirmation ticket.</p>
             </div>
           `;
         }
@@ -1127,15 +1945,17 @@
   }
 
   /* ==========================================================================
-     5. Bootloader on DOM Ready
+     7. Bootloader on DOM Ready
      ========================================================================== */
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      initTestingQueue();
-      initSupportPortal();
-    });
-  } else {
-    initTestingQueue();
+  function boot() {
+    initStudioBetaWidgets();
+    initProductBetaWidgets();
     initSupportPortal();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
   }
 })();

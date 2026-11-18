@@ -64,11 +64,21 @@
     addEventListener("keydown", e => e.key === "Escape" && close());
   }
 
-  /* scroll reveals */
+  /* scroll reveals (bulletproof against hash jumps & tall sections) */
+  const revealAllVisible = () => {
+    const vh = window.innerHeight || document.documentElement.clientHeight || 900;
+    $$(".reveal:not(.in)").forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < vh + 40) el.classList.add("in");
+    });
+  };
   const io = new IntersectionObserver(es => es.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
-  }), { threshold: .15 });
+  }), { threshold: 0.01, rootMargin: "0px 0px 40px 0px" });
   $$(".reveal").forEach(el => io.observe(el));
+  revealAllVisible();
+  addEventListener("hashchange", () => setTimeout(revealAllVisible, 60));
+  addEventListener("scroll", revealAllVisible, { passive: true });
 
   /* active section in nav */
   const secIO = new IntersectionObserver(es => es.forEach(e => {

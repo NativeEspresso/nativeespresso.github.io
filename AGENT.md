@@ -113,9 +113,21 @@ The host environment has verified access to the following runtimes in `PATH`:
 
 ---
 
-## 7. Associated Source Projects [READ_ONLY]
+## 7. Project Hierarchy: Core, Linear Secondary & `[READ_ONLY]` Secondary Projects
 
-The following local repositories contain the production source code and development assets for the applications hosted and showcased on this web portal. AI agents and developers may read, analyze, and inspect these directories for technical context, feature sets, audio/AI pipelines, and privacy compliance requirements, but **MUST NOT modify, create, or delete** any files within them from this web repository:
+### Primary / Core Project
+* `C:\Projects\Web\Native-Espresso` (`NativeEspresso/nativeespresso.github.io`)
+  * **Native Espresso Web Portal**: The actual core / primary project hosting the studio hub, product showcase pages, legal policies, and client integrations.
+
+### Linear Secondary Projects (Editable As Needed)
+* `C:\Projects\Azure\Native-Espresso-Backend` (`NativeEspresso/Native-Espresso-Backend`)
+  * **Cloud Backend (Azure)**: Private .NET 10 Isolated Worker serverless API deployed via Azure Functions, powering the web portal and admin tooling.
+* `C:\Projects\WinUI\Native-Espresso` (`ChTalhaArain/Native-Espresso`, `master` branch)
+  * **Admin / Administrative App (WinUI 3 Studio Control Center)**: Linear secondary desktop administrative project. **Allowed to be edited as needed, but not always** — typically updated only when the Azure backend changes (e.g., new endpoints, DTOs, or admin workflows).
+
+### Associated Source Projects (`[READ_ONLY]` Secondary Projects)
+
+The following local repositories are secondary reference projects containing the production source code and development assets for the applications showcased on this web portal. AI agents and developers may read, analyze, and inspect these directories for technical context, feature sets, audio/AI pipelines, and privacy compliance requirements, but **MUST NOT modify, create, or delete** any files within them from this web repository:
 
 * `C:\Projects\Android\Trans-Title` `[READ_ONLY]`
   * **Trans-Title (Android)**: Native Android source code for on-device transcription, subtitle generation (SRT/VTT), multi-track Cross-Play orchestration, and Media3 players.
@@ -125,7 +137,7 @@ The following local repositories contain the production source code and developm
   * **Echo Cleaner**: Kotlin Multiplatform / Android source code for on-device neural audio enhancement, acoustic de-reverberation, and noise suppression.
 
 > [!IMPORTANT]
-> **Strict Read-Only Access**: Treat `C:\Projects\Android\Trans-Title`, `C:\Projects\WinUI\Trans-Title`, and `C:\Projects\KMP\Echo-Cleaner` strictly as read-only references (`[READ_ONLY]`). Do not run write, edit, stage, or git operations against those project paths from the `Native-Espresso` web workspace.
+> **Strict Read-Only Access**: Treat `C:\Projects\Android\Trans-Title`, `C:\Projects\WinUI\Trans-Title`, and `C:\Projects\KMP\Echo-Cleaner` strictly as read-only secondary references (`[READ_ONLY]`). Do not run write, edit, stage, or git operations against those project paths from the `Native-Espresso` web workspace.
 
 ---
 
@@ -237,7 +249,8 @@ Stored in `assets/branding/` for developer page upload:
 
 ## 12. Cloud Integration, Multi-App Registry, Email Alerts & WinUI 3 Control Center
 
-### Isolated Private Serverless Backend (`C:\Projects\Web\Native-Espresso-Backend`):
+### Isolated Private Serverless Backend (`C:\Projects\Azure\Native-Espresso-Backend`):
+* **Role**: Linear secondary project deployed via Azure Functions.
 * **Repository**: `https://github.com/NativeEspresso/Native-Espresso-Backend` (Private, `main` branch — completely decoupled from the public GitHub Pages repo).
 * **Runtime**: C# **.NET 10.0 (LTS)** Isolated Worker Model on **Azure Functions Flex Consumption** (Linux Ubuntu 24.04, 512 MB instance, Central US).
 * **Live Base URL**: `https://native-espresso-web-function-epbhdxbxbybte6bz.centralus-01.azurewebsites.net` (CORS whitelisted for `https://nativeespresso.github.io`).
@@ -262,7 +275,8 @@ Stored in `assets/branding/` for developer page upload:
    * Independent web fail-safe for when in-app Android/Windows reporting is unreachable or store downloads fail.
    * Instant self-service advice (`wsreset.exe`, `winget`, Play Store cache), OS auto-detect, drag-and-drop image/log/video upload (up to 15 MB), and direct submission to `POST /api/support/report-issue` with explicit `appId` + `appName`.
 
-### Native Desktop Studio Control Center (`C:\Projects\WinUI\Native-Espresso`):
+### Native Desktop Admin / Studio Control Center (`C:\Projects\WinUI\Native-Espresso`):
+* **Role**: Linear secondary administrative project — editable as needed, though not on every web update (usually synced when the Azure backend is updated).
 * **Repository**: `https://github.com/ChTalhaArain/Native-Espresso` (Private, `master` branch).
 * **Framework**: Packaged WinUI 3 (.NET 10, Mica backdrop) authenticating against `/api/studio/*` using constant-time `X-Admin-Key` validation stored in **Windows Credential Locker (`PasswordVault`)**.
 * **Modules**: **Overview** (live cloud health & KPIs), **Closed Testing** (dynamic app filters, 1-click Play Console comma/line copy, bulk VIP approve), **Support Issues** (master-detail triage + blob attachment launcher), **Apps & Links** (add future apps, activate Closed Testing, update Web & Android links anytime), and **Settings**.
