@@ -6,6 +6,10 @@ This file serves as the single source of truth for ongoing development, complete
 
 ## 🟢 1. Completed Work
 
+* [x] **Atelier Glass & Ambient Light Luxury UI/UX Overhaul (All 7 Pages)**:
+  * Upgraded Company Hub (`index.html`, `assets/company.css`), Trans-Title showcase (`trans-title/`, `assets/trans-title.css`), Echo Cleaner showcase (`echo-cleaner/`, `assets/style.css`), and all legal pages with specular glassmorphism, ambient light orbs, architectural grid veils, channel-strip section notches, cursor-reactive spotlight sheen, magnetic CTA micro-interactions, top scroll-progress filament, staggered scroll choreography, smooth theme-switch icon transitions, active legal TOC highlighting, and theme-aware oscilloscope rendering in `assets/main.js`.
+  * Updated Company Hub navbar & favicon mark to the authentic "Extracted Shot" crema + lightning emblem and synchronized IP-cloaked product highlights with the latest Android/KMP release notes.
+  * Added live top-of-hero Closed Testing telemetry strips (`[data-studio-live-banner]`, `[data-hero-countdown]`) displaying real-time 1-second running & remaining cycle timers and one-click `+ Join Running Cycle` enrollment for active and follow-up testing windows.
 * [x] **Company Hub & Portal Architecture**:
   * Root `index.html` as the studio portal with app showcases, technology philosophy, and multi-platform status matrix.
   * Dedicated app directories (`trans-title/` and `echo-cleaner/`) with independent `index.html`, `privacy.html`, and `terms.html`.

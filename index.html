@@ -5,28 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Native Espresso — Independent On-Device Software Studio</title>
 <meta name="description" content="Independent software studio crafting native apps and on-device intelligence. Private by architecture, fast on local silicon, zero cloud surveillance.">
-<meta name="theme-color" content="#07090e">
+<meta name="theme-color" content="#05070c">
 <meta property="og:title" content="Native Espresso — Independent On-Device Software Studio">
 <meta property="og:description" content="Independent software studio building native apps and on-device tools. 100% private, zero uploads.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2307090e'/%3E%3Cpath d='M7 11h14v8a5 5 0 0 1-5 5h-4a5 5 0 0 1-5-5v-8z' stroke='%23f59e0b' stroke-width='2' fill='none'/%3E%3Cpath d='M21 13h2a3 3 0 0 1 3 3v0a3 3 0 0 1-3 3h-2' stroke='%23f59e0b' stroke-width='2' fill='none'/%3E%3Cpath d='M10 6c0 1.5 2 2 2 3M14 6c0 1.5 2 2 2 3M18 6c0 1.5 2 2 2 3' stroke='%23fbbf24' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230d0805'/%3E%3Cg transform='translate(-14,7)'%3E%3Cpath d='M136 252 A120 120 0 0 0 376 252 Z' fill='%23f59e0b'/%3E%3Crect x='124' y='236' width='264' height='16' rx='8' fill='%23fcd34d'/%3E%3Cpath d='M380 268 A40 40 0 0 1 380 348' fill='none' stroke='%23f59e0b' stroke-width='20' stroke-linecap='round'/%3E%3Crect x='150' y='396' width='212' height='14' rx='7' fill='%23b45309'/%3E%3Cpath d='M286 88 L214 238 L252 238 L218 344 L306 204 L266 204 L312 88 Z' fill='%230d0805'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/company.css?v=20261118b">
+<link rel="stylesheet" href="assets/company.css?v=20261118e">
 <script>(()=>{const t=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t)})();</script>
 </head>
 <body>
+<div class="grain" aria-hidden="true"></div>
 
 <!-- HEADER / NAV -->
 <header class="nav" id="top">
   <div class="wrap nav-in">
     <a class="brand" href="#top" aria-label="Native Espresso Home">
-      <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
-        <rect width="32" height="32" rx="7" fill="none" stroke="currentColor" stroke-opacity=".28"/>
-        <path d="M7 12h13v7a4 4 0 0 1-4 4h-5a4 4 0 0 1-4-4v-7z" stroke="currentColor" stroke-width="2" fill="none"/>
-        <path d="M20 14h2a2.5 2.5 0 0 1 2.5 2.5v0A2.5 2.5 0 0 1 22 19h-2" stroke="currentColor" stroke-width="2" fill="none"/>
-        <path d="M10 7c0 1.2 1.5 1.8 1.5 2.6M14 7c0 1.2 1.5 1.8 1.5 2.6M18 7c0 1.2 1.5 1.8 1.5 2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/>
-      </svg>
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="96 76 340 346" width="21" height="21">
+          <g transform="translate(-14,7)">
+            <path d="M136 252 A120 120 0 0 0 376 252 Z" fill="var(--espresso)"/>
+            <rect x="124" y="236" width="264" height="16" rx="8" fill="var(--espresso-gold)"/>
+            <path d="M380 268 A40 40 0 0 1 380 348" fill="none" stroke="var(--espresso)" stroke-width="24" stroke-linecap="round"/>
+            <rect x="150" y="396" width="212" height="16" rx="8" fill="var(--espresso-deep)"/>
+            <path d="M286 88 L214 238 L252 238 L218 344 L306 204 L266 204 L312 88 Z" fill="var(--bg)"/>
+          </g>
+        </svg>
+      </span>
       <span>Native&nbsp;Espresso</span>
     </a>
 
@@ -45,14 +51,24 @@
 </header>
 
 <main>
-<!-- HERO -->
+<!-- ATELIER HERO -->
 <section class="hero">
+  <div class="hero-grid-bg" aria-hidden="true"></div>
+  <div class="orb orb-a" aria-hidden="true"></div>
+  <div class="orb orb-b" aria-hidden="true"></div>
+  <div class="wrap live-testing-top" data-studio-live-banner hidden></div>
   <div class="wrap hero-in">
-    <span class="kicker rise" style="--d:0">Independent Software Studio · On-Device Engineering</span>
+    <div class="hero-kicker-pill rise" style="--d:0">
+      <span class="pulse-dot-green" aria-hidden="true"></span>
+      <span>Independent Software Studio · On-Device Engineering</span>
+    </div>
     <h1 class="rise" style="--d:1">Native Apps.<br><span class="grad">Engineered On-Device.</span></h1>
-    <p class="lede rise" style="--d:2">Native Espresso builds focused, high-performance apps and on-device tools that run directly on your hardware — fast, offline-first, and free from cloud surveillance.</p>
+    <p class="lede rise" style="--d:2">Native Espresso crafts focused, high-performance apps and on-device intelligence that run directly on your silicon — tactile, offline-first, and built without cloud surveillance.</p>
     <div class="hero-cta rise" style="--d:3">
-      <a class="btn btn-primary" href="#products">Browse Products</a>
+      <a class="btn btn-primary" href="#products">
+        <span>Browse Products</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
       <a class="btn btn-ghost" href="#closed-testing">Join Closed Testing</a>
     </div>
     <ul class="hero-strip rise" style="--d:4">
@@ -63,20 +79,23 @@
   </div>
 </section>
 
-<!-- COMPACT PRODUCT DIRECTORY -->
+<!-- PRODUCT PORTFOLIO GALLERY -->
 <section id="products" class="section">
   <div class="wrap">
     <div class="section-head reveal">
       <div>
         <span class="kicker">Portfolio</span>
-        <h2>Products</h2>
+        <div class="section-head-title">
+          <span class="channel-notch" aria-hidden="true"></span>
+          <h2>Products</h2>
+        </div>
       </div>
-      <p class="muted" style="font-size:0.9rem;">Select a product to view platform status, features, demos, and download access.</p>
+      <p class="muted" style="font-size:0.9rem;">Select a product to explore features, live platform status, interactive previews, and store access.</p>
     </div>
 
     <div class="product-list reveal" data-product-directory>
       <!-- TRANS-TITLE -->
-      <a class="product-row" href="trans-title/" data-product-row="trans-title">
+      <a class="product-row" href="trans-title/" data-product-row="trans-title" style="--row-accent:#9b72e8">
         <div class="product-icon" style="--item-accent:#9b72e8" aria-hidden="true">
           <svg viewBox="0 0 32 32" width="24" height="24" fill="none">
             <rect x="4" y="6" width="24" height="20" rx="4" stroke="currentColor" stroke-width="2.1"/>
@@ -88,7 +107,7 @@
             <h3>Trans-Title</h3>
             <span data-row-access="trans-title"></span>
           </div>
-          <p>On-device multimedia studio for speech transcription, subtitle translation, and multi-track playback.</p>
+          <p>Flagship on-device multimedia studio for 4-tier speech transcription, neural subtitle translation, Cross-Play orchestration, and OLED playback.</p>
         </div>
         <div class="product-platforms" aria-label="Target platforms">
           <span class="platform-chip">
@@ -108,7 +127,7 @@
       </a>
 
       <!-- ECHO CLEANER -->
-      <a class="product-row" href="echo-cleaner/" data-product-row="echo-cleaner">
+      <a class="product-row" href="echo-cleaner/" data-product-row="echo-cleaner" style="--row-accent:#22d3ee">
         <div class="product-icon" style="--item-accent:#22d3ee" aria-hidden="true">
           <svg viewBox="0 0 32 32" width="24" height="24" fill="none">
             <path d="M5 16h3l2.2-6.5L13.5 22l3.3-15 3.2 13.5 2-4.5H27" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -119,7 +138,7 @@
             <h3>Echo Cleaner</h3>
             <span data-row-access="echo-cleaner"></span>
           </div>
-          <p>Offline acoustic voice processor for echo suppression, noise reduction, and room de-reverberation.</p>
+          <p>Offline acoustic voice studio with dual neural engines for echo cancellation, noise suppression, room de-reverberation, and live A/B comparison.</p>
         </div>
         <div class="product-platforms" aria-label="Target platforms">
           <span class="platform-chip">
@@ -141,7 +160,7 @@
       <!-- LAB / MORE FOOTER ROW -->
       <div class="product-row-muted">
         <div class="product-row-muted-left">
-          <span class="mono" style="color:var(--espresso);">R&amp;D</span>
+          <span class="rd-badge">R&amp;D LAB</span>
           <span>More offline-first utilities and on-device experiments in active research.</span>
         </div>
         <div class="product-row-muted-links">
@@ -158,9 +177,12 @@
     <div class="section-head reveal">
       <div>
         <span class="kicker">Early Access</span>
-        <h2>Closed Testing Program</h2>
+        <div class="section-head-title">
+          <span class="channel-notch" aria-hidden="true"></span>
+          <h2>Closed Testing Program</h2>
+        </div>
       </div>
-      <p class="muted" style="font-size:0.9rem;">Register once for one, several, or all studio apps — then unlock store links on each product page.</p>
+      <p class="muted" style="font-size:0.9rem;">Register once for one, several, or all studio apps — then unlock store links &amp; QR passes on each product page.</p>
     </div>
 
     <div class="reveal" data-studio-beta-widget></div>
@@ -280,35 +302,38 @@
     <div class="section-head reveal">
       <div>
         <span class="kicker">Philosophy</span>
-        <h2>The Native Espresso Standard</h2>
+        <div class="section-head-title">
+          <span class="channel-notch" aria-hidden="true"></span>
+          <h2>The Native Espresso Standard</h2>
+        </div>
       </div>
     </div>
 
-    <div class="studio-grid reveal">
+    <div class="studio-grid">
       <div class="principle-grid">
-        <article class="principle-item">
+        <article class="principle-item reveal">
           <h3><i class="dot dot-green"></i>100% On-Device</h3>
-          <p>Proprietary neural engines and DSP pipelines run directly on client silicon — never on remote servers.</p>
+          <p>Proprietary neural engines and hardware-accelerated DSP pipelines run directly on client silicon — never on remote servers.</p>
         </article>
-        <article class="principle-item">
+        <article class="principle-item reveal">
           <h3><i class="dot dot-amber"></i>Zero Surveillance</h3>
-          <p>No behavioral profiling, no silent uploads, and no data brokers. Your media stays yours.</p>
+          <p>No behavioral profiling, no silent uploads, and no data brokers. Your audio, video, and transcripts stay strictly yours.</p>
         </article>
-        <article class="principle-item">
+        <article class="principle-item reveal">
           <h3><i class="dot dot-blue"></i>Offline by Default</h3>
-          <p>Core workflows operate cleanly in airplane mode without account walls or cloud dependencies.</p>
+          <p>Core studio workflows operate cleanly in airplane mode without account walls, sign-in friction, or cloud dependencies.</p>
         </article>
-        <article class="principle-item">
+        <article class="principle-item reveal">
           <h3><i class="dot dot-green"></i>Fair &amp; Transparent</h3>
-          <p>Clear free tiers and honest one-time Pro upgrades — no hidden subscription traps.</p>
+          <p>Generous free tiers and honest Pro upgrades — engineered for craft and longevity rather than hidden subscription traps.</p>
         </article>
       </div>
 
-      <aside class="contact-card">
+      <aside class="contact-card reveal">
         <div>
           <span class="kicker" style="margin-bottom:6px;">Direct Contact</span>
           <h3>Talk to the Studio</h3>
-          <p>Independent software studio focused on native performance and on-device privacy. Reach out directly for partnerships, privacy inquiries, or product feedback.</p>
+          <p>Independent software studio focused on native 120Hz performance and on-device privacy. Reach out directly for partnerships, privacy inquiries, or product feedback.</p>
           <div class="contact-meta">native.espresso@gmail.com</div>
         </div>
         <div class="contact-actions">
@@ -353,7 +378,7 @@
   </div>
 </footer>
 
-<script src="assets/main.js"></script>
-<script src="assets/cloud-client.js?v=20261118d"></script>
+<script src="assets/main.js?v=20261118e"></script>
+<script src="assets/cloud-client.js?v=20261118e"></script>
 </body>
 </html>

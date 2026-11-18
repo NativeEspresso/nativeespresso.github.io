@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Echo Cleaner — Studio-clear voice, 100% offline</title>
-<meta name="description" content="Echo Cleaner removes echo, noise and reverb and boosts your voice — entirely on-device. No uploads. Android.">
-<meta name="theme-color" content="#07090f">
+<meta name="description" content="Echo Cleaner removes echo, noise and reverb and boosts your voice — entirely on-device with dual neural acoustic engines. No uploads. Android.">
+<meta name="theme-color" content="#090d13">
 <meta property="og:title" content="Echo Cleaner — Studio-clear voice, 100% offline">
-<meta property="og:description" content="AI voice enhancement that never leaves your device.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2307090f'/%3E%3Cpath d='M6 16h3l2-6 3 12 3-16 3 14 2-4h4' stroke='%2322d3ee' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<meta property="og:description" content="On-device neural voice enhancement that never leaves your device.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23090d13'/%3E%3Cpath d='M6 16h3l2-6 3 12 3-16 3 14 2-4h4' stroke='%2322d3ee' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="../assets/style.css?v=20261118c">
+<link rel="stylesheet" href="../assets/style.css?v=20261118e">
 <script>(()=>{const t=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t)})();</script>
 </head>
 <body>
@@ -19,13 +19,13 @@
 
 <header class="nav" id="top">
   <div class="wrap nav-in">
-    <div style="display:flex;align-items:center;gap:10px;">
-      <a class="brand" href="../index.html" title="Back to Native Espresso Home" style="opacity:.8;font-size:.95rem;">
+    <div class="nav-crumbs">
+      <a class="brand brand-parent" href="../index.html" title="Back to Native Espresso Home">
         <span>Native Espresso</span>
       </a>
-      <span style="color:var(--line);font-weight:300;">/</span>
+      <span class="crumb-sep">/</span>
       <a class="brand" href="#top" aria-label="Echo Cleaner home">
-        <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="7" fill="none" stroke="currentColor" stroke-opacity=".25"/><path d="M6 16h3l2-6 3 12 3-16 3 14 2-4h4" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="7" fill="none" stroke="currentColor" stroke-opacity=".28"/><path d="M6 16h3l2-6 3 12 3-16 3 14 2-4h4" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>Echo&nbsp;Cleaner</span>
       </a>
     </div>
@@ -48,12 +48,17 @@
 <main>
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-grid-bg" aria-hidden="true"></div>
   <div class="orb orb-a" aria-hidden="true"></div>
   <div class="orb orb-b" aria-hidden="true"></div>
+  <div class="wrap live-testing-top" data-hero-countdown="echo-cleaner" hidden></div>
   <div class="wrap hero-in">
-    <p class="kicker rise" style="--d:0">On-Device Neural Audio Studio</p>
+    <div class="hero-kicker-pill rise" style="--d:0">
+      <i class="dot dot-cyan" aria-hidden="true"></i>
+      <span>On-Device Neural Audio Studio · Dual Acoustic Engines</span>
+    </div>
     <h1 class="rise" style="--d:1">Studio-clear voice.<br><span class="grad">Zero uploads.</span></h1>
-    <p class="lede rise" style="--d:2">Echo Cleaner strips echo, background noise and room reverb — then boosts and clarifies your voice. Every sample is processed on your phone. Nothing ever leaves it.</p>
+    <p class="lede rise" style="--d:2">Echo Cleaner strips room echo, background noise, and hollow reverb — then shapes and clarifies your voice with switchable Clean Room and Studio Pro engines. Every sample runs on your phone. Nothing ever leaves it.</p>
     <div class="platforms rise" style="--d:2.5;margin-bottom:18px;" data-app-platforms="echo-cleaner">
       <span class="platform-tag queue" data-platform-android><b>Android</b> Closed Testing Queue (Finalizing)</span>
       <span class="platform-tag"><b>iOS</b> In Planning</span>
@@ -61,17 +66,20 @@
     </div>
     <div data-app-access-banner="echo-cleaner" hidden style="margin-bottom:18px;"></div>
     <div class="hero-cta rise" style="--d:3">
-      <a class="btn btn-primary" href="#demo">Try the live demo</a>
+      <a class="btn btn-primary" href="#demo">
+        <span>Try the live demo</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
       <a class="btn btn-ghost" href="privacy.html">Read the privacy policy</a>
     </div>
     <ul class="chips rise" style="--d:4">
       <li><i class="dot dot-green"></i>100% offline</li>
-      <li><i class="dot dot-cyan"></i>Multi-Stage Neural Denoising</li>
-      <li><i class="dot dot-magenta"></i>No account required</li>
+      <li><i class="dot dot-cyan"></i>Clean Room &amp; Studio Pro Engines</li>
+      <li><i class="dot dot-magenta"></i>Live A/B Waveform Compare</li>
     </ul>
   </div>
   <svg class="hero-wave" id="heroWave" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
-    <defs><linearGradient id="hw" x1="0" x2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#4f7cff"/><stop offset="1" stop-color="#f43f7b"/></linearGradient></defs>
+    <defs><linearGradient id="hw" x1="0" x2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#38bdf8"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs>
     <path class="w1" d="M0 110 C 100 40 200 180 300 110 S 500 40 600 110 S 800 180 900 110 S 1100 40 1200 110" fill="none" stroke="url(#hw)" stroke-width="2.5"/>
     <path class="w2" d="M0 110 C 100 170 200 50 300 110 S 500 170 600 110 S 800 50 900 110 S 1100 170 1200 110" fill="none" stroke="url(#hw)" stroke-width="1.4" opacity=".45"/>
   </svg>
@@ -81,8 +89,11 @@
 <section id="demo" class="section" data-accent="cyan">
   <div class="wrap">
     <p class="kicker reveal">Interactive signal lab</p>
-    <h2 class="reveal">Hear what “clean” looks like</h2>
-    <p class="lede reveal">Drag the enhancement chain live. Magenta is the junk — echo, hiss and room tail. Watch it collapse as the on-device models do their job. Optionally play a synthesized before/after tone.</p>
+    <div class="section-title-row reveal">
+      <span class="channel-notch" aria-hidden="true"></span>
+      <h2>Hear what “clean” looks like</h2>
+    </div>
+    <p class="lede reveal">Drag the enhancement chain live. Rose is the unwanted room energy — echo, hiss, and reverb tail. Watch it collapse as the on-device neural pipeline isolates speech. Play a synthesized before/after preview tone anytime.</p>
     <div class="lab reveal">
       <div class="scope">
         <canvas id="wave" aria-label="Live waveform visualization of noisy versus enhanced signal"></canvas>
@@ -113,7 +124,7 @@
           <button class="btn btn-ghost btn-sm" id="btnReset">Reset</button>
           <button class="btn btn-ghost btn-sm" id="btnExport">Export PNG</button>
         </div>
-        <p class="console-note mono">Synthesized preview — the app runs real models on your audio, offline.</p>
+        <p class="console-note mono">Synthesized preview — the app runs real on-device acoustic engines on your recordings, offline.</p>
       </aside>
     </div>
   </div>
@@ -122,15 +133,18 @@
 <!-- FEATURES -->
 <section id="features" class="section" data-accent="green">
   <div class="wrap">
-    <p class="kicker reveal">The chain</p>
-    <h2 class="reveal">Four problems. One tap.</h2>
+    <p class="kicker reveal">The studio mixer</p>
+    <div class="section-title-row reveal">
+      <span class="channel-notch" aria-hidden="true"></span>
+      <h2>Precision acoustics. Instant auditioning.</h2>
+    </div>
     <div class="grid cards">
-      <article class="card reveal"><div class="ico" style="--c:var(--magenta)">◉</div><h3>Echo removal</h3><p>Speaker-to-mic echo and double-talk artifacts suppressed without thinning the voice.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--amber)">≋</div><h3>Noise reduction</h3><p>On-device neural denoising strips hiss, background hum, wind, traffic and crowd noise.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--blue)">⌁</div><h3>De-reverb</h3><p>Acoustic room model dries out room tail so recordings sound close-mic’d, not bathroom-mic’d.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--green)">↯</div><h3>Boost &amp; clarify</h3><p>Hardware-accelerated loudness shaping lifts quiet speech and keeps peaks controlled.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--cyan)">⛨</div><h3>Truly offline</h3><p>No network permission needed for processing. Your recordings are never uploaded, logged or shared.</p></article>
-      <article class="card reveal"><div class="ico" style="--c:var(--magenta)">✦</div><h3>Free &amp; Pro</h3><p>Start free with daily enhancements; go Pro for unlimited, ad-free processing.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--cyan)">◉</div><h3>Dual Acoustic Engines</h3><p>Switch between <strong>Clean Room</strong> and <strong>Studio Pro</strong> on-device neural audio engines with sub-second cached slider re-blending.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--green)">≋</div><h3>Noise &amp; Echo Removal</h3><p>Proprietary on-device neural denoising strips hiss, background hum, room echo, wind, and crowd bleed without thinning natural speech.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--blue)">⌁</div><h3>Room De-Reverberation</h3><p>Acoustic room modeling dries out hollow reflections so recordings sound intimate and close-mic’d rather than distant.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--magenta)">↯</div><h3>Live Waveform &amp; A/B Compare</h3><p>Inspect real-time audio envelopes and toggle instantly between original and enhanced audio to dial in exact voice clarity and bass warmth.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--amber)">🎙</div><h3>Record or Extract from Video</h3><p>Capture voice directly inside the app with pause/resume, import audio clips, or extract clean soundtracks straight from video files.</p></article>
+      <article class="card reveal"><div class="ico" style="--c:var(--cyan)">⛨</div><h3>100% Offline &amp; Pauseable Export</h3><p>Pause, resume, or cancel exports cleanly with zero leftover clutter — available across 12 languages with Light &amp; Dark studio themes.</p></article>
     </div>
   </div>
 </section>
@@ -139,11 +153,14 @@
 <section id="how" class="section" data-accent="blue">
   <div class="wrap">
     <p class="kicker reveal">Pipeline</p>
-    <h2 class="reveal">Import → enhance → export</h2>
+    <div class="section-title-row reveal">
+      <span class="channel-notch" aria-hidden="true"></span>
+      <h2>Record or import → enhance → export</h2>
+    </div>
     <ol class="steps">
-      <li class="reveal"><b class="mono">01</b><h3>Pick a recording</h3><p>Voice memo, interview, lecture, field recording — any audio on your device.</p></li>
-      <li class="reveal"><b class="mono">02</b><h3>On-device inference</h3><p>Proprietary acoustic de-reverberation and neural speech filters run locally with hardware acceleration.</p></li>
-      <li class="reveal"><b class="mono">03</b><h3>Export the clean take</h3><p>Save or share the enhanced file. The original stays untouched.</p></li>
+      <li class="reveal"><b class="mono">01</b><h3>Capture or pick media</h3><p>Record voice live, import any voice memo or podcast take, or extract audio directly from a local video file.</p></li>
+      <li class="reveal"><b class="mono">02</b><h3>On-device acoustic polish</h3><p>Proprietary neural de-reverberation, denoising, and hardware-accelerated loudness shaping run locally with instant A/B auditioning.</p></li>
+      <li class="reveal"><b class="mono">03</b><h3>Export the studio take</h3><p>Save or share your cleaned master with pause/resume export control — your original recording always stays untouched.</p></li>
     </ol>
   </div>
 </section>
@@ -152,7 +169,10 @@
 <section id="pricing" class="section" data-accent="magenta">
   <div class="wrap">
     <p class="kicker reveal">Simple, honest pricing</p>
-    <h2 class="reveal">Free to start. Pro when you need it.</h2>
+    <div class="section-title-row reveal">
+      <span class="channel-notch" aria-hidden="true"></span>
+      <h2>Free to start. Pro when you need it.</h2>
+    </div>
     <div class="grid plans">
       <article class="plan reveal">
         <h3>Free</h3><p class="price">$0</p>
@@ -162,18 +182,18 @@
           <li class="yes">Full enhancement chain</li>
           <li class="no">Contains ads</li>
         </ul>
-        <a class="btn btn-ghost" href="mailto:native.espresso@gmail.com?subject=Echo%20Cleaner%20closed%20testing">Join closed testing</a>
+        <a class="btn btn-ghost" href="#beta-queue">Join closed testing</a>
       </article>
       <article class="plan plan-pro reveal">
         <span class="tag">Recommended</span>
-        <h3>Pro</h3><p class="price">One purchase<span> · via Google Play</span></p>
+        <h3>Pro</h3><p class="price">Pro Access<span> · via Google Play</span></p>
         <ul>
           <li class="yes">Unlimited enhancements</li>
           <li class="yes">Zero ads, zero rewarded waits</li>
-          <li class="yes">Same 100% offline pipeline</li>
-          <li class="yes">Supports solo development</li>
+          <li class="yes">Same 100% offline neural pipeline</li>
+          <li class="yes">Supports independent engineering</li>
         </ul>
-        <a class="btn btn-primary" href="mailto:native.espresso@gmail.com?subject=Echo%20Cleaner%20Pro">Get Pro at launch</a>
+        <a class="btn btn-primary" href="#beta-queue">Join Closed Testing</a>
       </article>
     </div>
     <p class="privacy-strip reveal">⛨ Your audio never leaves your device — in either plan. <a href="privacy.html">Privacy policy</a> · <a href="terms.html">Terms</a></p>
@@ -184,8 +204,11 @@
 <section id="beta-queue" class="section" data-accent="cyan">
   <div class="wrap">
     <p class="kicker reveal">Closed Beta Program</p>
-    <h2 class="reveal">Join the Echo Cleaner Closed Testing Queue</h2>
-    <p class="lede reveal">Echo Cleaner is in final preparation for the Google Play Closed Testing track. Register below to test the acoustic neural pipeline on your microphone recordings and receive lifetime Pro perks.</p>
+    <div class="section-title-row reveal">
+      <span class="channel-notch" aria-hidden="true"></span>
+      <h2>Join the Echo Cleaner Closed Testing Queue</h2>
+    </div>
+    <p class="lede reveal">Echo Cleaner is in final preparation for the Google Play Closed Testing track. Register below to test the acoustic neural pipeline on your recordings and receive contributor perks.</p>
 
     <div style="margin-top:32px;">
       <div data-beta-widget data-app-id="echo-cleaner" data-app-name="Echo Cleaner" data-single-app="true"></div>
@@ -197,7 +220,10 @@
 <section id="support" class="section" data-accent="blue">
   <div class="wrap">
     <p class="kicker reveal">Troubleshooting &amp; Support</p>
-    <h2 class="reveal">Encountered an Issue with Echo Cleaner?</h2>
+    <div class="section-title-row reveal">
+      <span class="channel-notch" aria-hidden="true"></span>
+      <h2>Encountered an Issue with Echo Cleaner?</h2>
+    </div>
     <p class="lede reveal">If audio processing failed, a permission was blocked, or the closed testing invite did not appear — troubleshoot immediately or submit a diagnostic ticket directly to our engineers.</p>
 
     <div class="support-portal reveal" data-support-portal data-support-scope="echo-cleaner">
@@ -207,7 +233,7 @@
         <div>
           <h3 style="font-size:1.15rem;margin-bottom:8px;">Instant Diagnostic Solutions</h3>
           <p style="color:var(--muted);font-size:.92rem;margin-bottom:14px;">Select an Echo Cleaner scenario below for immediate resolution steps:</p>
-          
+
           <!-- Interactive Clickable Symptom Pills -->
           <div class="symptom-pills" data-symptom-pills></div>
 
@@ -258,7 +284,7 @@
                 <div class="dropzone-in">
                   <span class="drop-ico">📎</span>
                   <span>Drop error screenshot, video recording, or crash log here, or <u>browse</u></span>
-                  <span class="drop-hint">PNG, JPG, MP4, WEBM, TXT up to 15 MB · Ready for Azure Blob Storage</span>
+                  <span class="drop-hint">PNG, JPG, MP4, WEBM, TXT up to 15 MB · Secure Cloud Storage</span>
                 </div>
               </div>
               <div class="file-preview" data-file-preview></div>
@@ -292,13 +318,16 @@
 <section id="faq" class="section" data-accent="amber">
   <div class="wrap narrow">
     <p class="kicker reveal">Questions</p>
-    <h2 class="reveal">FAQ</h2>
+    <div class="section-title-row reveal">
+      <span class="channel-notch" aria-hidden="true"></span>
+      <h2>Frequently Asked Questions</h2>
+    </div>
     <div class="faq reveal">
-      <details><summary>Does Echo Cleaner upload my audio?</summary><p>No. All enhancement runs 100% on-device using our proprietary neural audio engine. Processing works fully in airplane mode.</p></details>
+      <details><summary>Does Echo Cleaner upload my audio?</summary><p>No. All enhancement runs 100% on-device using our proprietary neural audio engines. Processing works cleanly in airplane mode.</p></details>
       <details><summary>How does the free tier work?</summary><p>One free enhancement per day, plus two extra unlocks by watching a rewarded ad. Pro removes limits and ads.</p></details>
-      <details><summary>How does the enhancement engine work?</summary><p>Echo Cleaner processes audio through a multi-stage acoustic pipeline: acoustic echo cancellation, deep neural denoising, acoustic room de-reverberation, and hardware-accelerated dynamic range loudness shaping.</p></details>
-      <details><summary>Is my purchase tied to an account?</summary><p>No account needed. Pro is handled by Google Play Billing and restores with your Play account.</p></details>
-      <details><summary>How do I report a problem?</summary><p>Email <a href="mailto:native.espresso@gmail.com">native.espresso@gmail.com</a>. An in-app feedback form is coming; it will only send what you explicitly submit.</p></details>
+      <details><summary>How does the enhancement engine work?</summary><p>Echo Cleaner processes audio through a multi-stage acoustic pipeline: acoustic echo cancellation, on-device neural denoising, room de-reverberation, and hardware-accelerated dynamic loudness shaping — with switchable Clean Room and Studio Pro engines.</p></details>
+      <details><summary>Is my purchase tied to an account?</summary><p>No account needed. Pro is handled by Google Play Billing and restores automatically with your Play account.</p></details>
+      <details><summary>How do I report a problem?</summary><p>Use the <a href="#support">Support portal</a> above or email <a href="mailto:native.espresso@gmail.com">native.espresso@gmail.com</a>. We only receive what you explicitly submit.</p></details>
     </div>
   </div>
 </section>
@@ -316,7 +345,7 @@
   </div>
   <div class="wrap foot-base mono">© <span id="yr"></span> Native Espresso · Echo Cleaner · All audio stays on your device.</div>
 </footer>
-<script src="../assets/main.js"></script>
-<script src="../assets/cloud-client.js?v=20261118d"></script>
+<script src="../assets/main.js?v=20261118e"></script>
+<script src="../assets/cloud-client.js?v=20261118e"></script>
 </body>
 </html>

@@ -505,14 +505,19 @@
     const totalMs = days * 86400000;
     const endMs = startMs + totalMs;
     const nowMs = Date.now();
-    const remainingMs = endMs - nowMs;
-    const elapsedMs = Math.max(0, nowMs - startMs);
-    const pct = Math.min(100, Math.max(0, Math.round((elapsedMs / totalMs) * 100)));
+    const remainingMs = Math.max(0, endMs - nowMs);
+    const elapsedMs = Math.max(0, Math.min(totalMs, nowMs - startMs));
+    const pct = Math.min(100, Math.max(0, Number(((elapsedMs / totalMs) * 100).toFixed(1))));
     const currentDay = Math.min(days, Math.max(1, Math.floor(elapsedMs / 86400000) + 1));
 
-    const remDays = Math.max(0, Math.floor(remainingMs / 86400000));
-    const remHours = Math.max(0, Math.floor((remainingMs % 86400000) / 3600000));
-    const remMins = Math.max(0, Math.floor((remainingMs % 3600000) / 60000));
+    const elapsedDays = Math.floor(elapsedMs / 86400000);
+    const elapsedHours = Math.floor((elapsedMs % 86400000) / 3600000);
+    const elapsedMins = Math.floor((elapsedMs % 3600000) / 60000);
+
+    const remDays = Math.floor(remainingMs / 86400000);
+    const remHours = Math.floor((remainingMs % 86400000) / 3600000);
+    const remMins = Math.floor((remainingMs % 3600000) / 60000);
+    const remSecs = Math.floor((remainingMs % 60000) / 1000);
 
     return {
       startDate: new Date(startMs),
@@ -520,51 +525,258 @@
       totalDays: days,
       currentDay,
       percent: pct,
-      isComplete: remainingMs <= 0,
+      isComplete: nowMs >= endMs,
       isNotStarted: nowMs < startMs,
+      elapsedDays,
+      elapsedHours,
+      elapsedMins,
       remDays,
       remHours,
-      remMins
+      remMins,
+      remSecs
     };
+  }
+
+  function formatCountdownStrings(cd) {
+    const pad = (n) => String(n).padStart(2, "0");
+    const fmtDate = (d) => d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+    if (cd.isComplete) {
+      return {
+        running: `Ran ${cd.totalDays}d / ${cd.totalDays}d`,
+        remaining: "Window complete · Awaiting Play review",
+        headline: `${cd.totalDays}-day closed testing window complete — still accepting testers for next cycle`,
+        startLabel: fmtDate(cd.startDate),
+        endLabel: fmtDate(cd.endDate)
+      };
+    }
+    if (cd.isNotStarted) {
+      return {
+        running: `Starts ${fmtDate(cd.startDate)}`,
+        remaining: `${cd.totalDays}d cycle scheduled`,
+        headline: `Closed testing window starts ${fmtDate(cd.startDate)} (${cd.totalDays} days)`,
+        startLabel: fmtDate(cd.startDate),
+        endLabel: fmtDate(cd.endDate)
+      };
+    }
+    const runParts = [];
+    if (cd.elapsedDays > 0) runParts.push(`${cd.elapsedDays}d`);
+    runParts.push(`${cd.elapsedHours}h`);
+    if (cd.elapsedDays === 0) runParts.push(`${cd.elapsedMins}m`);
+
+    const remParts = [];
+    if (cd.remDays > 0) remParts.push(`${cd.remDays}d`);
+    remParts.push(`${pad(cd.remHours)}h`);
+    remParts.push(`${pad(cd.remMins)}m`);
+    remParts.push(`${pad(cd.remSecs)}s`);
+
+    return {
+      running: `Day ${cd.currentDay}/${cd.totalDays} · Running ${runParts.join(" ")}`,
+      remaining: `${remParts.join(" ")} left`,
+      headline: `Day ${cd.currentDay} of ${cd.totalDays} · Running ${runParts.join(" ")} · ${remParts.join(" ")} remaining`,
+      startLabel: fmtDate(cd.startDate),
+      endLabel: fmtDate(cd.endDate)
+    };
+  }
+
+  function isActiveTestingCycle(cfg) {
+    const s = (cfg?.androidStatus || "").toLowerCase();
+    return s === "closedtesting" || s === "testingextended";
+  }
+
+  function getEffectiveStartDate(cfg) {
+    if (cfg?.closedTestingStartDate) return cfg.closedTestingStartDate;
+    // Localhost-only preview helper (?previewStart=ISO) so live ticking can be inspected offline without affecting production
+    try {
+      if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+        const p = new URLSearchParams(location.search).get("previewStart");
+        if (p && !Number.isNaN(Date.parse(p))) return p;
+      }
+    } catch (_) {}
+    return null;
   }
 
   function renderCountdownHtml(cfg) {
     const status = (cfg.androidStatus || "").toLowerCase();
-    if ((status !== "closedtesting" && status !== "testingextended") || !cfg.closedTestingStartDate) {
+    const startDate = getEffectiveStartDate(cfg);
+    if (!isActiveTestingCycle(cfg) || !startDate) {
       return "";
     }
-    const cd = computeCountdown(cfg.closedTestingStartDate, cfg.closedTestingDays);
+    const cd = computeCountdown(startDate, cfg.closedTestingDays);
     if (!cd) return "";
-
-    const fmtDate = (d) => d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-    let headline = "";
-    if (cd.isComplete) {
-      headline = `${cd.totalDays}-day closed testing window complete — awaiting Google Play production review`;
-    } else if (cd.isNotStarted) {
-      headline = `Closed testing window starts ${fmtDate(cd.startDate)} (${cd.totalDays} days)`;
-    } else {
-      const parts = [];
-      if (cd.remDays > 0) parts.push(`${cd.remDays}d`);
-      parts.push(`${cd.remHours}h`);
-      if (cd.remDays === 0) parts.push(`${cd.remMins}m`);
-      headline = `Day ${cd.currentDay} of ${cd.totalDays} · ${parts.join(" ")} remaining`;
-    }
+    const txt = formatCountdownStrings(cd);
 
     return `
-      <div class="lifecycle-countdown ${status === "testingextended" ? "is-extended" : ""}" data-countdown-start="${escapeHtml(cfg.closedTestingStartDate)}" data-countdown-days="${cd.totalDays}">
+      <div class="lifecycle-countdown ${status === "testingextended" ? "is-extended" : ""}" data-countdown-start="${escapeHtml(startDate)}" data-countdown-days="${cd.totalDays}">
         <div class="lc-head">
           <span class="lc-label">${status === "testingextended" ? "Extended Testing Window" : "Google Play Closed Testing Window"}</span>
-          <span class="lc-time" data-countdown-text>${escapeHtml(headline)}</span>
+          <span class="lc-time" data-countdown-text>${escapeHtml(txt.headline)}</span>
         </div>
-        <div class="lc-track" role="progressbar" aria-valuenow="${cd.percent}" aria-valuemin="0" aria-valuemax="100">
+        <div class="lc-track" role="progressbar" aria-valuenow="${Math.round(cd.percent)}" aria-valuemin="0" aria-valuemax="100">
           <div class="lc-fill" style="width:${cd.percent}%"></div>
         </div>
         <div class="lc-dates">
-          <span>Started ${escapeHtml(fmtDate(cd.startDate))}</span>
-          <span>Target completion ${escapeHtml(fmtDate(cd.endDate))}</span>
+          <span>Started ${escapeHtml(txt.startLabel)}</span>
+          <span>Target completion ${escapeHtml(txt.endLabel)}</span>
         </div>
       </div>
     `;
+  }
+
+  function focusJoinFormForApp(appId) {
+    const studioSection = document.getElementById("closed-testing");
+    const productSection = document.getElementById("beta-queue");
+    const target = productSection || studioSection;
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    setTimeout(() => {
+      if (studioSection && appId) {
+        const cb = studioSection.querySelector(`input[name='studio_app'][value='${appId}']`);
+        if (cb && !cb.checked) {
+          cb.checked = true;
+          cb.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+        const emailEl = studioSection.querySelector("[data-studio-email]");
+        if (emailEl) emailEl.focus({ preventScroll: true });
+      } else if (productSection) {
+        const emailEl = productSection.querySelector("[data-email-input]");
+        if (emailEl) emailEl.focus({ preventScroll: true });
+      }
+    }, 420);
+  }
+
+  function renderStudioTopLiveBanner() {
+    const slot = document.querySelector("[data-studio-live-banner]");
+    if (!slot) return;
+
+    const activeApps = Object.entries(APP_CONFIG).filter(([, cfg]) => isActiveTestingCycle(cfg));
+    if (!activeApps.length) {
+      slot.innerHTML = "";
+      slot.hidden = true;
+      return;
+    }
+
+    const email = getRememberedEmail();
+    const tickets = getTickets();
+    let hasTimed = false;
+
+    const rows = activeApps.map(([appId, cfg]) => {
+      const status = (cfg.androidStatus || "").toLowerCase();
+      const isExtended = status === "testingextended";
+      const startDate = getEffectiveStartDate(cfg);
+      const cd = startDate ? computeCountdown(startDate, cfg.closedTestingDays) : null;
+      const txt = cd ? formatCountdownStrings(cd) : null;
+      if (cd) hasTimed = true;
+
+      const t = email && tickets[appId] && tickets[appId].email === email ? tickets[appId] : null;
+      const tStatus = t ? (t.status || "").toLowerCase() : "";
+      const ctaLabel = tStatus === "approved"
+        ? "✓ Approved · Open Page"
+        : tStatus === "pending"
+          ? "In Queue · View Status"
+          : (isExtended ? "+ Join Extended Cycle" : "+ Join Running Cycle");
+      const ctaHref = tStatus === "approved" ? `${cfg.pageUrl || `${appId}/`}#beta-queue` : "#closed-testing";
+
+      return `
+        <div class="live-cycle-bar ${isExtended ? "is-extended" : ""}" ${cd ? `data-countdown-start="${escapeHtml(startDate)}" data-countdown-days="${cd.totalDays}"` : ""}>
+          <div class="live-cycle-main">
+            <div class="live-cycle-meta">
+              <span class="live-cycle-pill">
+                <span class="${isExtended ? "pulse-dot-amber" : "pulse-dot-green"}" aria-hidden="true"></span>
+                ${isExtended ? "Extended Testing" : "Closed Testing Live"}
+              </span>
+              <a class="live-cycle-app" href="${escapeHtml(cfg.pageUrl || `${appId}/`)}">${escapeHtml(cfg.name)}</a>
+              <span class="live-cycle-sub">${cd
+                ? `<strong data-countdown-running>${escapeHtml(txt.running)}</strong><span class="lc-sep">·</span><span class="live-cycle-rem" data-countdown-remaining>${escapeHtml(txt.remaining)}</span>`
+                : `<strong>${cfg.closedTestingDays || 14}-Day Track Active</strong><span class="lc-sep">·</span><span class="live-cycle-rem">Open for new testers (current &amp; next cycle)</span>`}
+              </span>
+            </div>
+            ${cd ? `
+              <div class="live-cycle-track" role="progressbar" aria-valuenow="${Math.round(cd.percent)}" aria-valuemin="0" aria-valuemax="100">
+                <div class="lc-fill" style="width:${cd.percent}%"></div>
+              </div>
+            ` : ""}
+          </div>
+          <div class="live-cycle-actions">
+            ${tStatus === "approved"
+              ? `<a class="btn btn-primary btn-sm" href="${escapeHtml(ctaHref)}">${ctaLabel} →</a>`
+              : `<button type="button" class="btn btn-primary btn-sm" data-join-running-app="${escapeHtml(appId)}">${ctaLabel}</button>`}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    slot.innerHTML = `<div class="live-cycle-stack">${rows}</div>`;
+    slot.hidden = false;
+
+    slot.querySelectorAll("[data-join-running-app]").forEach((btn) => {
+      btn.addEventListener("click", () => focusJoinFormForApp(btn.getAttribute("data-join-running-app")));
+    });
+
+    if (hasTimed) startCountdownTicker();
+  }
+
+  function renderProductHeroCountdown(appId, cfg, ticket) {
+    const slot = document.querySelector(`[data-hero-countdown="${appId}"]`);
+    if (!slot) return;
+
+    if (!isActiveTestingCycle(cfg)) {
+      slot.innerHTML = "";
+      slot.hidden = true;
+      return;
+    }
+
+    const status = (cfg.androidStatus || "").toLowerCase();
+    const isExtended = status === "testingextended";
+    const startDate = getEffectiveStartDate(cfg);
+    const cd = startDate ? computeCountdown(startDate, cfg.closedTestingDays) : null;
+    const txt = cd ? formatCountdownStrings(cd) : null;
+
+    const tStatus = ticket ? (ticket.status || "").toLowerCase() : "";
+    const ctaLabel = tStatus === "approved"
+      ? "✓ Approved · View Play Links ↓"
+      : tStatus === "pending"
+        ? "In Queue · Check Status ↓"
+        : (isExtended ? "+ Join Extended Cycle" : "+ Join Running Cycle");
+
+    slot.innerHTML = `
+      <div class="live-cycle-bar ${isExtended ? "is-extended" : ""}" ${cd ? `data-countdown-start="${escapeHtml(startDate)}" data-countdown-days="${cd.totalDays}"` : ""}>
+        <div class="live-cycle-main">
+          <div class="live-cycle-meta">
+            <span class="live-cycle-pill">
+              <span class="${isExtended ? "pulse-dot-amber" : "pulse-dot"}" aria-hidden="true"></span>
+              ${isExtended ? "Extended Closed Testing" : "Closed Testing Running"}
+            </span>
+            <span class="live-cycle-sub">${cd
+              ? `<strong data-countdown-running>${escapeHtml(txt.running)}</strong><span class="lc-sep">·</span><span class="live-cycle-rem" data-countdown-remaining>${escapeHtml(txt.remaining)}</span>`
+              : `<strong>${cfg.closedTestingDays || 14}-Day Cycle Active</strong><span class="lc-sep">·</span><span class="live-cycle-rem">Still open — join anytime for current or next cycle</span>`}
+            </span>
+          </div>
+          ${cd ? `
+            <div class="live-cycle-track" role="progressbar" aria-valuenow="${Math.round(cd.percent)}" aria-valuemin="0" aria-valuemax="100">
+              <div class="lc-fill" style="width:${cd.percent}%"></div>
+            </div>
+            <div class="live-cycle-dates">
+              <span>Started ${escapeHtml(txt.startLabel)}</span>
+              <span>Already running? You can still join for this cycle or the next.</span>
+              <span>Target ${escapeHtml(txt.endLabel)}</span>
+            </div>
+          ` : `
+            <div class="live-cycle-dates">
+              <span>Already running? Add your Google Play email anytime so you're included in this cycle and any follow-up cycle.</span>
+            </div>
+          `}
+        </div>
+        <div class="live-cycle-actions">
+          <button type="button" class="btn btn-primary btn-sm" data-join-running-app="${escapeHtml(appId)}">${ctaLabel}</button>
+        </div>
+      </div>
+    `;
+    slot.hidden = false;
+
+    slot.querySelector("[data-join-running-app]")?.addEventListener("click", () => focusJoinFormForApp(appId));
+
+    if (cd) startCountdownTicker();
   }
 
   function renderLifecycleNoticeHtml(cfg) {
@@ -884,6 +1096,7 @@
   function renderStudioBeta(container, rememberedEmail) {
     const email = (rememberedEmail || "").trim().toLowerCase();
     updateProductDirectoryBadges(email);
+    renderStudioTopLiveBanner();
 
     if (email) {
       renderStudioAccessSummary(container, email);
@@ -912,10 +1125,11 @@
 
     const appCheckboxes = testingIds.map((id) => {
       const app = APP_CONFIG[id];
+      const liveTag = isActiveTestingCycle(app) ? ` <em class="chip-live-tag">Live</em>` : "";
       return `
         <label class="app-pick-chip">
           <input type="checkbox" name="studio_app" value="${escapeHtml(id)}" checked>
-          <span><i class="app-pick-check">✓</i>${escapeHtml(app.name)}</span>
+          <span><i class="app-pick-check">✓</i>${escapeHtml(app.name)}${liveTag}</span>
         </label>
       `;
     }).join("");
@@ -925,7 +1139,7 @@
         <div class="studio-beta-top">
           <div>
             <h3>Join or Check Closed Testing Access</h3>
-            <p>Choose all studio apps or only the ones you want to test. Once approved, visit each product page to unlock your Google Play links and QR pass.</p>
+            <p>Testing already running? You can still add your Google Play email right now to join the active track and be ready for any follow-up cycle. Once approved, visit each product page for your Play Store links and QR pass.</p>
           </div>
         </div>
 
@@ -1228,27 +1442,23 @@
     if (countdownTickerStarted) return;
     countdownTickerStarted = true;
     setInterval(() => {
+      if (document.hidden) return;
       document.querySelectorAll("[data-countdown-start]").forEach((el) => {
         const start = el.getAttribute("data-countdown-start");
         const days = Number(el.getAttribute("data-countdown-days")) || 14;
         const cd = computeCountdown(start, days);
         if (!cd) return;
-        const textEl = el.querySelector("[data-countdown-text]");
+        const txt = formatCountdownStrings(cd);
         const fillEl = el.querySelector(".lc-fill");
+        const textEl = el.querySelector("[data-countdown-text]");
+        const runEl = el.querySelector("[data-countdown-running]");
+        const remEl = el.querySelector("[data-countdown-remaining]");
         if (fillEl) fillEl.style.width = `${cd.percent}%`;
-        if (textEl) {
-          if (cd.isComplete) {
-            textEl.textContent = `${cd.totalDays}-day closed testing window complete — awaiting Google Play production review`;
-          } else if (!cd.isNotStarted) {
-            const parts = [];
-            if (cd.remDays > 0) parts.push(`${cd.remDays}d`);
-            parts.push(`${cd.remHours}h`);
-            if (cd.remDays === 0) parts.push(`${cd.remMins}m`);
-            textEl.textContent = `Day ${cd.currentDay} of ${cd.totalDays} · ${parts.join(" ")} remaining`;
-          }
-        }
+        if (textEl) textEl.textContent = txt.headline;
+        if (runEl) runEl.textContent = txt.running;
+        if (remEl) remEl.textContent = txt.remaining;
       });
-    }, 60000);
+    }, 1000);
   }
 
   function initProductBetaWidgets() {
@@ -1310,6 +1520,7 @@
 
     syncProductHeroPlatformBadges(appId, cfg);
     updateHeroAccessBanner(appId, cfg, currentTicket);
+    renderProductHeroCountdown(appId, cfg, currentTicket);
 
     const noticeHtml = renderLifecycleNoticeHtml(cfg);
     const countdownHtml = renderCountdownHtml(cfg);
@@ -1350,9 +1561,21 @@
       </label>
     `).join("");
 
+    const statusLower = (cfg.androidStatus || "").toLowerCase();
+    const isRunning = isActiveTestingCycle(cfg);
+    const isExtended = statusLower === "testingextended";
+
     const prefillNote = prefillEmail
-      ? `Signed in with <strong>${escapeHtml(prefillEmail)}</strong> — you aren't registered for ${escapeHtml(cfg.name)} yet. Click below to request access or check status.`
-      : `${escapeHtml(cfg.subtitle)}. Enter your Google Play email to join the waitlist — or if you're already approved for ${escapeHtml(cfg.name)}, unlock your direct Google Play links and QR pass instantly.`;
+      ? `Signed in with <strong>${escapeHtml(prefillEmail)}</strong> — you aren't registered for ${escapeHtml(cfg.name)} yet. ${isRunning ? "Testing is already running — you can join right now for this cycle and any follow-up cycle." : "Click below to request access or check status."}`
+      : isExtended
+        ? `Additional closed testing is actively running for ${escapeHtml(cfg.name)} — new testers help us reach public Google Play release faster! Enter your Google Play email to join the active cycle.`
+        : isRunning
+          ? `Closed testing for ${escapeHtml(cfg.name)} is already running — and you can still join right now! Adding your Google Play email enrolls you into the active track and ensures extra testers are ready if Google Play requests another cycle.`
+          : `${escapeHtml(cfg.subtitle)}. Enter your Google Play email to join the waitlist — or if you're already approved for ${escapeHtml(cfg.name)}, unlock your direct Google Play links and QR pass instantly.`;
+
+    const submitLabel = prefillEmail
+      ? (isRunning ? `Join Active ${escapeHtml(cfg.name)} Testing` : `Join ${escapeHtml(cfg.name)} Queue`)
+      : (isExtended ? "Join Extended Testing" : isRunning ? "Join Active Testing" : "Join / Check Access");
 
     bodyEl.innerHTML = `
       <div class="queue-header">
@@ -1370,13 +1593,13 @@
         <div class="input-wrap">
           <input type="email" required placeholder="Enter your Google Play account email" value="${escapeHtml(prefillEmail || "")}" class="queue-input" data-email-input autocomplete="email">
           <button type="submit" class="btn btn-primary queue-btn">
-            <span>${prefillEmail ? `Join ${escapeHtml(cfg.name)} Queue` : "Join / Check Access"}</span>
+            <span>${submitLabel}</span>
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
         </div>
 
         <div class="queue-meta">
-          <span>⛨ 100% Free · Zero Spam · Direct Play Store Invitation</span>
+          <span>⛨ 100% Free · Zero Spam · Open During Running &amp; Follow-Up Cycles</span>
           <span class="queue-note">Google Play links &amp; QR pass appear here automatically once your email is approved for ${escapeHtml(cfg.name)}.</span>
         </div>
       </form>
@@ -1410,6 +1633,7 @@
     const mobile = isMobileDevice();
 
     updateHeroAccessBanner(appId, cfg, ticket);
+    renderProductHeroCountdown(appId, cfg, ticket);
 
     if (isApproved) {
       if (!hasLinks) {
@@ -1559,6 +1783,7 @@
       resetBtn.addEventListener("click", () => {
         clearAllTesterState();
         updateHeroAccessBanner(appId, cfg, null);
+        renderProductHeroCountdown(appId, cfg, null);
         renderProductFormView(bodyEl, appId, cfg, container, "");
       });
     }
