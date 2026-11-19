@@ -487,7 +487,7 @@
 
   function isAppAcceptingTesters(cfg) {
     const s = (cfg?.androidStatus || "").toLowerCase();
-    return s !== "published" && s !== "productionapproved";
+    return s !== "published" && s !== "productionapproved" && s !== "development";
   }
 
   function formatStatusBadge(androidStatus) {
@@ -496,6 +496,7 @@
       case "testingextended": return { label: "Android: Closed Testing Extended", pill: "Extended", tagClass: "queue" };
       case "productionapproved": return { label: "Android: Production Approved", pill: "Approved", tagClass: "active" };
       case "published": return { label: "Android: Published on Google Play", pill: "Live", tagClass: "active" };
+      case "development": return { label: "Android: In Active Development", pill: "Dev", tagClass: "dev" };
       case "planning": return { label: "Android: Planning Waitlist", pill: "Plan", tagClass: "" };
       default: return { label: "Android: Closed Testing Queue", pill: "Queue", tagClass: "queue" };
     }
@@ -854,6 +855,17 @@
         <div class="lifecycle-banner is-thanks">
           <div class="lb-badge"><span class="dot-green"></span> Release Note &amp; Thanks</div>
           <p style="margin:0;">${escapeHtml(msg).replace(/\n/g, "<br>")}</p>
+        </div>
+      `;
+    }
+
+    if (status === "development") {
+      const body = msg || `${cfg.name} for Android is currently in active engineering development. Closed testing sign-ups and Google Play opt-in links will unlock right here as soon as the build enters Testing Queue.`;
+      return `
+        <div class="lifecycle-banner is-info">
+          <div class="lb-badge">Android · In Active Development</div>
+          <h3>Currently in Active Engineering</h3>
+          <p style="margin:0;">${escapeHtml(body).replace(/\n/g, "<br>")}</p>
         </div>
       `;
     }
@@ -1798,14 +1810,17 @@
     const statusLower = (cfg.androidStatus || "").toLowerCase();
     const isRunning = isActiveTestingCycle(cfg);
     const isExtended = statusLower === "testingextended";
+    const hasQueueLinks = Boolean(cfg.joinWebUrl || cfg.joinAndroidUrl);
 
     const prefillNote = prefillEmail
-      ? `Signed in with <strong>${escapeHtml(prefillEmail)}</strong> — you aren't registered for ${escapeHtml(cfg.name)} yet. ${isRunning ? "Testing is already running — you can join right now for this cycle and any follow-up cycle." : "Click below to request access or check status."}`
+      ? `Signed in with <strong>${escapeHtml(prefillEmail)}</strong> — you aren't registered for ${escapeHtml(cfg.name)} yet. ${isRunning ? "Testing is already running — you can join right now for this cycle and any follow-up cycle." : hasQueueLinks ? "If you were already added on Google Play Console, submit below to unlock your opt-in link & QR pass right away." : "Click below to request access or check status."}`
       : isExtended
         ? `Additional closed testing is actively running for ${escapeHtml(cfg.name)} — new testers help us reach public Google Play release faster! Enter your Google Play email to join the active cycle.`
         : isRunning
           ? `Closed testing for ${escapeHtml(cfg.name)} is already running — and you can still join right now! Adding your Google Play email enrolls you into the active track and ensures extra testers are ready if Google Play requests another cycle.`
-          : `${escapeHtml(cfg.subtitle)}. Enter your Google Play email to join the waitlist — or if you're already approved for ${escapeHtml(cfg.name)}, unlock your direct Google Play links and QR pass instantly.`;
+          : hasQueueLinks
+            ? `${escapeHtml(cfg.subtitle)}. Already added to our Google Play tester list? Enter your email below to unlock the opt-in link & QR pass immediately — or join the waitlist queue to help reach 12+ opted-in testers.`
+            : `${escapeHtml(cfg.subtitle)}. Enter your Google Play email to join the waitlist — or if you're already approved for ${escapeHtml(cfg.name)}, unlock your direct Google Play links and QR pass instantly.`;
 
     const submitLabel = prefillEmail
       ? (isRunning ? `Join Active ${escapeHtml(cfg.name)} Testing` : `Join ${escapeHtml(cfg.name)} Queue`)
@@ -1893,13 +1908,17 @@
       } else {
         const qrTargetUrl = joinAndroidUrl || joinWebUrl;
         const qrSvg = QR.generateSVG(qrTargetUrl, 168);
+        const isQueueWithLinks = (cfg.androidStatus || "").toLowerCase() === "testingqueue";
+        const unlockedBadge = isQueueWithLinks
+          ? "Pre-Launch Play Testing Unlocked"
+          : "Google Play Closed Testing Unlocked";
 
         bodyEl.innerHTML = `
           <div class="queue-status-in approved-view">
             <div class="queue-header">
-              <div class="queue-badge approved"><span class="dot-green"></span> Google Play Closed Testing Unlocked</div>
+              <div class="queue-badge approved"><span class="dot-green"></span> ${unlockedBadge}</div>
               <h3>You are an Approved Tester for ${escapeHtml(cfg.name)}!</h3>
-              <p class="queue-desc">Approved Account: <strong>${escapeHtml(ticket.email)}</strong> · Platform: <strong>${escapeHtml(ticket.platform || "Android")}</strong></p>
+              <p class="queue-desc">Approved Account: <strong>${escapeHtml(ticket.email)}</strong> · Platform: <strong>${escapeHtml(ticket.platform || "Android")}</strong>${isQueueWithLinks ? " · Opt in & install early so we can launch the 14-day countdown as soon as 12+ testers join!" : ""}</p>
             </div>
 
             <div class="approved-deck">

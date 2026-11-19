@@ -6,6 +6,9 @@ This file serves as the single source of truth for ongoing development, complete
 
 ## 🟢 1. Completed Work
 
+* [x] **Full Android Lifecycle, Single-Source Links, Recurring Check-In Reminders & Bulk Play Console Import**:
+  * Added Android `Development` state (`Planning` -> `Development` -> `TestingQueue` -> `ClosedTesting` -> `TestingExtended` -> `ProductionApproved` -> `Published`), exact countdown start date+time + `Start Now` button, `ClosedTestingStarted` / `CountdownStarted` transition prompts on Save, and `AutoRemindersEnabled` + `ReminderIntervalDays` (default every 2 days) recurring engagement checks (`TesterEngagementTimer` + `LastReminderSentAt` / `ReminderCount` in Azure SQL).
+  * Upgraded WinUI **Closed Testing Queue** to pull Web & Android links directly from **Apps & Links** (zero re-typing on approve), added **Bulk Import Play Console Testers** (`POST /api/studio/testers/bulk-import`), replaced placeholder `X` icons with `Assets/StudioIcon.png`, and added multi-platform status chips (`Win`, `iOS`, `macOS`, `Linux`) to **Overview** app cards.
 * [x] **Closed Testing Intelligence, FAQ Polish & 5-Platform Live WinUI Sync**:
   * Added install confirmation, Day-2 active engagement tracking, `?checkin=installed|engaged|updated` URL deep links, and live `LatestVersion` update alert banners in `assets/cloud-client.js`, paired with `TesterEngagementTimer` (6h), `POST /api/testers/engagement`, `POST /api/studio/testers/send-reminders`, and `AppUpdateApproved` Brevo broadcasts.
   * Added live `IosStatus`, `MacosStatus`, and `LinuxStatus` controls across Azure SQL (`dbo.Apps`), WinUI 3 `AppsPage`, and `assets/cloud-client.js` (syncing all 5 platform pills cleanly without manual HTML edits).

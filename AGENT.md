@@ -261,16 +261,16 @@ Stored in `assets/branding/` for developer page upload:
 * **Runtime**: C# **.NET 10.0 (LTS)** Isolated Worker Model on **Azure Functions Flex Consumption** (Linux Ubuntu 24.04, 512 MB instance, Central US).
 * **Live Base URL**: `https://native-espresso-web-function-epbhdxbxbybte6bz.centralus-01.azurewebsites.net` (CORS whitelisted for `https://nativeespresso.github.io`).
 * **Database**: Azure SQL Database (Free Tier Serverless, overage billing disabled, auto-pause wake-up retry loop) with 4 tables:
-  * `dbo.Apps`: Dynamic multi-app registry (`AppId`, `AppName`, `AndroidStatus`, `WindowsStatus`, `IosStatus`, `MacosStatus`, `LinuxStatus`, `ClosedTestingStartDate`, `ClosedTestingDays`, `LatestVersion`, `LatestReleaseNotes`, `JoinWebUrl`, `JoinAndroidUrl`, `MicrosoftStoreUrl`).
-  * `dbo.Testers`: Closed testing waitlist, approval state, installation confirmation (`InstallConfirmed`, `InstalledVersion`), Day-2 engagement tracking (`LastEngagedAt`, `Day2ReminderSentAt`), and update alert tracking (`LastUpdateVersionNotified`).
+  * `dbo.Apps`: Dynamic multi-app registry (`AppId`, `AppName`, `AndroidStatus` including `Development` and `TestingQueue` -> `ClosedTesting`, `WindowsStatus`, `IosStatus`, `MacosStatus`, `LinuxStatus`, `ClosedTestingStartDate`, `ClosedTestingDays`, `AutoRemindersEnabled`, `ReminderIntervalDays`, `LatestVersion`, `LatestReleaseNotes`, `JoinWebUrl`, `JoinAndroidUrl`, `MicrosoftStoreUrl`).
+  * `dbo.Testers`: Closed testing waitlist, bulk-imported Play Console tester lists (`POST /api/studio/testers/bulk-import`), approval state, installation confirmation (`InstallConfirmed`, `InstalledVersion`), recurring check-in tracking (`LastEngagedAt`, `Day2ReminderSentAt`, `LastReminderSentAt`, `ReminderCount`), and update alert tracking (`LastUpdateVersionNotified`).
   * `dbo.IssueReports`: Multi-app support tickets (`AppId`, `AppName`, `Platform`, `Category`, `AttachmentUrl`, `Status`, `AdminNotes`).
   * `dbo.AppReviews`: Community star ratings, platform tags, moderation state (`Pending`, `Approved`, `Rejected`), pinning, and official studio replies (`DeveloperReply`, `RepliedAt`).
-* **Background Automation**: 6-hour `TesterEngagementTimer` (`0 0 */6 * * *`) checks approved closed-testing cohorts (≥ 24h after approval) and dispatches adaptive Day-2 engagement or install-check reminders via Brevo.
+* **Background Automation**: 6-hour `TesterEngagementTimer` (`0 0 */6 * * *`) checks active closed-testing cohorts with `AutoRemindersEnabled = 1`, dispatching initial 24h install/check-in reminders and recurring check-ins every `ReminderIntervalDays` (default 2 days) during live countdown windows (skipping recently engaged testers).
 * **Cloud Storage**: Azure Blob Storage (`sharedstoragepool`, container `support-attachments`) for error screenshots, logs, and short video recordings up to 15 MB.
 * **Dual-Email Cascade Strategy**:
   * **Primary**: Resend API (100 free/day — optional once a custom domain is configured).
   * **Active Provider / Fallback**: Brevo API (300 free/day, 9,000/month — verified sender `native.espresso@gmail.com`).
-  * Serverless-safe awaited dispatch (`await` / `Task.WhenAll`) for Beta Queue confirmations, Developer alerts, dual-link VIP Play Store approvals, Day-2 engagement reminders, new version update announcements (`AppUpdateApproved`), review reply notifications, and Support Ticket receipts.
+  * Serverless-safe awaited dispatch (`await` / `Task.WhenAll`) for Beta Queue confirmations, Developer alerts, dual-link VIP Play Store approvals, `ClosedTestingStarted` / `CountdownStarted` transition broadcasts, recurring every-2-days check-in reminders, new version update announcements (`AppUpdateApproved`), review reply notifications, and Support Ticket receipts.
 
 ### Frontend Client, 3D Spatial Stage & Reviews (`assets/cloud-client.js`, `assets/main.js`):
 1. **3D Interactive Showcase & Floating Command Dock**:
@@ -289,7 +289,7 @@ Stored in `assets/branding/` for developer page upload:
 * **Role**: Linear secondary administrative project — editable as needed, though not on every web update (usually synced when the Azure backend is updated).
 * **Repository**: `https://github.com/ChTalhaArain/Native-Espresso` (Private, `master` branch).
 * **Framework**: Packaged WinUI 3 (.NET 10, Mica backdrop) authenticating against `/api/studio/*` using constant-time `X-Admin-Key` validation stored in **Windows Credential Locker (`PasswordVault`)**.
-* **Modules**: **Overview** (live cloud health & KPIs including review counts), **Closed Testing** (dynamic app filters, install/engagement badges, 1-click Play Console copy, bulk VIP approve, manual install mark & Day-2/Install reminder dispatcher), **Support Issues** (master-detail triage + blob attachment launcher), **Reviews & Comments** (pin/approve/reject + Official Studio Reply & Brevo notification), **Apps & Links** (5-platform live status dropdowns including `iOS`, `macOS`, `Linux`, countdown controls, `LatestVersion` + `New Update Approved` broadcasts, Play Store & Microsoft Store links), and **Settings**.
+* **Modules**: **Overview** (live cloud health, KPIs, Studio/App icons, multi-platform status pills), **Closed Testing** (dynamic app filters, install/engagement/reminder badges, 1-click Play Console copy, **Bulk Import** Play Console lists, zero-re-type single-source approvals, install mark & recurring reminder dispatcher), **Support Issues** (master-detail triage + blob attachment launcher), **Reviews & Comments** (pin/approve/reject + Official Studio Reply & Brevo notification), **Apps & Links** (`Development`/`TestingQueue`/`ClosedTesting` states, exact start date+time + `Start Now`, every-N-days auto-reminder toggle, transition email prompts, 5-platform statuses, `LatestVersion`, Play Store & Microsoft Store links), and **Settings**.
 
 
 
